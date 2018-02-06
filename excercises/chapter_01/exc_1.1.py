@@ -8,106 +8,75 @@ What is their role in the optimization?
 Try to reason it through first, then implement it.
 """
 
-
-limit = 100
-
-x = 2
-B = C = 1
-
-minimal = 7
-a_min = 7
-
-maximal = 7
-a_max = 7
+from sympy import symbols
+from sympy import plot
 
 
-for a in range(0, limit + 1):
-    A = a
-    solution = A*(x-B)**2 + C
-    if solution < minimal:
-        minimal = solution
-        a_min = A
-    if solution > maximal:
-        maximal = solution
-        a_max = A
+def main():
 
-print("Keeping the values of x at", x, ", and the values of B and C both at", B, ":")
-print("The equation has the lowest value (%d), when A equals %d" % (minimal, a_min))
-print("The equation has the highest value (%d), when A equals %d\n" % (maximal, a_max))
+    """
+    Plots a function based on a considered formula
+    The three values A, B and C are inputted by the user
+    x is varied in a range specified by the user
+    """
+
+    formula = str(input("Please input the formula you want to plot: "))
+
+    parsed = list(formula)
+    letters = []
+    alphabet = 'abcdefghijklmnopqrstuvwxyz'
+
+    checked = 0
+    while checked != len(parsed):
+        if parsed[checked].lower() in alphabet and parsed[checked].lower() not in letters:
+            letters.append(parsed[checked])
+        checked += 1
+
+    print("The following unique letters are detected in the formula:", letters)
+    possible = "".join(letters)
+
+    passing = False
+
+    while not passing:
+        variable = str(input("Which one of these letters is considered the variable? "))
+        if variable not in possible:
+            print('! ! !\n'
+                  'Chosen value has to be available in', letters, '.\n'
+                  '! ! !')
+            continue
+        else:
+            passing = True
+
+    new_formula = formula.lower()
+    letters.remove(variable)
+    looped = 0
+
+    while looped != len(letters):
+        letter_replaced = chr(96 + (looped + 1))
+        value = str(input("What value do you specify for parameter %s: " % letter_replaced.upper()))
+        new_formula = new_formula.replace(letter_replaced, value)
+        looped += 1
+
+    correct = False
+
+    while not correct:
+        range_var_low = int(input("Please the LOWEST value for the variable (%s) in the function: " % variable))
+        range_var_high = int(input("Please the HIGHEST value for the variable (%s) in the function: " % variable))
+        if range_var_low >= range_var_high:
+            print('! ! !\n'
+                  'The lowerbound has to be lower than the upperbound.\n'
+                  'Please input new values'
+                  '! ! !')
+            continue
+        else:
+            correct = True
+
+    var = symbols(variable)
+
+    plot(new_formula, (var, range_var_low, range_var_high),
+         title="Function created based on inputted values",
+         ylabel='Function values',
+         xlabel='Value for x')
 
 
-x = 2
-A = C = 1
-
-minimal = 7
-b_min = 7
-
-maximal = 7
-b_max = 7
-
-
-for b in range(0, limit + 1):
-    B = b
-    solution = A*(x-B)**2 + C
-    if solution < minimal:
-        minimal = solution
-        b_min = B
-    if solution > maximal:
-        maximal = solution
-        b_max = B
-
-print("Keeping the values of x at", x, ", and the values of A and C both at", A, ":")
-print("The equation has the lowest value (%d), when B equals %d" % (minimal, b_min))
-print("The equation has the highest value (%d), when B equals %d\n" % (maximal, b_max))
-
-x = 2
-A = B = 1
-
-minimal = 7
-c_min = 7
-
-maximal = 7
-c_max = 7
-
-
-for c in range(0, limit + 1):
-    C = c
-    solution = A*(x-B)**2 + C
-    if solution < minimal:
-        minimal = solution
-        c_min = C
-    if solution > maximal:
-        maximal = solution
-        c_max = C
-
-print("Keeping the values of x at", x, ", and the values of A and B both at", A, ":")
-print("The equation has the lowest value (%d), when C equals %d" % (minimal, c_min))
-print("The equation has the highest value (%d), when C equals %d\n" % (maximal, c_max))
-
-x = 1
-
-highestAll = 7
-highestCombination = [0, 0, 0]
-
-lowestAll = 7
-lowestCombination = [0, 0, 0]
-
-for a in range(0, limit + 1):
-    for b in range(0, limit + 1):
-        for c in range(0, limit + 1):
-            A = a
-            B = b
-            C = c
-            solution = A * (x - B) ** 2 + C
-            if solution > highestAll:
-                highestAll = solution
-                highestCombination = [a, b, c]
-            if solution < lowestAll:
-                lowestAll = solution
-                lowestCombination = [a, b, c]
-
-print("In the case where x equals", x, "and all the other variables are ranging from", 0, "to", limit,":")
-print("The smallest value is", lowestAll,
-      "which can be obtained by selecting the following parameters:", lowestCombination)
-print("The largest value is", highestAll,
-      "which can be obtained by selecting the following parameters:", highestCombination)
+main()
