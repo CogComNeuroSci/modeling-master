@@ -6,6 +6,7 @@ Created on Thu Dec 28 12:15:46 2017
 @author: tom
 simple energy minimization model
 with RT simulation
+plots figures 2.1b and 2.1c
 """
 
 # import
