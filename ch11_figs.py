@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as ptch
 
+#%% embedded in a cell so it can run on its own
 # fig 11.2b
 n_cats = 50
 mean_cats = [-1, -1]
@@ -42,7 +43,7 @@ plt.scatter(output2[0], output2[1], s = 200, c = cluster_color, marker = cluster
 plt.title("Competitive learning")
 
 #%%
-# fig 11.2c/d; embedded in a cell so it can run on its own
+# fig 11.2c/d
 radius = 0.3
 origin = [0.5, 0.5]
 std = 0.2
@@ -67,4 +68,32 @@ for index in range(2):
         axes[index].scatter(x, y, c = angle[1], marker = angle[2], s = angle[3])
     axes[index].add_patch(circ)    
     axes[index].axis([0, 1, 0, 1])
-#plt.show()    
+
+#%%
+# fig 11.3: Kohonen maps
+
+alpha0 = 1 # initial learning rate
+beta = 1   # competition toughness 
+n_in = 3
+n_d1 = 5
+n_d2 = 5
+speed = 0.01 # to make sure the lr doesn't decrease too quickly
+n_trials = 500
+w = np.random.uniform(0,1,(n_d1,n_d2,n_in))
+
+def distance(winner,x,y):
+    y_win = winner // n_d2
+    x_win = winner % n_d2
+    return np.sqrt((x_win-x)**2 + (y_win-y)**2)
+
+for loop in range(n_trials):
+    lrate = alpha0/(loop*speed+1)
+    x = np.zeros(n_in)
+    x[np.random.randint(0,n_in)] = 1
+    y = x.dot(np.reshape(w.swapaxes(0,2).swapaxes(1,2),(n_in,n_d1*n_d2)))
+    y_max = np.argmax(y)
+    for d1loop in range(n_d1):
+        for d2loop in range(n_d2):
+            w[d1loop,d2loop,:] = (w[d1loop,d2loop,:] + 
+               lrate*np.exp(-beta*distance(y_max,d1loop,d2loop))*(x-w[d1loop,d2loop,:])) 
+plt.imshow(w) 
