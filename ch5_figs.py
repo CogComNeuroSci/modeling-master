@@ -28,7 +28,7 @@ def plotlines():
         y = slope[i]*x + intercept[i]
         plt.plot(x, y, color = "black")
     
-# figure 5.2a
+#%% figure 5.2a
 # determine the convex set
 plt.subplot(121)
 plotlines()
@@ -46,7 +46,7 @@ for row in range(len(xi)):
 plt.contourf(xi, yi, Zi)
 plt.title("Fig 5.2a \nAn AND of linear functions is a convex set", {"fontsize": font_size})
 
-# figure 5.2b
+#%% figure 5.2b
 plt.subplot(122)
 plotlines()
 Zi_full = np.zeros(Xi.shape)
@@ -58,3 +58,24 @@ for index in checklist:
     Zi_full = np.any([Zi_full,Zi],axis=0)        
 plt.contourf(xi, yi, Zi_full)
 plt.title("Fig 5.2b \nAn OR of convex sets", {"fontsize": font_size})
+
+#%% figure 5.5a
+font_size = 10
+plt.subplot(121)
+x = np.arange(0,5)
+y1 = (1/2)**x   # vanishing line, because base < 1
+y2 = (1.5)**x   # exploding line, because base > 1
+plt.plot(x,y1, color = "black")
+plt.plot(x,y2, color = "black")
+plt.xticks(x,5-np.arange(0,5))
+plt.xlabel("Layer number (lower is deeper)")
+plt.title("Fig 5.5a \nVanishing and exploding functions", {"fontsize": font_size})
+
+#%% figure 5.5b
+plt.subplot(122)
+x = np.linspace(-2,2)
+y = np.maximum(0,x) # rectified linear function
+plt.plot(x,y, color = "black")
+plt.xlabel("x")
+plt.ylabel("y = max{0,x}")
+plt.title("Fig 5.5b \nA novel transformation function", {"fontsize": font_size})
