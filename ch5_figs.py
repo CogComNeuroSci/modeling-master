@@ -11,8 +11,7 @@ import matplotlib.pyplot as plt
 
 slope = [ -2, 0.5, 3]
 intercept = [0, 1, 1]
-low = -1
-high = 2
+low, high = -1, 2
 font_size = 5
 
 def conv(x, y, sign = 1, list = range(len(slope))):
