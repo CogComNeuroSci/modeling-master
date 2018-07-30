@@ -19,11 +19,12 @@ import matplotlib.pyplot as plt
 
 algo = "rw"
 env = gym.make('Taxi-v2')
-n_episodes, max_per_episode = 1000, 200
-lr, gamma = 0.7, 0.95
-n_action = 6
-Q = np.random.rand(5*5*5*4, n_action) # giant Q matrix for flat RL
+n_episodes, max_per_episode = 500, 200
+lr, gamma, lambd = 0.7, 0.95, 0.4
+Q = np.random.rand(env.observation_space.n, env.action_space.n) # giant Q matrix for flat RL
 tot_reward_epi, tot_finish = [], []
+color_list = {"rw": "black", "sarsa": "red", "sarsalam": "blue", "ql": "green"}
+window_conv = 10
 
 # get to work
 for ep in range(n_episodes):
@@ -31,8 +32,9 @@ for ep in range(n_episodes):
     observation0 = env.observation_space.sample()
     action0 = env.action_space.sample()
     reward0 = np.random.randint(0, 1)
-    done = False
     tot_reward = 0
+    if algo == "sarsalam":
+        trace = np.zeros(env.observation_space.n)
     print("episode {}".format(ep))
     for t in range(max_per_episode):
         t += 1
@@ -40,24 +42,29 @@ for ep in range(n_episodes):
         try:
             prob = np.exp(Q[observation,:])
             prob = prob/np.sum(prob)
-        except:
-            prob = range(n_action)/n_action
-        action = np.random.choice(range(n_action), p = prob) # softmax
-        #action = env.action_space.sample() # random policy
+            action = np.random.choice(range(env.action_space.n), p = prob) # softmax
+        except:        
+            action = env.action_space.sample() # random policy
         observation1, reward, done, info = env.step(action)
-        #print(reward)
         if algo == "rw":
             backup = reward
             Q[observation, action] += lr*(backup - Q[observation0, action])
         elif algo == "sarsa":
-            backup = reward0 + gamma*Q[observation,action]
+            backup = reward0 + gamma*Q[observation, action]
             Q[observation0, action0] += lr*(backup - Q[observation0, action0])
+        elif algo == "sarsalam":
+            backup = reward0 + gamma*Q[observation, action]
+            Q[:, action0] += lr*(backup - Q[observation0, action0])*trace
         else: # q-learning
             backup = reward + gamma*np.max(Q[observation1, :])
             Q[observation, action] += lr*(backup - Q[observation, action])
         if done:
             print("Episode finished after {} timesteps".format(t+1))
             break
+        if algo == "sarsalam": # decaying trace
+            v = np.zeros(env.observation_space.n)
+            v[observation] = 1
+            trace = gamma*lambd*trace + v
         observation0 = observation # previous state
         observation = observation1
         action0 = action           # previous action
@@ -69,7 +76,9 @@ for ep in range(n_episodes):
     tot_finish.append(t)
 
 # show what you found
+v_reward = np.convolve(tot_reward_epi,np.ones(window_conv)/window_conv)
 plt.subplot(121)
-plt.plot(range(n_episodes),tot_reward_epi)
+plt.plot(v_reward[window_conv:-window_conv], color = color_list[algo])
+v_finish = np.convolve(tot_finish,np.ones(window_conv)/window_conv)
 plt.subplot(122)
-plt.plot(range(n_episodes),tot_finish)
+plt.plot(v_finish[window_conv:-window_conv], color = color_list[algo])
