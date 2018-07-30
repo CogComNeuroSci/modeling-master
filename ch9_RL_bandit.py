@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 
 # for starters
 # available algorithms: gradient ascent, epsilon-greedy, optimistic starts
-algo = "epsilon" # options: gradient, epsilon, optimist
+algo = "gradient" # options: gradient, epsilon, optimist
 np.set_printoptions(precision=2)
 ntrial = 1000
 alpha = 0.5
@@ -33,6 +33,7 @@ if algo=="optimist":
     epsilon = 0
 else:
     epsilon = 0.1
+color_list = {"gradient": "black", "epsilon": "red", "optimist": "blue"}
 
 # let's play
 for loop in range(ntrial):
@@ -57,4 +58,4 @@ print("mean reward: {:.2f}".format(np.mean(r[-window:])))
 v = np.convolve(r,np.ones(window_conv)/window_conv)
 hit_point = np.min([i for i in range(len(v)) if v[i]>threshold])
 print("first point above threshold: {:.2f}".format(hit_point))
-plt.plot(v[:-window_conv])
+plt.plot(v[:-window_conv], color = color_list[algo])
