@@ -1,6 +1,14 @@
+#!/usr/bin/python3
+
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+
+
+"""
+@author: Pieter Huycke
+email: pieter.huycke@ugent.be
+"""
 
 
 def logistic_activation(beta, netinput, theta):
@@ -117,7 +125,7 @@ def asking_input():
                            'It is clear that in this example:\n'
                             '\t\t1) .6 represents a possible value for beta\n'
                             '\t\t2) the x-axis will go from -20 all the way to 20\n'
-                            '\t\t3) 3 represents a possible value for theta\n'
+                            '\t\t3) 9 represents a possible value for theta\n'
                            'They are separated by one space only.\n')
     beta_var, x_var, theta_var = input("Enter your desired parameter values: ").split()
     beta_var, theta_var = float(beta_var), float(theta_var)
