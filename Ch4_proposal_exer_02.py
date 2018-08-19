@@ -176,7 +176,6 @@ def loop_delta(input_pattern, output_pattern, loops, tolerated_error):
     permission = str(input('Show the weight changes for each cycle (y/n)? '))
 
     consensus_reached = False
-    new_internal_activation = np.array()
 
     for cycles in range(loops):
         if permission.lower() in ['yes', 'y']:
@@ -198,9 +197,13 @@ def loop_delta(input_pattern, output_pattern, loops, tolerated_error):
             break
 
     if not consensus_reached:
-        print('\n-- Learning completed without satisfying the defined conditions --'
-              '\nActivation computed after last cycle: ', new_internal_activation,
-              '\nAccompanying weight matrix: ', weight_matrix)
+        print('\nNothing found, even after %d cycles ...\n' % loops,
+              'Original input pattern: ', input_pattern, '\n'
+              ' Original output pattern: ', output_pattern, '\n'
+              ' Adjusted weight matrix: ', weight_matrix, '\n'
+              ' Resulting output pattern: ', new_internal_activation, '\n'
+              '\n-- Terminated search --')
+
     return weight_matrix
 
 
@@ -234,14 +237,14 @@ def loop_delta_until_found(input_pattern, output_pattern, tolerated_error):
     """
 
     cycles = 0
-    max_cycles = 250000
+    max_cycles = 500000
     configuration_found = False
 
     weight_matrix = initialise_weights(input_pattern, output_pattern)
     print('Original (random) weight matrix: \n', weight_matrix)
 
     int_input = internal_input(input_pattern, output_pattern, weight_matrix)
-    alpha = float(input('\nDefine a constant which influences how large the weight change each trial will be: '))
+    alpha = float(input('\nDefine alpha (determines how large the weight change each trial will be): '))
     permission = str(input('Show the weight changes for each cycle (y/n)? '))
 
     while not configuration_found:
@@ -270,7 +273,8 @@ def loop_delta_until_found(input_pattern, output_pattern, tolerated_error):
                   ' Original output pattern: ', output_pattern, '\n'
                   ' Adjusted weight matrix: ', weight_matrix, '\n'
                   ' Resulting output pattern: ', new_internal_activation, '\n'
-                  '\nTerminating search...')
+                  '\n-- Terminated search --')
+            break
 
     return weight_matrix
 
@@ -288,7 +292,7 @@ def main():
           ' -------------- \n'
           'In this second exercise we take a closer look at the Delta rule.\n'
           'We learned in Ch 04 that the weight change under the Delta rule is proportional to the difference\n'
-          'between the "desired" output and the actual output: t_i - y_i. \n'
+          'between the "desired" output and the "actual" output: t_i - y_i. \n'
           'Other factors that influence the weight change are alpha (step size), \n'
           'and the activation of the sending input unit: x_j.\n\n'
           'In this exercise, we will investigate how weight change under the Delta rule occurs.\n'
@@ -302,15 +306,31 @@ def main():
           'Specifically, you should study how the following parameters influence the learning process:\n'
           '\t\t1) alpha: the stepsize\n'
           '\t\t2) the form of the input-, and output patterns\n'
-          '\t\t3) whether you cycle a fixed amount of times, or you cycle until a solution is found\n\n')
+          '\t\t3) whether you cycle a fixed amount of times, or you cycle until a solution is found\n')
+
+    escaping = 0
 
     while True:
+        starting_cue = str(input('Would you like to start the program (y/n)? '))
+        if starting_cue not in ['yes', 'y', 'no', 'n']:
+            print("Unexpected input. Please type 'y' or 'n' only.\n")
+            continue
+        else:
+            if starting_cue in ['y', 'yes']:
+                pass
+            else:
+                print('Terminating program ...')
+                escaping = 1
+                break
+        if escaping == 1:
+            break
         while True:
-            print(' ------------------- \n'
+            print('\n'
+                  ' ------------------- \n'
                   '| Kicking the tires |\n'
                   ' ------------------- ')
-            which_input = str(input('Would you like a fixed input or a random input (y/n)?\n'
-                                    'If you type "y", the following input will be used:\n'
+            which_input = str(input('Would you like a fixed input or a random input pattern (y/n)?\n'
+                                    'If you type "y", the following input pattern will be used:\n'
                                     ' Input pattern:    [.99, .01, .99, .01, .99, .01]\n'
                                     ' Output pattern:   [.99, .99, .01, .01]\n'
                                     'If you type "n", random input-, and output patterns will be generated\n'
@@ -356,13 +376,16 @@ def main():
                 if other_input in ['y', 'yes']:
                     cycles = int(input('How many cycles are we looping? '))
                     loop_delta(actual_input, desired_output, cycles, margin)
+                    break
                 else:
                     loop_delta_until_found(actual_input, desired_output, margin)
-                break
-        print(' --- \n')
+                    break
+        print('###\n')
         the_end = str(input('End program? (y/n): '))
         if the_end in ['yes', 'y']:
             print('Terminating program ...')
             break
 
 
+np.set_printoptions(suppress=True)
+main()
