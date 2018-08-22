@@ -19,7 +19,7 @@ def activation_function(netinput, form='logistic'):
 
     :param form:
     Determines the type of the activation function that is used
-    This parameter can have to values:
+    This parameter can have two values:
         'linear' means that a linear activation function is used to "transform" the netinput
         'logistic' means that a logistic activation function is used to transform the netinput
 
@@ -77,7 +77,7 @@ def initialise_weights(input_pattern, output_pattern, zeros=False):
          for j in range(0, len(weights_suboptimal), len(input_pattern))]
     else:
         [weights_suboptimal.append(round(random.uniform(-3, 3), 2))
-        for i in range(number_of_weights)]
+         for i in range(number_of_weights)]
         [weights.append(weights_suboptimal[j:j + len(input_pattern)])
          for j in range(0, len(weights_suboptimal), len(input_pattern))]
 
@@ -97,9 +97,10 @@ def internal_input(input_pattern, weights, act_function='logistic'):
     This matrix can be initialised using the function 'initialise_weights()'.
 
     :param act_function:
-    Determines which type of activation function is used
-    This parameter can have to values:
-
+    Determines the type of the activation function that is used
+    This parameter can have two values:
+        'linear' means that a linear activation function is used to "transform" the netinput
+        'logistic' means that a logistic activation function is used to transform the netinput
 
     :return:
     Returns the netinput after it was transformed using a logistic activation function
@@ -119,6 +120,36 @@ def internal_input(input_pattern, weights, act_function='logistic'):
 
 def weight_change(alpha, input_pattern, output_pattern, weights, function_word='logistic'):
 
+    """
+    :param alpha:
+    The stepsize
+    The larger this parameter is, the more drastic the weight changes in each trial will be
+
+    :param input_pattern:
+    The input pattern which is provided
+    An example: [.99 .01 .99 .01 .99 .01]
+    Input patterns are usually numpy arrays
+
+    :param output_pattern:
+    The input pattern which is provided
+    An example: [.99 .99 .01 .01]
+    Output patterns are usually numpy arrays
+
+    :param weights:
+    The weight matrix for our input-, and output pattern.
+    This matrix can be initialised using the function 'initialise_weights()'.
+
+    :param function_word:
+    Determines the type of the activation function that is used
+    This parameter can have two values:
+        'linear' means that a linear activation function is used to "transform" the netinput
+        'logistic' means that a logistic activation function is used to transform the netinput
+
+    :return:
+    Determines the weight change for each trial based on the internal input
+    The difference the desired activation level and the actual activation level is used to do so
+    """
+
     np.set_printoptions(suppress=True)
     weights = np.array(weights)
 
@@ -126,8 +157,9 @@ def weight_change(alpha, input_pattern, output_pattern, weights, function_word='
         altered_weights = weights[i]
         for j in range(len(altered_weights)):
             internal_activation = internal_input(input_pattern, weights, act_function=function_word)[0]
-            delta = np.array(output_pattern[i]) - internal_activation[i]
-            altered_weights[j] = alpha * activation_function(input_pattern[j]) * delta
+            delta = activation_function(np.array(output_pattern[i])) - internal_activation[i]
+            altered_weights[j] = \
+                alpha * activation_function(input_pattern[j]) * delta
             if abs(delta) <= .1:
                     break
         weights[i] = np.round(altered_weights, 3)
@@ -135,6 +167,11 @@ def weight_change(alpha, input_pattern, output_pattern, weights, function_word='
 
 
 def asking_questions():
+
+    """
+    :return:
+    A helper function to get some variables that are needed to get the script running
+    """
 
     while True:
         answer_one = str(input('Weights all set to zero? Type: zero\n'
@@ -204,6 +241,8 @@ def loop_delta(input_pattern, output_pattern, loops=50, print_loops=True):
     else:
         weights = initialise_weights(input_pattern, output_pattern, zeros=False)
 
+    original_weights = np.copy(weights)
+
     for i in range(loops):
         all_met = False
         resulting_matrix = weight_change(alpha, input_pattern, output_pattern, weights, function_word=linear_logistic)
@@ -211,25 +250,41 @@ def loop_delta(input_pattern, output_pattern, loops=50, print_loops=True):
             print("Altered matrix: \n", resulting_matrix)
 
         for j in range(len(output_pattern)):
-            if output_pattern[j] != np.sum(np.multiply(input_pattern, resulting_matrix[j])):
+            if abs((output_pattern[j] - np.sum(np.multiply(input_pattern, resulting_matrix[j])))) > .01:
                 break
             all_met = True
 
         if all_met:
-            print('\nLearning completed after completing loop nr %d\n' % (i+1),
-                  '\nAll loops executed, and solution yielded:')
-            for l in range(len(resulting_matrix)):
-                print('Netinput for unit %d: ' % (l + 1), np.sum(np.multiply(input_pattern, weights[l])),
-                      '\nDesired: ', output_pattern[l], '\n')
-            print('Adjusted weight matrix:')
+            outputs_original = []
+            for p in range(len(original_weights)):
+                outputs_original.append(np.sum(np.multiply(original_weights[p], input_pattern)))
+
+            print('\nOriginal weight matrix:\n', original_weights)
+            print('\nOutputs yielded with this matrix:\n', outputs_original)
+
+            outputs_new = []
+            for p in range(len(resulting_matrix)):
+                outputs_new.append(np.sum(np.multiply(resulting_matrix[p], input_pattern)))
+
+            print('\nAltered weight matrix:\n', resulting_matrix)
+            print('\nOutputs yielded with altered matrix:\n', outputs_new)
+            print('Desired output:\n', output_pattern)
             return resulting_matrix
         else:
             weights = resulting_matrix
 
-    print('\nNothing satisfactory found\n'
-          'All loops executed to no avail:')
-    for l in range(len(weights)):
-        print('Netinput for unit %d: ' % (l+1), np.sum(np.multiply(input_pattern, weights[l])),
-              '\nDesired: ', output_pattern[l], '\n')
-    print('\nAdjusted weight matrix:')
+    outputs_original = []
+    for i in range(len(original_weights)):
+        outputs_original.append(np.sum(np.multiply(original_weights[i], input_pattern)))
+
+    print('\nOriginal weight matrix:\n', original_weights)
+    print('\nOutputs yielded with this matrix:\n', outputs_original)
+
+    outputs_new = []
+    for i in range(len(weights)):
+        outputs_new.append(np.sum(np.multiply(weights[i], input_pattern)))
+
+    print('\nAltered weight matrix:\n', weights)
+    print('\nOutputs yielded with altered matrix:\n', outputs_new)
+    print('Desired output:\n', output_pattern)
     return weights
