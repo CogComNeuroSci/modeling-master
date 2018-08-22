@@ -31,7 +31,7 @@ def activation_function(netinput, form='logistic'):
     if form == 'linear':
         return netinput
     else:
-        return np.tanh(netinput)
+        return np.round(.5 * ((np.e + 1/np.e) / (np.e - 1/np.e)) * np.tanh(netinput), 5)
 
 
 def initialise_weights(input_pattern, output_pattern, zeros=False):
@@ -117,9 +117,21 @@ def internal_input(input_pattern, weights, act_function='logistic'):
     return activations, act_function
 
 
-def weight_change():
+def weight_change(alpha, input_pattern, output_pattern, weights):
 
-    return 0
+    np.set_printoptions(suppress=True)
+    weights = np.array(weights)
+
+    for i in range(len(output_pattern)):
+        altered_weights = weights[i]
+        for j in range(len(altered_weights)):
+            internal_activation = internal_input(input_pattern, weights)[0]
+            delta = np.array(output_pattern[i]) - internal_activation[i]
+            print('Delta:', delta)
+            altered_weights[j] = alpha * activation_function(input_pattern[j]) * delta
+        weights[i] = np.round(altered_weights, 3)
+
+    return weights
 
 
 def asking_questions():
