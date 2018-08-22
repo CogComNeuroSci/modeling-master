@@ -76,7 +76,7 @@ def initialise_weights(input_pattern, output_pattern, zeros=False):
         [weights.append(weights_suboptimal[j:j + len(input_pattern)])
          for j in range(0, len(weights_suboptimal), len(input_pattern))]
     else:
-        [weights_suboptimal.append(round(random.uniform(-1, 1), 2))
+        [weights_suboptimal.append(round(random.uniform(-3, 3), 2))
         for i in range(number_of_weights)]
         [weights.append(weights_suboptimal[j:j + len(input_pattern)])
          for j in range(0, len(weights_suboptimal), len(input_pattern))]
@@ -117,7 +117,7 @@ def internal_input(input_pattern, weights, act_function='logistic'):
     return activations, act_function
 
 
-def weight_change(alpha, input_pattern, output_pattern, weights):
+def weight_change(alpha, input_pattern, output_pattern, weights, function_word='logistic'):
 
     np.set_printoptions(suppress=True)
     weights = np.array(weights)
@@ -125,12 +125,12 @@ def weight_change(alpha, input_pattern, output_pattern, weights):
     for i in range(len(output_pattern)):
         altered_weights = weights[i]
         for j in range(len(altered_weights)):
-            internal_activation = internal_input(input_pattern, weights)[0]
+            internal_activation = internal_input(input_pattern, weights, act_function=function_word)[0]
             delta = np.array(output_pattern[i]) - internal_activation[i]
-            print('Delta:', delta)
             altered_weights[j] = alpha * activation_function(input_pattern[j]) * delta
+            if abs(delta) <= .1:
+                    break
         weights[i] = np.round(altered_weights, 3)
-
     return weights
 
 
@@ -183,17 +183,6 @@ def loop_delta(input_pattern, output_pattern, loops=50, print_loops=True):
     An example: [.99 .99 .01 .01]
     Output patterns are usually numpy arrays
 
-    :param tolerated_error:
-    How much error between the actual output pattern and the desired output pattern can you handle?
-    An example with a tolerated error of .05:
-    The altering of the weight matrix will stop as soon as the difference between the activations of the
-    actual output pattern and the desired output pattern is smaller than or equal to .05
-    So, when the actual pattern is:
-        [.95 .95 .03 .03]
-    And the desired output pattern is:
-        [.99 .99 .01. 01]
-    Then the condition is met, and the weight matrix will not be altered any further
-
     :param loops:
     The number cycles where the weight matrix is altered to close the gap between the actual output
     and the desired output
@@ -208,102 +197,39 @@ def loop_delta(input_pattern, output_pattern, loops=50, print_loops=True):
     Changes the weight matrix for a fixed amount of cycles, or until the condition is met (minimal error reached)
     """
 
-    weight_question, linear_or_logistic, alpha = asking_questions()
+    random_zero, linear_logistic, alpha = asking_questions()
 
-    if weight_question.lower() == 'zero':
-        weight_matrix = initialise_weights(input_pattern, output_pattern, zeros=True)
-    elif weight_question.lower() == 'random':
-        weight_matrix = initialise_weights(input_pattern, output_pattern)
+    if random_zero == 'zero':
+        weights = initialise_weights(input_pattern, output_pattern, zeros=True)
     else:
-        raise ValueError('Use correct arguments for the first question.')
+        weights = initialise_weights(input_pattern, output_pattern, zeros=False)
 
-    print('\nOriginal weight matrix:')
-    for num in range(len(weight_matrix)):
-        print('weights from all input units to output unit no. %d: ' % (num+1), weight_matrix[num])
-
-    original_weight_matrix = np.copy(weight_matrix)
-
-    print('\ncycling started\n')
-
-    """
-    for cycles in range(loops):
-        change_in_weights = weight_change(alpha, input_pattern, output_pattern, weight_matrix,
-                                          internal_input(input_pattern, weight_matrix))
+    for i in range(loops):
+        all_met = False
+        resulting_matrix = weight_change(alpha, input_pattern, output_pattern, weights, function_word=linear_logistic)
         if print_loops:
-            print('The adjusted weight matrix: ', change_in_weights)
-        weight_matrix = change_in_weights
-    """
+            print("Altered matrix: \n", resulting_matrix)
 
-    return original_weight_matrix, weight_matrix
+        for j in range(len(output_pattern)):
+            if output_pattern[j] != np.sum(np.multiply(input_pattern, resulting_matrix[j])):
+                break
+            all_met = True
 
-
-def loop_delta_until_found(input_pattern, output_pattern, tolerated_error):
-
-    """
-    :param input_pattern:
-    The input pattern which is provided
-    An example: [.99 .01 .99 .01 .99 .01]
-    Input patterns are usually numpy arrays
-
-    :param output_pattern:
-    The input pattern which is provided
-    An example: [.99 .99 .01 .01]
-    Output patterns are usually numpy arrays
-
-    :param tolerated_error:
-    How much error between the actual output pattern and the desired output pattern can you handle?
-    An example with a tolerated error of .05:
-    The altering of the weight matrix will stop as soon as the difference between the activations of the
-    actual output pattern and the desired output pattern is smaller than or equal to .05
-    So, when the actual pattern is:
-        [.95 .95 .03 .03]
-    And the desired output pattern is:
-        [.99 .99 .01. 01]
-    Then the condition is met, and the weight matrix will not be altered any further
-
-    :return:
-    Changes the weight matrix until the condition is met (minimal error reached)
-    In no consensus is reached, the looping stops after 250 000 cycles to prevent RunTimeErrors from occurring
-    """
-
-    cycles = 0
-    max_cycles = 500000
-    configuration_found = False
-
-    weight_matrix = initialise_weights(input_pattern, output_pattern)
-    print('Original (random) weight matrix: \n', weight_matrix)
-
-    int_input = internal_input(input_pattern, weight_matrix)
-    alpha = float(input('\nDefine alpha (determines how large the weight change each trial will be): '))
-    permission = str(input('Show the weight changes for each cycle (y/n)? '))
-
-    while not configuration_found:
-        if permission.lower() in ['yes', 'y']:
-            weight_matrix = weight_change(alpha, input_pattern, output_pattern, weight_matrix, int_input)
-            print('Cycle %d: adjusted weight matrix: ' % (cycles + 1), weight_matrix)
+        if all_met:
+            print('\nLearning completed after completing loop nr %d\n' % (i+1),
+                  '\nAll loops executed, and solution yielded:')
+            for l in range(len(resulting_matrix)):
+                print('Netinput for unit %d: ' % (l + 1), np.sum(np.multiply(input_pattern, weights[l])),
+                      '\nDesired: ', output_pattern[l], '\n')
+            print('Adjusted weight matrix:')
+            return resulting_matrix
         else:
-            weight_matrix = weight_change(alpha, input_pattern, output_pattern, weight_matrix, int_input)
+            weights = resulting_matrix
 
-        new_internal_activation = np.array(internal_input(input_pattern, weight_matrix))
-        checking_setup = abs(np.array(output_pattern) - new_internal_activation)
-
-        if all(elements <= tolerated_error for elements in checking_setup):
-            print('\nLearning completed (cycle: %d):\n' % cycles,
-                  'Original input pattern: ', input_pattern, '\n'
-                  ' Original output pattern: ', output_pattern, '\n'
-                  ' Adjusted weight matrix: ', weight_matrix, '\n'
-                  ' Resulting output pattern: ', new_internal_activation, '\n')
-            break
-
-        cycles += 1
-
-        if cycles == max_cycles:
-            print('\nNothing found, even after %d cycles ...\n' % max_cycles,
-                  'Original input pattern: ', input_pattern, '\n'
-                  ' Original output pattern: ', output_pattern, '\n'
-                  ' Adjusted weight matrix: ', weight_matrix, '\n'
-                  ' Resulting output pattern: ', new_internal_activation, '\n'
-                  '\n-- Terminated search --')
-            break
-
-    return weight_matrix
+    print('\nNothing satisfactory found\n'
+          'All loops executed to no avail:')
+    for l in range(len(weights)):
+        print('Netinput for unit %d: ' % (l+1), np.sum(np.multiply(input_pattern, weights[l])),
+              '\nDesired: ', output_pattern[l], '\n')
+    print('\nAdjusted weight matrix:')
+    return weights
