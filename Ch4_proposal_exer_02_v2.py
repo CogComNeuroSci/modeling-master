@@ -9,7 +9,12 @@ help(name_of_module)
 """
 # help(delta_learning)
 
-inputted_pattern = [1, -1, 1, -1, 1, 1, -1, -1]
+inputted_pattern = [1, -1, 1, -1, 1, 1, 1, -1]
 desired_output = [1, -1, 1, -1, 1, 1]
 
-altered_weight_matrix = delta_learning.loop_delta(inputted_pattern, desired_output, loops=500, print_loops=False)
+weight_zero = [0]*len(inputted_pattern)
+weight_matrix = [weight_zero] * len(desired_output)
+
+print(weight_matrix)
+print(delta_learning.activation_function(0, form='linear'))
+
