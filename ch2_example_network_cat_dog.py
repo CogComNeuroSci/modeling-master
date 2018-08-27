@@ -29,14 +29,14 @@ n_units = len(layers)
 activations = np.array([1., 0., 0., 0., 0.])
 weights = np.zeros(shape=[n_units, n_units])
 
-# setting up weights for the cat-dog detector
+# setting up weights for the cat-dog detector; note example is different from in book.
 weights[0, 3] = .4 # cats often bite visitors
 weights[0, 4] = .1 # dogs rarely bite visitors
 weights[1, 3] = .2 # cats often have four legs
 weights[1, 4] = .2 # dogs often have four legs
 weights[2, 3] = .1 # cats rarely have their pictures on FB
 weights[2, 4] = .4 # dogs often have their pictures on FB
-weights[3, 4] = -.2 # a cate cannot be a dog, and vice versa
+weights[3, 4] = -.2 # a cat cannot be a dog, and vice versa
 
 # computing the initial y activation values
 incat = weights[0, 3] * activations[0] + weights[1, 3] * activations[1] + weights[2, 3] * activations[2]
