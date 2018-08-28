@@ -31,55 +31,48 @@ def activation_function(netinput, form='logistic'):
     if form == 'linear':
         return netinput
     else:
-        return np.round(.5 * ((np.e + 1/np.e) / (np.e - 1/np.e)) * np.tanh(netinput), 5)
+        calculated = 1 / (1 + np.exp(-5 * (netinput - .5)))
+        return calculated
 
 
-def initialise_weights(input_pattern, output_pattern, zeros=False):
+def make_network(setup=None, zeros=False):
 
-    """
-    :param input_pattern:
-    The input pattern which is provided
-    An example: [.99 .01 .99 .01 .99 .01]
-    Input patterns are usually numpy arrays
+    if setup is None:
+        setup = [2, 2, 1]
+    size_network = len(setup)
+    network = []
 
-    :param output_pattern:
-    The input pattern which is provided
-    An example: [.99 .99 .01 .01]
-    Output patterns are usually numpy arrays
+    for i in range(size_network):
+        sub_network = []
+        for j in range(setup[i]):
+            random_number = 0
+            if not zeros:
+                random_number = round(random.uniform(-1, 1), 2)
+            sub_network.append(random_number)
+        network.append(sub_network)
 
-    :param zeros:
-    Defines how you want the weights to be set:
-    This parameter can have two values:
-        True means that all weights will be set to zero
-        False means that all weights will be determined randomly by sampling from the following interval:
-                [-1, 1]
+    return network
 
-    :return:
-    This function returns a random weight matrix
-    In this case, the weights are random floats (rounded to two decimal places) in the following range:
-    [-5, 5]
-    The weight matrix is an array of n x m long, where n is the length of the input pattern,
-    and m the length of the output pattern
-    The array has m sub arrays, each with n elements in it
-    This signifies the weights from all n input units to output unit m
-    So, the first sub array represents the weights from all input units to the first output unit
-    """
 
-    number_of_weights = len(input_pattern) * len(output_pattern)
+def initialise_weights(network, zeros=True):
 
-    weights_suboptimal = []
+    index = 1
     weights = []
 
-    if zeros:
-        [weights_suboptimal.append(0)
-         for i in range(number_of_weights)]
-        [weights.append(weights_suboptimal[j:j + len(input_pattern)])
-         for j in range(0, len(weights_suboptimal), len(input_pattern))]
-    else:
-        [weights_suboptimal.append(round(random.uniform(-3, 3), 2))
-         for i in range(number_of_weights)]
-        [weights.append(weights_suboptimal[j:j + len(input_pattern)])
-         for j in range(0, len(weights_suboptimal), len(input_pattern))]
+    while index != len(network):
+        suboptimal_weights = []
+
+        input_pattern = network[index - 1]
+        output_pattern = network[index]
+
+        number_of_weights = len(input_pattern) * len(output_pattern)
+        for i in range(number_of_weights):
+            if zeros:
+                suboptimal_weights.append(0)
+            else:
+                suboptimal_weights.append(round(random.uniform(-5, 5), 2))
+        weights.append(suboptimal_weights)
+        index += 1
 
     return weights
 
@@ -118,50 +111,32 @@ def internal_input(input_pattern, weights, act_function='logistic'):
     return activations, act_function
 
 
-def weight_change(alpha, input_pattern, output_pattern, weights, function_word='logistic'):
+def chunks(l, n):
+    n = max(1, n)
+    parts = []
+    [parts.append(l[i:i+n]) for i in range(0, len(l), n)]
+    return parts
 
-    """
-    :param alpha:
-    The stepsize
-    The larger this parameter is, the more drastic the weight changes in each trial will be
 
-    :param input_pattern:
-    The input pattern which is provided
-    An example: [.99 .01 .99 .01 .99 .01]
-    Input patterns are usually numpy arrays
+def calculate_output(network, weights):
 
-    :param output_pattern:
-    The input pattern which is provided
-    An example: [.99 .99 .01 .01]
-    Output patterns are usually numpy arrays
+    activation_levels = []
 
-    :param weights:
-    The weight matrix for our input-, and output pattern.
-    This matrix can be initialised using the function 'initialise_weights()'.
+    for k in range(len(network) - 1):
+        subset_network = network[k]
+        subset_weights = chunks(weights[k], len(subset_network))
+        extra_step = []
+        for l in range(len(subset_weights)):
+            result = np.round(np.sum(np.multiply(subset_weights[l], subset_network)), 2)
+            extra_step.append(np.round(activation_function(result, form='logistic'), 2))
+        activation_levels.append(extra_step)
 
-    :param function_word:
-    Determines the type of the activation function that is used
-    This parameter can have two values:
-        'linear' means that a linear activation function is used to "transform" the netinput
-        'logistic' means that a logistic activation function is used to transform the netinput
+    return activation_levels
 
-    :return:
-    Determines the weight change for each trial based on the internal input
-    The difference the desired activation level and the actual activation level is used to do so
-    """
 
-    np.set_printoptions(suppress=True)
-    weights = np.array(weights)
+test_network = make_network([2, 2, 1], zeros=False)
+weight_matrix = initialise_weights(test_network, zeros=False)
 
-    for i in range(len(output_pattern)):
-        altered_weights = weights[i]
-        for j in range(len(altered_weights)):
-            internal_activation = internal_input(input_pattern, weights, act_function=function_word)[0]
-            delta = activation_function(np.array(output_pattern[i])) - internal_activation[i]
-            altered_weights[j] = altered_weights[j] + \
-                alpha * activation_function(input_pattern[j]) * delta
-            if abs(delta) <= .1:
-                    break
-        weights[i] = np.round(altered_weights, 3)
-    return weights
-
+print('Network: ', test_network)
+print('Weight matrix: ', weight_matrix)
+print('Output:', calculate_output(test_network, weight_matrix))
