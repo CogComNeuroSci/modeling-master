@@ -17,7 +17,7 @@ high = 4
 font_size = 5
 x = np.linspace(low,high,20)
 
-# fig 4.2
+#%% fig 4.2
 plt.figure(0)
 # linear activation function
 y = x + 1
@@ -42,7 +42,7 @@ plt.subplot(326)
 plt.plot(x,y,color="black")
 plt.title("Gaussian", {"fontsize": font_size})
 
-# fig 4.3
+#%% fig 4.3
 plt.figure(1)
 # geometric intuition for threshold function
 plt.subplot(121)
@@ -61,7 +61,7 @@ for i in range(ndots):
         color = "y"
     plt.plot(dot[0],dot[1],color+"o")
     
-# geometric intuition for sigmoid function
+#%% geometric intuition for sigmoid function
 plt.subplot(122)
 plt.title("fig 4.3b: \nlogistic activation function in 2D", {"fontsize": font_size})
 ngrid = 100
@@ -70,3 +70,26 @@ yi = np.linspace(slope*low + intercept, slope*high + intercept, ngrid)
 Xi, Yi = np.meshgrid(xi, yi)
 zi = logistic(Xi,Yi,slope,intercept)
 plt.contourf(xi, yi, zi, 14)
+
+#%% representing the threshold function (fig 4.4)
+plt.figure(3)
+plt.subplot(131)
+plt.title("fig 4.4a: \nthreshold in a 1-dimensional function", fontsize = 8)
+plt.xlabel("x")
+plt.ylabel("y")
+plt.text(0.1, 0.12, "}", fontsize = 20)
+plt.text(0.4, 0.1, r"$\theta$")
+xi = np.linspace(low, high, ngrid)
+yi = np.linspace(slope*low + intercept, slope*high + intercept, ngrid)
+plt.plot(xi, yi, color = "black")
+plt.plot(xi,[0]*len(xi),  color = "black")
+plt.plot([0]*len(xi), yi, color = "black")
+w1, w2, threshold = -1, 2, 1
+plt.subplot(133)
+plt.title("fig 4.4b: \nthreshold in a 2-dimensional function", fontsize = 8)
+plt.xlabel(r"$x_1$")
+plt.ylabel(r"$x_2$")
+plt.plot(xi,[0]*len(xi),  color = "black")
+plt.plot([0]*len(xi), yi, color = "black")
+yi = np.linspace(-w1/w2*low-threshold/w2, -w1/w2*high-threshold/w2, ngrid)
+plt.plot(xi, yi, color = "black")
