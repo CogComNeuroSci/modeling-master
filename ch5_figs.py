@@ -58,6 +58,41 @@ for index in checklist:
 plt.contourf(xi, yi, Zi_full)
 plt.title("Fig 5.2b \nAn OR of convex sets", {"fontsize": font_size})
 
+#%% figure 5.3
+# (Code mostly stolen from Pieter)
+
+from numpy import arange
+from pylab import meshgrid, cm, title
+from matplotlib.ticker import LinearLocator, FormatStrFormatter
+import matplotlib.pyplot as plt
+
+texts = ["5.3a:\nFunction with one (global) minimum", 
+         "5.3b:\nFunction with several local minima"]
+
+# the function that I'm going to plot
+def z_func(x, y, nr):
+    if nr == 1:
+        return (x ** 2 + y ** 2)/10
+    else:
+        return ((x/4) ** 4 - ((x/2) ** 2) + (y/4)** 4 - (y/2) ** 2 ) 
+
+x = arange(-10.0, 10.0, 0.1)
+y = arange(-10.0, 10.0, 0.1)
+
+# grid of point
+X, Y = meshgrid(x, y)
+
+fig = plt.figure()
+
+for loop in range(2):
+    Z = z_func(X, Y, loop+1)
+    ax = fig.add_subplot(1, 2, loop+1, projection = "3d")
+    title(texts[loop])
+    ax.plot_surface(X, Y, Z, cmap=cm.RdBu)
+    # drawing the function
+    ax.zaxis.set_major_locator(LinearLocator(10))
+    ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+
 #%% figure 5.5a
 font_size = 10
 plt.subplot(121)
