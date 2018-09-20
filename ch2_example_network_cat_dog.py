@@ -10,7 +10,7 @@ import time
 from course_functions import plot_network, update_network
 
 timesleep = .2
-n_tsteps = 50
+n_tsteps = 100
 times = np.arange(n_tsteps)
 t = 1
 # output units
