@@ -97,3 +97,23 @@ plt.plot(xi,[0]*len(xi),  color = "black")
 plt.plot([0]*len(xi), yi, color = "black")
 yi = np.linspace(-w1/w2*low-threshold/w2, -w1/w2*high-threshold/w2, ngrid)
 plt.plot(xi, yi, color = "black")
+
+#%% linearly and non-linearly separable tasks (fig 4.6)
+fontsize = 15
+left, right, down, up = 0, 1, 0, 1
+mapping = [[0, 1, 1, 1], [0, 0, 0, 1], [0, 1, 1, 0]]
+text = ["fig 4.6a:\nThe OR problem", "fig 4.6b:\nThe AND problem", "fig 4.6c:\nThe XOR problem"]
+plt.figure(4)
+for loop in range(3):
+    plt.subplot(3,3,loop+1)
+    plt.title(text[loop], fontsize = 10)
+    plt.axis("off")
+    plt.subplot(3,3,3+loop+1)
+    plt.xticks(x, " ")
+    plt.yticks(y, " ")
+    plt.xlim(-0.5, 1.5)
+    plt.ylim(-0.5, 1.5)
+    plt.text(left, down, mapping[loop][0], fontsize = fontsize)
+    plt.text(left, up,   mapping[loop][1], fontsize = fontsize)
+    plt.text(right, down,mapping[loop][2], fontsize = fontsize)
+    plt.text(right, up,  mapping[loop][3], fontsize = fontsize)
