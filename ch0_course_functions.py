@@ -10,13 +10,12 @@ Todo:
     - ..
 """
 
-import matplotlib.pyplot as plt
-import pylab as pl
+import matplotlib.pyplot as pl
 import numpy as np
 import time
 
 
-global plt, np, time, cols
+global pl, np, time, cols
 cols = [[.8, .2, .1], [.2, .3, .9]]
 
 
@@ -30,7 +29,7 @@ def plot_network(figsize = [13, 7], activations = np.random.rand(3),
                  weights = np.random.rand(3, 3), layers = np.array([1, 1, 2]),
                  energy = None):
 
-    fig = plt.figure(figsize = figsize)
+    fig = pl.figure(figsize = figsize)
     axs = []; circles = []
     axs.append(fig.add_subplot(2, 2, (1, 3)))
     axs.append(fig.add_subplot(2, 2, 2))
@@ -86,9 +85,9 @@ def plot_network(figsize = [13, 7], activations = np.random.rand(3),
         axs[2].plot(1, energy, 'ro-', markersize = 7)
 
     # plot units
-    # circles = [plt.Circle(unit_pos[pos_n, :], 0.5/n_units, edgecolor = 'black',
+    # circles = [pl.Circle(unit_pos[pos_n, :], 0.5/n_units, edgecolor = 'black',
     #                 facecolor=np.repeat(activations[pos_n]/2.25, 3)+.5) for pos_n in range(n_units)]
-    circles = [plt.Circle(unit_pos[pos_n, :], 0.5/n_units, edgecolor = 'black',
+    circles = [pl.Circle(unit_pos[pos_n, :], 0.4/n_units, edgecolor = 'black',
                     facecolor=[.8, .8, .8]) for pos_n in range(n_units)]
     [axs[0].add_artist(circles[circ_n]) for circ_n in range(len(circles))]
 
@@ -196,7 +195,7 @@ def update_network(fig, axs, texts_handles, lines_handles, activations,
     axs[2].autoscale_view()
 
     fig.canvas.draw()
-    plt.show()
+    pl.show()
     fig.canvas.flush_events()
 
 
