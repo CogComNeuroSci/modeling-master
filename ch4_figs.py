@@ -3,7 +3,7 @@
 """
 Created on Tue Jul  3 13:49:33 2018
 
-@author: tom
+@author: tom verguts
 create plots from chapter 4
 """
 import numpy as np

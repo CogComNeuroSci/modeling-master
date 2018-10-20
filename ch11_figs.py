@@ -3,7 +3,7 @@
 """
 Created on Fri Jul  6 10:37:20 2018
 
-@author: tom
+@author: tom verguts
 code for pics in chapter 11
 """
 import numpy as np

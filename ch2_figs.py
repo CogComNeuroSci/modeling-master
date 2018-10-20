@@ -3,7 +3,7 @@
 """
 Created on Tue Jul  3 13:49:33 2018
 
-@author: tom
+@author: tom verguts
 create fig 2.4
 """
 import matplotlib.pyplot as plt

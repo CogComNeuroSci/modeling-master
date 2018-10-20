@@ -18,7 +18,7 @@ w_m = -1
 n_unit = 6
 max_n_step = 30
 threshold = np.ones(n_unit)/2
-stop_threshold = 0.5 
+stop_threshold = 0.001 
 weight = np.zeros((6,6))
 for loop in range(n_unit):
     weight[loop,loop] = w_p
