@@ -58,28 +58,28 @@ def plot_network(figsize = [13, 7], activations = np.random.rand(3),
         for unit_n in lay_units:
             # plot lines between units of layer N
             for unit_n2 in lay_units:
-                w = weights[unit_n, unit_n2]
+                w = weights[unit_n2, unit_n]
                 if w:
-                    lines_handles['line_%i-%i' % (unit_n, unit_n2)] =\
+                    lines_handles['line_%i-%i' % (unit_n2, unit_n)] =\
                         axs[0].plot([unit_pos[unit_n, 0], unit_pos[unit_n2, 0]],
                             [unit_pos[unit_n, 1], unit_pos[unit_n2, 1]], '-', color = cols[int(w < 0)],
                             zorder = -10, linewidth=.5 + 5 * np.abs(w))
 
             # plot lines from layer N to the next (N+1)
             for unit_next in nextlay_units:
-                w = weights[unit_n, unit_next]
+                w = weights[unit_next, unit_n]
                 if w:
-                    lines_handles['line_%i-%i' % (unit_n, unit_next)] =\
+                    lines_handles['line_%i-%i' % (unit_next, unit_n)] =\
                         axs[0].plot([unit_pos[unit_n, 0], unit_pos[unit_next, 0]],
                             [unit_pos[unit_n, 1], unit_pos[unit_next, 1]],
                             '-', color = cols[int(w<0)], zorder = -10, linewidth = .5 + 5 * np.abs(w))
 
     for unit_n in range(n_units):
         axs[2].plot(1, activations[unit_n], 'ko-', markersize = 5)
-        for unit_m in range(unit_n, n_units):
-            w = weights[unit_n, unit_m]
+        for unit_m in range(unit_n):
+            w = weights[unit_m, unit_n]
             # if w:
-            axs[1].plot(1, w, 'ko-', markersize = 5, alpha = int(w!=0))
+            axs[1].plot(0, w, 'ko-', markersize = 5, alpha = int(w!=0))
     
     if energy != None:
         axs[2].plot(1, energy, 'ro-', markersize = 7)
@@ -105,6 +105,7 @@ def plot_network(figsize = [13, 7], activations = np.random.rand(3),
 
     # texts_handles['tex_delt'] = axs[0].text(.85, 0.95, 'Delta w = 0', ha='center', va='center')#, transform=axs[0].transaxes)
     texts_handles['tex_cycl'] = axs[0].text(.1, 0.95, 'cycle = 1', ha='center', va='center')#, transform=axs[0].transaxes)
+    texts_handles['tex_learn_trial_n'] = axs[0].text(.7, 0.95, 'Learning trial n = 0', ha='center', va='center')
     axs[1].set_title('Weights history')
     axs[2].set_title('Activation history')
 
@@ -114,7 +115,8 @@ def plot_network(figsize = [13, 7], activations = np.random.rand(3),
 
 
 def update_network(fig, axs, texts_handles, lines_handles, activations,
-                   unit_pos, weights, layers, change, cycle, energy = None):
+                   unit_pos, weights, layers, change, cycle, energy = None,
+                   learn_trial_n = 0):
     n_units = activations.shape[0]
 
     # update the connection lines depending on the new weight matrix
@@ -124,14 +126,14 @@ def update_network(fig, axs, texts_handles, lines_handles, activations,
         for unit_n in lay_units:
             # plot lines between units of layer N
             for unit_n2 in lay_units:
-                w = weights[unit_n, unit_n2]
-                if 'line_%i-%i' % (unit_n, unit_n2) in lines_handles.keys():
-                    lines_handles['line_%i-%i' % (unit_n, unit_n2)][0].set_alpha(w!=0)
+                w = weights[unit_n2, unit_n]
+                if 'line_%i-%i' % (unit_n2, unit_n) in lines_handles.keys():
+                    lines_handles['line_%i-%i' % (unit_n2, unit_n)][0].set_alpha(w!=0)
                     if w:
-                        lines_handles['line_%i-%i' % (unit_n, unit_n2)][0].set_color(cols[int(w < 0)])
-                        lines_handles['line_%i-%i' % (unit_n, unit_n2)][0].set_linewidth(.5 + 5 * np.abs(w))
+                        lines_handles['line_%i-%i' % (unit_n2, unit_n)][0].set_color(cols[int(w < 0)])
+                        lines_handles['line_%i-%i' % (unit_n2, unit_n)][0].set_linewidth(.5 + 5 * np.abs(w))
                 else:
-                    lines_handles['line_%i-%i' % (unit_n, unit_n2)] =\
+                    lines_handles['line_%i-%i' % (unit_n2, unit_n)] =\
                         axs[0].plot([unit_pos[unit_n, 0], unit_pos[unit_n2, 0]],
                             [unit_pos[unit_n, 1], unit_pos[unit_n2, 1]],
                             '-', color = cols[int(w<0)], zorder=-10,
@@ -139,22 +141,24 @@ def update_network(fig, axs, texts_handles, lines_handles, activations,
 
             # plot lines from layer N to the next (N+1)
             for unit_next in nextlay_units:
-                w = weights[unit_n, unit_next]
-                if 'line_%i-%i' % (unit_n, unit_next) in lines_handles.keys():
-                    lines_handles['line_%i-%i' % (unit_n, unit_next)][0].set_alpha(int(w!=0))
+                w = weights[unit_next, unit_n]
+                if 'line_%i-%i' % (unit_next, unit_n) in lines_handles.keys():
+                    lines_handles['line_%i-%i' % (unit_next, unit_n)][0].set_alpha(int(w!=0))
                     if w:
-                        lines_handles['line_%i-%i' % (unit_n, unit_next)][0].set_color(cols[int(w < 0)])
-                        lines_handles['line_%i-%i' % (unit_n, unit_next)][0].set_linewidth(.5 + 5 * np.abs(w))
+                        lines_handles['line_%i-%i' % (unit_next, unit_n)][0].set_color(cols[int(w < 0)])
+                        lines_handles['line_%i-%i' % (unit_next, unit_n)][0].set_linewidth(.5 + 5 * np.abs(w))
                 else:
-                    lines_handles['line_%i-%i' % (unit_n, unit_next)] =\
+                    lines_handles['line_%i-%i' % (unit_next, unit_n)] =\
                         axs[0].plot([unit_pos[unit_n, 0], unit_pos[unit_next, 0]],
                             [unit_pos[unit_n, 1], unit_pos[unit_next, 1]],
                             '-', color = cols[int(w<0)], zorder=-10,
                             linewidth=.5 + 5*np.abs(w))
 
-
-    # texts_handles['tex_delt'].set_text('Delta w = %.4f' % round(change, 4))
-    texts_handles['tex_cycl'].set_text('cycle = %i' % cycle)
+    if learn_trial_n != -1:
+        texts_handles['tex_learn_trial_n'].set_text('trial n = %i' % learn_trial_n)
+    else:
+        texts_handles['tex_learn_trial_n'].set_text('')
+    texts_handles['tex_cycl'].set_text('optim. cycle = %i' % cycle)
 
     # update activation texts
     for unit_n in range(n_units):
@@ -173,12 +177,11 @@ def update_network(fig, axs, texts_handles, lines_handles, activations,
         new_y = np.concatenate([data[1], [activations[unit_n]]])
         axs[2].lines[unit_n].set_data((new_x, new_y))
         
-        for unit_m in range(unit_n, n_units):
+        for unit_m in range(unit_n):
             w = weights[unit_n, unit_m]
-#            print(w)
 
             data = axs[1].lines[lineind].get_data()
-            new_x = np.concatenate([data[0], [cycle]])
+            new_x = np.concatenate([data[0], [learn_trial_n]])
             new_y = np.concatenate([data[1], [w]])
             axs[1].lines[lineind].set_data((new_x, new_y))
             lineind += 1
