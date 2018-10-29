@@ -27,7 +27,7 @@ timesleep = 0.1
 beta = 0.2
 xmin, xmax, ymin, ymax = -10, 10, -10, 10
 n_trials, n_patterns = 100, 5
-mu1, mu2, s1, s2 = np.array([-2, -1]), np.array([1, 1]), 1, 1
+mu1, mu2, s1, s2 = np.array([-2, -1]), np.array([-1, 1]), 2, 1
 xrange = np.linspace(xmin, xmax)
 x1 = s1*np.random.randn(n_patterns, 2) + ml.repmat(mu1,n_patterns,1) # 'cats'
 x1 = np.concatenate((x1, np.ones((n_patterns,1))), axis = 1)
