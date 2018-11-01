@@ -117,7 +117,7 @@ inhibition = -0.3
 
 # let's add the inhibition between output units
 weights_end[4, 5] = inhibition # jets inhibits sharks
-weights_end[5, 4] = inhibition # cat inhibits dog
+weights_end[5, 4] = inhibition # sharks inhibits jets
 weights_end[6, 7] = inhibition # burglar inhibits drugs dealer
 weights_end[7, 6] = inhibition # drugs dealer inhibits burglar
 
