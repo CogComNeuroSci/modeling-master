@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Nov  2 14:39:31 2018
+
+@author: tom verguts
+AIC and BIC illustration
+model 1: There is just one p-value
+model 2: Part 1 and part 2 have a different p-value
+"""
+import numpy as np
+
+n_trials = 1000
+p = [[0.6, 0.6], [0.5, 0.7]]
+K = [1, 2] # nr of parameters
+
+for loop in range(2):
+    data = np.zeros(n_trials)
+    for data_loop in range(n_trials):
+        data[data_loop] = (np.random.rand() > p[loop][data_loop//(n_trials//2)])
+    n_heads = np.array([np.sum(data[:n_trials//2+1]), np.sum(data[n_trials//2:])])
+    p1 = np.sum(n_heads)/data.size
+    p2 = np.array(n_heads/(data.size//2))
+
+    lik1 = np.sum(n_heads)*np.log(p1) + (n_trials-np.sum(n_heads))*np.log(1-p1)
+    lik2 = ( n_heads[0]*np.log(p2[0]) + (n_trials//2-n_heads[0])*np.log(1-p2[0])+
+            n_heads[1]*np.log(p2[1]) + (n_trials//2-n_heads[1])*np.log(1-p2[1]) )
+
+    aic1 = -2*lik1 + 2*K[0]
+    aic2 = -2*lik2 + 2*K[1]
+
+    bic1 = -2*lik1 + K[0]*np.log(n_trials)/2
+    bic2 = -2*lik2 + K[1]*np.log(n_trials)/2
+
+    print([lik1, lik2, aic1, aic2, bic1, bic2])
