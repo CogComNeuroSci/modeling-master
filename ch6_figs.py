@@ -34,3 +34,14 @@ for loop in range(2):
     axs[loop].plot(p, logL, color = "black")
     axs[loop].set_ylim(av-logL_range/2, av+logL_range/2)
     axs[loop].set_title("{} data points".format(n[loop][0]+n[loop][1]))
+
+#%% fig 6.4: grid
+x = np.linspace(0, 1, 10)
+y = np.linspace(0, 5, 10)
+
+plt.figure()
+plt.xticks(x)
+plt.yticks(y)
+plt.xlabel('Parameter 1')
+plt.ylabel('Parameter 2')
+plt.grid(True)

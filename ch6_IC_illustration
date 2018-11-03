@@ -32,4 +32,5 @@ for loop in range(2):
     bic1 = -2*lik1 + K[0]*np.log(n_trials)/2
     bic2 = -2*lik2 + K[1]*np.log(n_trials)/2
 
-    print([lik1, lik2, aic1, aic2, bic1, bic2])
+    print("Dataset {0}\n LogL model1: {1:.2f} model 2: {2:.2f}\n AIC model1: {3:.2f} model2: {4:.2f}\n BIC model1 {5:.2f} BIC model2 {6:.2f}".
+          format(loop+1,lik1, lik2, aic1, aic2, bic1, bic2))
