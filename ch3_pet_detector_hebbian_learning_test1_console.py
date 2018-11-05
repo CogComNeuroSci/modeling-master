@@ -3,11 +3,10 @@
 """
 @author: Mehdi Senoussi
 code adapted by tom verguts for test1
-this is where code is written to the figure
+this is where code is written to the console
 """
 
 import numpy as np
-import time
 from ch0_course_functions import plot_network, update_network
 import matplotlib.pyplot as pl
 
@@ -31,10 +30,10 @@ beta = .05
 
 # training samples (activation (x) of each input unit)
 cat_proto = [0, 1, 1]
-n_train_cats = 3
+n_train_cats = 30
 dog_proto = [1, 1, -1]
-n_train_dogs = 4
-std_noise = 0.2
+n_train_dogs = 40
+std_noise = 0.01
 
 train_samples = cat_proto
 for loop in range(n_train_cats-1):
@@ -83,7 +82,7 @@ fig, axs, texts_handles, lines_handles, unit_pos =\
 
 fig.suptitle('Press any key to do a training trial')
 
-# we set a weight index because it's size is bigger than the number of samples
+# we set a weight index because its size is bigger than the number of samples
 w_ind = 0
 
 # loop over all samples/trials to train our model
@@ -112,19 +111,13 @@ for trial_n in np.arange(n_trials):
         lines_handles = lines_handles, activations = activations, change =0,
         unit_pos = unit_pos, weights = weights[w_ind, :, :], layers = layers,
         cycle = 0, learn_trial_n = trial_n+1, energy = energy)
-    print(weights[w_ind, :,:])
     
     # to wait for any button press to go to the next iteration of the loop
     # you can make this "automatic" by changing the 0 to a number of seconds
-    fig.waitforbuttonpress(0)
+    #fig.waitforbuttonpress(0)
 
 axs[0].set_title('')
 
-
-
-pl.suptitle('Learning phase finished!\nPress a key to input a certain pattern in the model and see how it behaves!')
-fig.canvas.draw()
-fig.waitforbuttonpress(0)
 
 #%%
 ###############################################################################
@@ -159,7 +152,7 @@ weights[3, 4] = -0.3 # cat inhibits dog
 n_test= 2 + 3
 new_cat = np.array(cat_proto)
 new_dog = np.array(dog_proto)
-std_noise = 0.2
+std_noise_test = 0.01
 
 test_sample = np.zeros((n_test,3))
 test_sample[0, :] = new_cat
@@ -168,12 +161,11 @@ test_sample[2, :] = (new_cat + new_dog)/2 # this is a cat-like dog (or dog-like 
 for i in range(3):
     test_sample[i,:] = test_sample[2,:]
 
-test_sample = test_sample + np.random.randn(n_test, 3)*std_noise
+test_sample = test_sample + np.random.randn(n_test, 3)*std_noise_test
+
+test_output = np.zeros((n_test,2))
     
 for test_loop in range(n_test):
-    fig, axs, texts_handles, lines_handles, unit_pos =\
-    plot_network(figsize = [13, 7], activations = activations,
-                  weights = weights[0, :, :], layers = layers, energy = 0)
 
     # let's input a certain pattern of activations (i.e. x1, x2 and x3)
     activations[:3] = test_sample[test_loop,:]
@@ -193,10 +185,4 @@ for test_loop in range(n_test):
         if ydog[t]<0 : ydog[t] = 0
         activations[3:] = [ycat[t], ydog[t]]
         energy = -incat*ycat[t] - indog*ydog[t] - weights_end[4, 3]*ycat[t]*ydog[t]
-        
-        update_network(fig = fig, axs = axs, texts_handles = texts_handles,
-                       lines_handles = lines_handles, activations = activations,
-                       unit_pos = unit_pos, weights = weights_end, layers = layers, change = 0,
-                       cycle = t, energy = energy, learn_trial_n = -1)
-
-        time.sleep(timesleep)
+    print("output for test {0} equals {1}".format(test_loop, activations[3:]))    
