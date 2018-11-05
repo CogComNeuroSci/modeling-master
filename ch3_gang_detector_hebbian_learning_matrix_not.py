@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 @author: Mehdi Senoussi
-code adapted by tom verguts to the jets and sharks context
-version 1
+code adapted by tom verguts to extra exercise 1 (the jets and sharks gangs)
 """
 
 import numpy as np
@@ -14,8 +13,7 @@ import matplotlib.pyplot as pl
 # we have 4 input unit on the first layer and 4 output units on the second layer
 layers = np.array([1, 1, 1, 1, 2, 2, 2, 2])
 n_units = len(layers)
-# here we set all the input activations (index from 0 to 3) to 0.
-# We also set the output units to 0.
+# here we set all the activations (index from 0 to 7) to 0.
 activations = np.array([0., 0., 0., 0., 0., 0., 0., 0.])
 
 # let's set energy to zero for now
@@ -26,16 +24,16 @@ energy = 0
 ####    LEARNING PART
 ###############################################################################
 
-# our learning parameter
+# our learning rate parameter
 beta = .6
 
-# training samples (activation (x) of each input unit)
+# training samples
 train_samples = np.array([[1, 0, 0, 0, 0, 0, 0, 0],  # john
                           [0, 1, 0, 0, 0, 0, 0, 0],  # paul 
                           [0, 0, 1, 0, 0, 0, 0, 0],  # ringo 
                           [0, 0, 0, 1, 0, 0, 0, 0] ]) # george
 
-# the targets :
+# the targets for john, paul, ringo, and george, respectively:
 targets = np.array(  [    [0, 0, 0, 0, 1, 0, 1, 0], # jet, burglar
                           [0, 0, 0, 0, 1, 0, 1, 0], # jet, burglar
                           [0, 0, 0, 0, 0, 1, 0, 1], # shark, drugsdealer
@@ -57,24 +55,11 @@ weights = np.zeros(shape = [n_trials + 1, n_units, n_units])
 # other than zeros
 # random.random() yields a number between 0 and 1, then we divide by 10 so we
 # get a number between 0 and 0.1
-random_weight = np.random.random()/10.
-weights[0, 4, 0] = random_weight # random weight from john
-weights[0, 5, 0] = random_weight
-weights[0, 6, 0] = random_weight
-weights[0, 7, 0] = random_weight
-weights[0, 4, 1] = random_weight # random weight from paul
-weights[0, 5, 1] = random_weight
-weights[0, 6, 1] = random_weight
-weights[0, 7, 1] = random_weight
-weights[0, 4, 2] = random_weight # random weight from ringo
-weights[0, 5, 2] = random_weight
-weights[0, 6, 2] = random_weight
-weights[0, 7, 2] = random_weight
-weights[0, 4, 3] = random_weight # random weight from george
-weights[0, 5, 3] = random_weight
-weights[0, 6, 3] = random_weight
-weights[0, 7, 3] = random_weight
-
+# a new random element is used for each entry
+rows = [4, 5, 6, 7]*4 # * = concatenation in this context
+columns = [x//4 for x in range(16)] # list comprehension
+for loop in range(16):
+    weights[0, rows[loop], columns[loop]] = np.random.random()/10.
 
 
 # plot the network to see how it initially looks like
@@ -123,17 +108,19 @@ y_burg  = np.zeros(n_tsteps)
 y_drug  = np.zeros(n_tsteps)
 
 # std of noise
-sigma = .7
-# change rate (scaling parameter)
+sigma = .2
+# change rate
 alpha = .2
+# inhibition parameter
+inhibition = -0.3
 
 # let's add the inhibition between output units
-weights_end[4, 5] = -0.3 # jets inhibits sharks
-weights_end[5, 4] = -0.3 # cat inhibits dog
-weights_end[6, 7] = -0.3 # burglar inhibits drugs dealer
-weights_end[7, 6] = -0.3 # drugs dealer inhibits burglar
+weights_end[4, 5] = inhibition # jets inhibits sharks
+weights_end[5, 4] = inhibition # sharks inhibits jets
+weights_end[6, 7] = inhibition # burglar inhibits drugs dealer
+weights_end[7, 6] = inhibition # drugs dealer inhibits burglar
 
-# let's input a certain pattern of activations (i.e. x1, x2 and x3)
+# let's input a certain pattern of activations
 activations[:4] = 1, 0, 0, 0 # activate john
 
 ################################
@@ -141,7 +128,7 @@ activations[:4] = 1, 0, 0, 0 # activate john
 #### USING THE DOT PRODUCT
 ################################
 ################################
-# computing the initial y activation values
+# computing the input to the output units
 activations = np.dot(weights_end, activations)
 ################################
 ################################
@@ -152,28 +139,15 @@ in_shark = activations[5]
 in_burg  = activations[6]
 in_drug  = activations[7]
 
-y_jet[t]   = y_jet[t-1]   + alpha * (in_jet   + weights_end[4, 5] * y_shark[t-1])+ np.random.randn()*sigma
-y_shark[t] = y_shark[t-1] + alpha * (in_shark + weights_end[5, 4] * y_jet[t-1])  + np.random.randn()*sigma
-y_burg[t]  = y_burg[t-1]  + alpha * (in_burg  + weights_end[6, 7] * y_drug[t-1]) + np.random.randn()*sigma
-y_drug[t]  = y_drug[t-1]  + alpha * (in_drug  + weights_end[7, 6] * y_burg[t-1]) + np.random.randn()*sigma
-
-activations[4:] = [y_jet[t], y_shark[t], y_burg[t], y_drug[t]]
-energy = (-in_jet*y_jet[t] - in_shark*y_shark[t] - in_burg*y_burg[t] - in_drug*y_drug[t] 
-          + weights_end[5, 6]*y_jet[t]*y_shark[t] + weights_end[6, 7]*y_burg[t]*y_drug[t]) 
-
 for t in times[1:]:
     y_jet[t]   = y_jet[t-1]   + alpha * (in_jet   + weights_end[4, 5] * y_shark[t-1])+ np.random.randn()*sigma
     y_shark[t] = y_shark[t-1] + alpha * (in_shark + weights_end[5, 4] * y_jet[t-1])  + np.random.randn()*sigma
     y_burg[t]  = y_burg[t-1]  + alpha * (in_burg  + weights_end[6, 7] * y_drug[t-1]) + np.random.randn()*sigma
     y_drug[t]  = y_drug[t-1]  + alpha * (in_drug  + weights_end[7, 6] * y_burg[t-1]) + np.random.randn()*sigma   
-    if y_jet[t] < 0 :
-        y_jet[t] = 0
-    if y_shark[t] < 0 :
-        y_shark[t] = 0
-    if y_burg[t] < 0 :
-        y_burg[t] = 0    
-    if y_drug[t] < 0 :
-        y_drug[t] = 0    
+
+    # cutoff at zero
+    [y_jet[t], y_shark[t], y_burg[t], y_drug[t]] = list(np.maximum([0]*4, [y_jet[t], y_shark[t], y_burg[t], y_drug[t]]))
+
     activations[4:] = [y_jet[t], y_shark[t], y_burg[t], y_drug[t]]
     energy = (-in_jet*y_jet[t] - in_shark*y_shark[t] - in_burg*y_burg[t] - in_drug*y_drug[t] 
           + weights_end[4, 5]*y_jet[t]*y_shark[t] + weights_end[6, 7]*y_burg[t]*y_drug[t])

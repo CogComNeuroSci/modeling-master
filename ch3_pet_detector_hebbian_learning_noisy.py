@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 @author: Mehdi Senoussi
-noisy version by tom verguts
+code adapted by tom verguts to check effect of noise (extra exercise 2)
 note that I removed all plotting functionality in this exercise; 
 all printing goes to the console
 """
@@ -24,13 +24,13 @@ energy = 0
 ####    LEARNING PART
 ###############################################################################
 
-# our learning scaling parameter
+# our learning parameter
 beta = .8
 
 # training samples (activation (x) of each input unit)
 train_samples = np.array([[1, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 1], [0, 0, 1], [0, 0, 1]])
 
-# the targets (basically representing "dog" or "cat"):
+# the targets (representing "dog" or "cat"):
 #                      cat        cat        cat        dog        dog        dog
 targets = np.array(  [[1, 0],   [1, 0],    [1, 0],    [0, 1],    [0, 1],    [0, 1]])
 
@@ -49,13 +49,14 @@ weights = np.zeros(shape = [n_trials + 1, n_units, n_units])
 # let's set random SMALL weights so that the plotting functions have something
 # other than zeros
 # random.random() yields a number between 0 and 1, then we divide by 50 so we
-# get a number between 0 and 0.02
+# get a number between 0 and 0.02; note: there is a new random number in each location
+# because the function np.random.random() is called anew on each line
 weights[0, 3, 0] = np.random.random()/50. # random weight 
-weights[0, 4, 0] = np.random.random()/50. # dogs rarely bite visitors
-weights[0, 3, 1] = np.random.random()/50. # cats often have four legs
-weights[0, 4, 1] = np.random.random()/50. # dogs often have four legs
-weights[0, 3, 2] = np.random.random()/50. # cats rarely have their pictures on FB
-weights[0, 4, 2] = np.random.random()/50. # dogs often have their pictures on FB
+weights[0, 4, 0] = np.random.random()/50. # 
+weights[0, 3, 1] = np.random.random()/50. # 
+weights[0, 4, 1] = np.random.random()/50. # 
+weights[0, 3, 2] = np.random.random()/50. # 
+weights[0, 4, 2] = np.random.random()/50. # 
 
 
 
@@ -68,9 +69,9 @@ for trial_n in np.arange(n_trials):
     for j in np.arange(n_sample_dim):
         # loop on each of the target's "dimensions" (i.e. each wanted output unit's activation)
         for i in np.arange(n_target_dim):
-            # we get this trial xs (i.e. input activations) from our array of samples
+            # we get this trial's xvalues (i.e. input activations) from our array of samples
             x = train_samples[trial_n, j]
-            # we get this trial targets (i.e. wanted outputs) from our array of targets
+            # we get this trial's targets (i.e. wanted outputs) from our array of targets
             t = targets[trial_n, i]
             
             # get the old weight of this connection
@@ -109,7 +110,7 @@ ycat = np.zeros(n_tsteps)
 
 # std of noise
 sigma = np.arange(0, 3, 0.2)
-# change rate
+# change rate; how quickly activation changes in a trial
 alpha = .2
 
 correct_counter = np.zeros(sigma.size) # this collects the number of correct trials
@@ -133,6 +134,7 @@ for noise_loop in range(sigma.size): # loop across all noise levels
             if ydog[t]<0: ydog[t] = 0
             activations[3:] = [ycat[t], ydog[t]]
             energy = -incat*ycat[t] - indog*ydog[t] - weights_end[4, 3]*ycat[t]*ydog[t]
+        # check whether the correct response (i.e., cat) was given by the network    
         correct_counter[noise_loop] += (ycat[-1] > ydog[-1])
 
 correct_counter = correct_counter/n_test_trials
