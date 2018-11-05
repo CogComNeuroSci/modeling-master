@@ -8,7 +8,6 @@ this is where code is written to the console
 
 import numpy as np
 from ch0_course_functions import plot_network, update_network
-import matplotlib.pyplot as pl
 
 # we have 3 input unit on the first layer and 2 output units on the second layer
 layers = np.array([1, 1, 1, 2, 2])
@@ -26,13 +25,14 @@ energy = 0
 ###############################################################################
 
 # our learning parameter
-beta = .05
+beta = .1
 
 # training samples (activation (x) of each input unit)
-cat_proto = [0, 1, 1]
+cat_proto = np.array([0, 1, 1])
 n_train_cats = 30
-dog_proto = [1, 1, -1]
+dog_proto = np.array([1, 1, -1])
 n_train_dogs = 40
+
 std_noise = 0.01
 
 train_samples = cat_proto
@@ -128,7 +128,6 @@ axs[0].set_title('')
 weights_end = weights[-1, :, :]
 
 
-timesleep = .1
 n_tsteps = 20
 times = np.arange(n_tsteps)
 t = 1
@@ -141,29 +140,29 @@ indog = np.zeros(n_tsteps)
 
 # std of noise
 sigma = .7
-# learning rate
+# change rate
 alpha = .2
 
 # let's add the inhibition between cat and dog
-weights[4, 3] = -0.3 # dog inhibits cat
-weights[3, 4] = -0.3 # cat inhibits dog
+weights_end[4, 3] = -0.3 # dog inhibits cat
+weights_end[3, 4] = -0.3 # cat inhibits dog
 
 # define test cases
-n_test= 2 + 3
+n_test= 2 + 10
 new_cat = np.array(cat_proto)
 new_dog = np.array(dog_proto)
-std_noise_test = 0.01
+std_noise_test = 0.01 # to get something new on each trial
 
 test_sample = np.zeros((n_test,3))
 test_sample[0, :] = new_cat
 test_sample[1, :] = new_dog
 test_sample[2, :] = (new_cat + new_dog)/2 # this is a cat-like dog (or dog-like cat)
-for i in range(3):
-    test_sample[i,:] = test_sample[2,:]
+for i in range(10):
+    test_sample[i+2,:] = test_sample[2,:]
 
 test_sample = test_sample + np.random.randn(n_test, 3)*std_noise_test
 
-test_output = np.zeros((n_test,2))
+#test_output = np.zeros((n_test,2))
     
 for test_loop in range(n_test):
 
