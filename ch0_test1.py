@@ -3,7 +3,14 @@
 """
 @author: Mehdi Senoussi
 code adapted by tom verguts for test1
-this is where code is written to the console
+this is the version where code is written to the console
+you can use this code to explore several factors
+potentially relevant in hebbian learning such as 
+- frequency
+- recency
+- pattern length
+- inhibition strength
+- etc...
 """
 
 import numpy as np
@@ -28,9 +35,9 @@ energy = 0
 beta = .1
 
 # training samples (activation (x) of each input unit)
-cat_proto = np.array([0, 1, 1])
-n_train_cats = 30
-dog_proto = np.array([1, 1, -1])
+cat_proto = np.array([1, 1, 1])
+n_train_cats = 10
+dog_proto = np.array([1, 0, -1])
 n_train_dogs = 40
 
 # noise on exemplars
@@ -54,14 +61,14 @@ for loop in range(n_train_dogs):
     targets = np.vstack((targets, [0, 1]))
 
 # how many training samples do we have (hence, how many trials are we going to do?)
-n_trials = train_samples.shape[0]
+n_train_trials = train_samples.shape[0]
 # get the number of dimensions (i.e. units) in the samples
 n_sample_dim = train_samples.shape[1]
 # get the number of dimensions (i.e. units) in the targets
 n_target_dim = targets.shape[1]
 
 # create the weight matrix (n_trials+1 because it has to be initialized)
-weights = np.zeros(shape = [n_trials + 1, n_units, n_units])
+weights = np.zeros(shape = [n_train_trials + 1, n_units, n_units])
 
 # let's set random SMALL weights so that the plotting functions have something
 # other than zeros
@@ -80,22 +87,23 @@ fig, axs, texts_handles, lines_handles, unit_pos =\
     plot_network(figsize = [13, 7], activations = activations,
                   weights = weights[0, :, :], layers = layers, energy = 0)
 
-fig.suptitle('Press any key to do a training trial')
-
 # we set a weight index because its size is bigger than the number of samples
 w_ind = 0
 
+order = np.random.permutation(n_train_trials) # randomly shuffled
+#order = np.arange(n_train_trials) # not randomly shuffled
+
 # loop over all samples/trials to train our model
-for trial_n in np.arange(n_trials):
-    axs[0].set_title('this trial: xs = %s, ts = %s' % (train_samples[trial_n, :], targets[trial_n, :]))
+for trial_n in np.arange(n_train_trials):
+    axs[0].set_title('this trial: xs = {0}, ts = {1}'.format(train_samples[order[trial_n], :], targets[order[trial_n], :]))
     # loop on each of the sample's "dimensions" (i.e. each input unit's activation)
     for j in np.arange(n_sample_dim):
         # loop on each of the target's "dimensions" (i.e. each wanted output unit's activation)
         for i in np.arange(n_target_dim):
             # we get this trial xs (i.e. input activations) from our array of samples
-            x = train_samples[trial_n, j]
+            x = train_samples[order[trial_n], j]
             # we get this trial targets (i.e. wanted outputs) from our array of targets
-            t = targets[trial_n, i]
+            t = targets[order[trial_n], i]
             
             # get the old weight of this connection
             old_weight = weights[w_ind, i+3, j]
@@ -111,12 +119,6 @@ for trial_n in np.arange(n_trials):
         lines_handles = lines_handles, activations = activations, change =0,
         unit_pos = unit_pos, weights = weights[w_ind, :, :], layers = layers,
         cycle = 0, learn_trial_n = trial_n+1, energy = energy)
-    
-    # to wait for any button press to go to the next iteration of the loop
-    # you can make this "automatic" by changing the 0 to a number of seconds
-    #fig.waitforbuttonpress(0)
-
-axs[0].set_title('')
 
 
 #%%
@@ -162,7 +164,7 @@ for i in range(10):
 
 test_sample = test_sample + np.random.randn(n_test, 3)*std_noise_test
 
-order = np.random.randperm(n_test) # randomly shuffled
+order = np.arange(n_test) # no random shuffling here; but can be changed
 
 for test_loop in range(n_test):
 
@@ -181,9 +183,7 @@ for test_loop in range(n_test):
     for t in times[1:]:
         ycat[t] = ycat[t-1] + alpha * (incat + weights_end[3, 4] * ydog[t-1]) + np.random.randn()*sigma
         ydog[t] = ydog[t-1] + alpha * (indog + weights_end[4, 3] * ycat[t-1]) + np.random.randn()*sigma
-        if ycat[t]<0 : ycat[t] = 0
-        if ydog[t]<0 : ydog[t] = 0
-        activations[3:] = [ycat[t], ydog[t]]
+        activations[3:] = [np.maximum(0, ycat[t]), np.maximum(0, ydog[t])]
         energy = -incat*ycat[t] - indog*ydog[t] - weights_end[4, 3]*ycat[t]*ydog[t]
     
     # show the result
