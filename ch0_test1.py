@@ -33,6 +33,7 @@ n_train_cats = 30
 dog_proto = np.array([1, 1, -1])
 n_train_dogs = 40
 
+# noise on exemplars
 std_noise = 0.01
 
 train_samples = cat_proto
@@ -45,7 +46,7 @@ noise = np.random.randn(n_train_cats+n_train_dogs, 3)*std_noise
 train_samples = train_samples + noise
 
 # the targets (basically representing "dog" or "cat"):
-#                      cat  
+#                   cat nr 1  
 targets = np.array( [1, 0] )
 for loop in range(n_train_cats-1):
     targets = np.vstack((targets, [1, 0]))
@@ -61,7 +62,6 @@ n_target_dim = targets.shape[1]
 
 # create the weight matrix (n_trials+1 because it has to be initialized)
 weights = np.zeros(shape = [n_trials + 1, n_units, n_units])
-
 
 # let's set random SMALL weights so that the plotting functions have something
 # other than zeros
