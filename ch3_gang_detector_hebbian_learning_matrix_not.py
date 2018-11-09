@@ -150,7 +150,7 @@ for t in times[1:]:
 
     activations[4:] = [y_jet[t], y_shark[t], y_burg[t], y_drug[t]]
     energy = (-in_jet*y_jet[t] - in_shark*y_shark[t] - in_burg*y_burg[t] - in_drug*y_drug[t] 
-          + weights_end[4, 5]*y_jet[t]*y_shark[t] + weights_end[6, 7]*y_burg[t]*y_drug[t])
+          - weights_end[4, 5]*y_jet[t]*y_shark[t] - weights_end[6, 7]*y_burg[t]*y_drug[t])
     
     update_network(fig = fig, axs = axs, texts_handles = texts_handles,
         lines_handles = lines_handles, activations = activations,

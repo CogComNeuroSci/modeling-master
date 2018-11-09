@@ -35,9 +35,9 @@ energy = 0
 beta = .1
 
 # training samples (activation (x) of each input unit)
-cat_proto = np.array([1, 1, 1])
+cat_proto = np.array([0, 1, 1])
 n_train_cats = 10
-dog_proto = np.array([1, 0, -1])
+dog_proto = np.array([1, 1, -1])
 n_train_dogs = 40
 
 # noise on exemplars
