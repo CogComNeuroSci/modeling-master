@@ -3,6 +3,7 @@
 
 
 """
+original script
 @author: Pieter
 Pieter.Huycke@UGent.be
 
@@ -45,6 +46,8 @@ iris = datasets.load_iris()
 y = iris.target
 class_names = iris.target_names
 
+sc = StandardScaler()
+
 for dimension_loop in all_dimensions:
     #create a dataset with a limited number of input dimensions
     X = iris.data[:,dimension_loop]
@@ -55,17 +58,11 @@ for dimension_loop in all_dimensions:
                                                     random_state=2018)
 
     # train the standard scaler with a part of the data
-    sc = StandardScaler()
     sc.fit(X_train)
 
     # apply scaler to all x
-    #X_train_std = sc.transform(X_train)
-    #X_test_std = sc.transform(X_test)
-    
-    #X_train_std = X_train_std*5
-    #X_test_std = X_test_std*5
-    X_train_std = X_train
-    X_test_std = X_test
+    X_train_std = sc.transform(X_train)
+    X_test_std = sc.transform(X_test)
     
     # define classifier (Perceptron object from scikit-learn)
     classification_algorithm = Perceptron(max_iter = 200,
