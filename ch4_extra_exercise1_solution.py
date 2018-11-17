@@ -46,7 +46,13 @@ iris = datasets.load_iris()
 y = iris.target
 class_names = iris.target_names
 
+# Question: Why can I put the next two statements outside of the loop?
+# the scaler
 sc = StandardScaler()
+# define classifier (Perceptron object from scikit-learn)
+classification_algorithm = Perceptron(max_iter = 200,
+                                      verbose = 0,
+                                      random_state = 2018)
 
 for dimension_loop in all_dimensions:
     #create a dataset with a limited number of input dimensions
@@ -64,10 +70,6 @@ for dimension_loop in all_dimensions:
     X_train_std = sc.transform(X_train)
     X_test_std = sc.transform(X_test)
     
-    # define classifier (Perceptron object from scikit-learn)
-    classification_algorithm = Perceptron(max_iter = 200,
-                                      verbose = 0,
-                                      random_state = 2018)
 
     # fit ('train') classifier to the training data
     classification_algorithm.fit(X_train_std, y_train)

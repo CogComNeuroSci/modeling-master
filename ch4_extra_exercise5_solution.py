@@ -7,7 +7,9 @@
 Pieter.Huycke@UGent.be
 
 - - - - - - - - - - - - 
-tom verguts removed all the comments :)
+adapted by tom verguts for extra exercise 5
+I now use SGDClassifier as the learning algorithm
+eta0 is the learning rate, but it must explicitly be set to be constant
 """
 
 # import general modules
@@ -15,7 +17,7 @@ import numpy                 as np
 
 # import data, and functions specific to scikit-learn
 from sklearn                 import datasets
-from sklearn.linear_model    import Perceptron
+from sklearn.linear_model    import SGDClassifier
 from sklearn.metrics         import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing   import StandardScaler
@@ -46,8 +48,7 @@ class_names = iris.target_names
 # if the seed was deleted, the dataset would be split in different pieces 
 # with each run
 X_train, X_test, y_train, y_test = train_test_split(X, 
-                                                    y, 
-                                                    random_state=2018)
+                                                    y)
 
 # train a scaler based on the training data
 # this scaler normalizes all our features (our x values)
@@ -68,18 +69,12 @@ sc.fit(X_train)
 # by doing so, we normalize all our features, and we minimize the chance
 # that our machine learning fails due to high variance in the dataset
 
-#X_train_std = sc.transform(X_train)
-#X_test_std = sc.transform(X_test)
+X_train_std = sc.transform(X_train)
+X_test_std = sc.transform(X_test)
 
-#X_train_std = X_train_std
-#X_test_std = X_test_std
-
-X_train_std = X_train
-X_test_std = X_test
-
-classification_algorithm = Perceptron(max_iter = 20,
-                                      verbose = 0,
-                                      eta0 = .000001)
+classification_algorithm = SGDClassifier(max_iter = 20,
+                                      verbose = 0, learning_rate = "constant",
+                                      eta0 = .5)
 
 # train our classification algorithm on the part of the data that we 
 # reserved for the training process
@@ -97,7 +92,7 @@ y_pred = classification_algorithm.predict(X_test_std)
 # print(y_pred)
 # print(y_test)
 
-# absolute amount of times the classification was wrong
+# absolute number of times the classification was wrong
 compared = np.array(y_pred == y_test)
 absolute_wrong = (compared == False).sum()
 print("Our classification was wrong for {0} out of the {1} cases.".format(absolute_wrong, len(compared)))
@@ -106,12 +101,3 @@ print("Our classification was wrong for {0} out of the {1} cases.".format(absolu
 # calculated by doing:
 # 1 - (observations predicted wrong / total observations)
 print('Accuracy percentage: {0:.2f}'.format(accuracy_score(y_test, y_pred) * 100))
-
-# compute confusion matrix
-# a confusion matrix represents the overlap between what we predicted, and 
-# what actually is the truth
-# in other words, we make a prediction about the species of all the
-# observations in the test data, but we of course know what the actual species
-# label should be
-# the confusion matrix creates a visual summary of our classification success
-# by comparing our predictions with the actual data

@@ -8,10 +8,8 @@ original script
 Pieter.Huycke@UGent.be
 
 - - - - - - - - - - - - 
-extra exercise 3
-adapted by tom verguts; based on code of exercise 2; rather than write
-a whole new script, I just generalized the code of exercise 2. Thus, this code
-is just one extra elif condition (and a longer final print statement)
+extra exercise 6
+NOT YET DONE; THIS SCRIPT IS JUST COPY-PASTE FROM EARLIER SCRIPTS
 """
 
 # import: general and scikit-learn specific
@@ -29,19 +27,9 @@ threshold = 0.9
 # do we want lines and lines of intermediate results?
 verbose = False
 
-all_dimensions = []
-n_dim = 4
 
-# these are the ones I will check
-for loop in range(2**n_dim - 1):
-    binary_number = bin(loop+1)[2:]
-    binary_number = "0"*(n_dim-len(binary_number)) + binary_number
-    dimension_vector = []
-    for dim_loop in range(n_dim):
-        if int(binary_number[dim_loop]) == 1:
-            dimension_vector.append(dim_loop)
-    all_dimensions.append(dimension_vector)
-    
+all_dimensions = [[1, 2, 3]]
+
 # import the Iris flower dataset
 iris = datasets.load_iris()
 y = iris.target
@@ -49,12 +37,7 @@ class_names = iris.target_names
 
 accuracy_total = np.zeros(3)
 
-# the scaler
 sc = StandardScaler()
-# define classifier (Perceptron object from scikit-learn)
-classification_algorithm = Perceptron(max_iter = 100,
-                                      verbose = 0)
-
 
 for normalization_loop in range(3): # with and without; and with sd = 5
     for dimension_loop in all_dimensions:
@@ -80,6 +63,10 @@ for normalization_loop in range(3): # with and without; and with sd = 5
         else:
             X_train_std = X_train
             X_test_std = X_test
+    
+        # define classifier (Perceptron object from scikit-learn)
+        classification_algorithm = Perceptron(max_iter = 200,
+                                      verbose = 0, fit_intercept = False)
 
         # fit ('train') classifier to the training data
         classification_algorithm.fit(X_train_std, y_train)
@@ -104,9 +91,6 @@ for normalization_loop in range(3): # with and without; and with sd = 5
             print('We consider this data ' + lin_string + ' linearly separable')
         
         accuracy_total[normalization_loop] += accuracy
-
-# this works because it's an nparray...
-accuracy_total = accuracy_total / (2**n_dim - 1)
 
 # and then finallly the result...
 print("accuracy with normalization: {:.1%}%\n".format(accuracy_total[0])      +

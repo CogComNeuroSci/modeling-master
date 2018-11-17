@@ -47,7 +47,13 @@ class_names = iris.target_names
 
 accuracy_total = np.zeros(2)
 
+# the scaler
 sc = StandardScaler()
+# define classifier (Perceptron object from scikit-learn)
+# I took away the random starting state; therefore, each run will generate
+# slightly differen results
+classification_algorithm = Perceptron(max_iter = 200,
+                                      verbose = 0)
 
 for normalization_loop in range(2): # with and without
     for dimension_loop in all_dimensions:
@@ -56,8 +62,7 @@ for normalization_loop in range(2): # with and without
         
         # split data in training and testing set
         X_train, X_test, y_train, y_test = train_test_split(X, 
-                                                    y, 
-                                                    random_state=2018)
+                                                    y)
 
         # train the standard scaler with a part of the data
         if normalization_loop == 0:
@@ -68,11 +73,6 @@ for normalization_loop in range(2): # with and without
         else:
             X_train_std = X_train
             X_test_std = X_test
-    
-        # define classifier (Perceptron object from scikit-learn)
-        classification_algorithm = Perceptron(max_iter = 100,
-                                      verbose = 0,
-                                      random_state = 2018)
 
         # fit ('train') classifier to the training data
         classification_algorithm.fit(X_train_std, y_train)
