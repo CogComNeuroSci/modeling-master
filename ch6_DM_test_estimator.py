@@ -18,6 +18,8 @@ param_list = []
 nstim = 4
 file_name_to_write = "simulation_data_1.csv"
 
+np.set_printoptions(precision = 2, suppress = True)
+
 #def logit(beta_in,x1,x2):
 #    return 1/(1+np.exp(beta_in*(x2-x1)))
 
