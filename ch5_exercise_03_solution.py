@@ -23,7 +23,7 @@ from   plotting_helper            import plot_confusion_matrix
 from   sklearn.metrics            import confusion_matrix, accuracy_score
 from   sklearn.neural_network     import MLPClassifier
 
-#%%
+
 '''
 * TWO RELEVANT STIMULUS DIMENSIONS *
 
@@ -86,14 +86,13 @@ outputs            = np.ravel(np.vstack((color_outputs, word_outputs)))
 # here, only two labels are possible ('green', and 'red')
 class_names = ['Color', 'Word']
 
-#%%
 '''
 Fit the model to the data that is available
 '''
 
 # define MultiLayerPerceptron
 mlp = MLPClassifier(hidden_layer_sizes=(4,), 
-                    max_iter=105,
+                    max_iter=100,
                     solver='sgd', 
                     verbose=0,
                     random_state=2020,
@@ -103,69 +102,54 @@ mlp = MLPClassifier(hidden_layer_sizes=(4,),
 # train the model based on the data
 mlp.fit(inputted_patterns, outputs)
 
-#%% 
+#%%
 '''
-Test the model on a balanced dataset
-In this dataset, the amount of cues that require a 'word' response is equal
-to the amount of stimuli that requires a 'color response'.
+CONGRUENT TRIALS
 '''
 
-color_inputs    = np.tile(color_inputs_copy, (length_inputs * 5, 1))
-word_inputs     = np.tile(word_inputs_copy,  (length_inputs * 5, 1))
-
-color_outputs   = np.tile(color_outputs_copy, (length_inputs * 5, 1))
-word_outputs    = np.tile(word_outputs_copy,  (length_inputs * 5, 1))
-
-balanced_input  = np.vstack((color_inputs, word_inputs))
-balanced_output = np.ravel(np.vstack((color_outputs, word_outputs)))
+color_inputs_congr  = np.tile(color_inputs_copy[0:2], (length_inputs * 10, 1))
+color_outputs_congr = np.tile(color_outputs_copy[0:2], (length_inputs * 10, 1))
 
 # predict y based on x for the test data
-y_pred = mlp.predict(balanced_input)
-
-print(mlp.coefs_[0])
-
-# select wrong predictions (absolute vals) and print them
-compared = np.array(y_pred == balanced_output)
-absolute_wrong = (compared == False).sum()
-print("Our classification was wrong for {0} out of the {1} cases.".format(absolute_wrong, len(compared)))
+y_pred = mlp.predict(color_inputs_congr)
 
 # print accuracy using dedicated function
-print('Accuracy percentage: {0:.2f}'.format(accuracy_score(balanced_output, y_pred) * 100))
-
-# define confusion matrix and set numpy precision to two numbers
-cnf_matrix = confusion_matrix(balanced_output, y_pred)
-np.set_printoptions(precision=2)
-
-# plot absolute confusion matrix
-plot_confusion_matrix(cnf_matrix, 
-                      classes = class_names,
-                      normalize = False,
-                      plot_title = 'Confusion matrix for the Stroop task\nWeights from input layer to hidden layer were distorted')
-
+print('Accuracy percentage in the congruent trials: {0:.2f}%'.format(accuracy_score(color_outputs_congr, y_pred) * 100))
 
 #%%
+'''
+INCONGRUENT TRIALS
+'''
+
+color_inputs_incongr  = np.tile(color_inputs_copy[2:4], (length_inputs * 10, 1))
+color_outputs_incongr = np.tile(color_outputs_copy[2:4], (length_inputs * 10, 1))
+
+# predict y based on x for the test data
+y_pred = mlp.predict(color_inputs_incongr)
+
+# print accuracy using dedicated function
+print('Accuracy percentage in the incongruent trials: {0:.2f}%'.format(accuracy_score(color_outputs_incongr, y_pred) * 100))
+
+#%%
+
+"""
+
 '''
 Change the weights
 '''
 np.random.seed(2020)
 
 original_weights_to_hidden = np.copy(mlp.coefs_[0])
-mlp.coefs_[0]              = mlp.coefs_[0] + (np.random.randn(6, 4) / 10)
+mlp.coefs_[0]              = mlp.coefs_[0] + (np.random.randn(6, 4) / 50)
 
 # predict y based on x for the test data
-y_pred = mlp.predict(balanced_input)
-
-# select wrong predictions (absolute vals) and print them
-compared = np.array(y_pred == balanced_output)
-absolute_wrong = (compared == False).sum()
-print("Our classification was wrong for {0} out of the {1} cases.".format(absolute_wrong, len(compared)))
-
+y_pred = mlp.predict(inputted_patterns)
 
 # print accuracy using dedicated function
-print('Accuracy percentage: {0:.2f}'.format(accuracy_score(balanced_output, y_pred) * 100))
+print('Accuracy percentage: {0:.2f}'.format(accuracy_score(outputs, y_pred) * 100))
 
 # define confusion matrix and set numpy precision to two numbers
-cnf_matrix = confusion_matrix(balanced_output, y_pred)
+cnf_matrix = confusion_matrix(outputs, y_pred)
 np.set_printoptions(precision=2)
 
 # plot absolute confusion matrix
@@ -173,3 +157,4 @@ plot_confusion_matrix(cnf_matrix,
                       classes = class_names,
                       normalize = False,
                       plot_title = 'Confusion matrix for the Stroop task\nWeights from input layer to hidden layer were distorted')
+"""
