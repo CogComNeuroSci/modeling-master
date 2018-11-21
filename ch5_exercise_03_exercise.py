@@ -61,58 +61,56 @@ is able to complete the task, but has a bias towards reading vs naming the color
         # [-1] if the response should be 'green'
 
 # task: 'name the color of the presented word'
-red_red_color     = [0, 1, 0, 1, 0, 1] # Answer should be: 'red'
-green_green_color = [0, 1, 1, 0, 1, 0] # Answer should be: 'green'
-red_green_color   = [0, 1, 0, 1, 1, 0] # Answer should be: 'red'
-green_red_color   = [0, 1, 1, 0, 0, 1] # Answer should be: 'green'
+red_red_color     = ... # Answer should be: 'red'
+green_green_color = ... # Answer should be: 'green'
+red_green_color   = ... # Answer should be: 'red'
+green_red_color   = ... # Answer should be: 'green'
 
 # task: 'read the presented word'
-red_red_word      = [1, 0, 0, 1, 0, 1] # Answer should be: 'red'
-green_green_word  = [1, 0, 1, 0, 1, 0] # Answer should be: 'green'
-red_green_word    = [1, 0, 0, 1, 1, 0] # Answer should be: 'green'
-green_red_word    = [1, 0, 1, 0, 0, 1] # Answer should be: 'red'
+red_red_word      = ... # Answer should be: 'red'
+green_green_word  = ... # Answer should be: 'green'
+red_green_word    = ... # Answer should be: 'green'
+green_red_word    = ... # Answer should be: 'red'
 
 # appropriate responses for each case
-response_1, response_2, response_3, response_4 =  [1], [-1],  [1], [-1]
-response_5, response_6, response_7, response_8 =  [1], [1], [-1],  [1]
+response_1, response_2, response_3, response_4 =  ...
+response_5, response_6, response_7, response_8 =  ...
 
 # bundle them together
-color_inputs  = np.array([red_red_color, green_green_color, 
-                          red_green_color, green_red_color])
-word_inputs   = np.array([red_red_word,  green_green_word,  
-                          red_green_word,  green_red_word])
+color_inputs  = np.array(...)
+word_inputs   = np.array(...)
 
 # make a copy of the original arrays, because I believe you might want to use 
 # those later on...
-color_inputs_copy, word_inputs_copy = np.copy(color_inputs), \
-                                      np.copy(word_inputs)
+color_inputs_copy, word_inputs_copy = ..., \
+                                      ...
 
 # define the appropriate responses for the 'name the color' task
-color_outputs = np.array([response_1, response_2, response_3, response_4])
+color_outputs = np.array(...)
 
 # define the appropriate responses for the 'read the word' task
-word_outputs  = np.array([response_5, response_6, response_7, response_8])
+word_outputs  = np.array(...)
 
 # again make a copy of the original arrays
-color_outputs_copy, word_outputs_copy = np.copy(color_outputs), \
-                                        np.copy(word_outputs)
+color_outputs_copy, word_outputs_copy = ..., \
+                                        ...
 
 # amount of possible inputs (the same for the word task of course)
-length_inputs = len(color_inputs)
+...
 
 # repeat the input patterns (repeat the word task more, for the bias)
 # we defined the color inputs 2 times, and the word inputs 7 times
-color_inputs   = np.tile(color_inputs, (length_inputs * 2, 1))
-word_inputs    = np.tile(word_inputs,  (length_inputs * 7, 1))
+color_inputs   = np.tile(...)
+word_inputs    = np.tile(...)
 
 # repeat the responses the same amount of times: our responses should match
 # our defined input patterns
-color_outputs  = np.tile(color_outputs, (length_inputs * 2, 1))
-word_outputs   = np.tile(word_outputs,  (length_inputs * 7, 1))
+color_outputs  = np.tile(...)
+word_outputs   = np.tile(...)
 
 # stack the input patterns and their associated responses
-inputted_patterns  = np.vstack((color_inputs, word_inputs))
-outputs            = np.ravel(np.vstack((color_outputs, word_outputs)))
+inputted_patterns  = ...
+outputs            = np.ravel(...)
 
 # the strings associated with our possible outcomes
 # here, only two labels are possible ('color' and 'word')
@@ -131,16 +129,16 @@ Our learning rate, the random_state, ... and other parameters remain constant
 '''
 
 # define MultiLayerPerceptron
-mlp = MLPClassifier(hidden_layer_sizes=(4,), 
-                    max_iter=500,
-                    solver='sgd', 
-                    verbose=0,
-                    random_state=1234,
-                    learning_rate_init=.3, 
-                    activation='logistic')
+    # a hidden layer with four units
+    # 500 learning cycles
+    # solver = 'sgd'
+    # random_state = 1234
+    # learning rate = .7
+    # activation function = 'logistic'
+...
 
 # train the model based on the data
-mlp.fit(inputted_patterns, outputs)
+mlp.fit(...)
 
 #%%
 '''
@@ -155,20 +153,20 @@ when the ink color is different to the word meaning
 (i.e., green written in red ink)
 '''
 
-color_inputs_congr  = np.tile(color_inputs_copy[0:2], (length_inputs * 10, 1))
-words_inputs_congr  = np.tile(word_inputs_copy[0:2], (length_inputs * 10, 1))
+color_inputs_congr  = np.tile..., (... * 10, 1))
+words_inputs_congr  = np.tile(..., (... * 10, 1))
 
-color_outputs_congr = np.tile(color_outputs_copy[0:2], (length_inputs * 10, 1))
-word_outputs_congr  = np.tile(word_outputs_copy[0:2], (length_inputs * 10, 1))
+color_outputs_congr = np.tile(..., (... * 10, 1))
+word_outputs_congr  = np.tile(..., (... * 10, 1))
 
-congruent_input     = np.vstack((color_inputs_congr, words_inputs_congr))
-congruent_output    = np.ravel(np.vstack((color_outputs_congr, word_outputs_congr)))
+congruent_input     = ...
+congruent_output    = np.ravel(...)
 
 # predict y based on x for the test data
-y_pred = mlp.predict(congruent_input)
+y_pred = mlp.predict(...)
 
 # print accuracy using dedicated function
-print('Accuracy percentage in the congruent trials: {0:.2f}%'.format(accuracy_score(congruent_output, y_pred) * 100))
+print('Accuracy percentage in the congruent trials: {0:.2f}%'.format(... * 100))
 
 #%%
 '''
@@ -180,20 +178,20 @@ incongruent trials.
 The same definitions with respect to (in)congruency hold
 '''
 
-color_inputs_incongr  = np.tile(color_inputs_copy[2:4], (length_inputs * 10, 1))
-words_inputs_incongr  = np.tile(word_inputs_copy[2:4], (length_inputs * 10, 1))
+color_inputs_incongr  = np.tile..., (... * 10, 1))
+words_inputs_incongr  = np.tile..., (... * 10, 1))
 
-color_outputs_incongr = np.tile(color_outputs_copy[2:4], (length_inputs * 10, 1))
-word_outputs_incongr  = np.tile(word_outputs_copy[2:4], (length_inputs * 10, 1))
+color_outputs_incongr = np.tile..., (... * 10, 1))
+word_outputs_incongr  = np.tile..., (... * 10, 1))
 
-incongruent_input     = np.vstack((color_inputs_incongr, words_inputs_incongr))
-incongruent_output    = np.ravel(np.vstack((color_outputs_incongr, word_outputs_incongr)))
+incongruent_input     = ...
+incongruent_output    = np.ravel(...)
 
 # predict y based on x for the test data
-y_pred = mlp.predict(incongruent_input)
+y_pred = mlp.predict(...)
 
 # print accuracy using dedicated function
-print('Accuracy percentage in the incongruent trials: {0:.2f}%'.format(accuracy_score(incongruent_output, y_pred) * 100))
+print('Accuracy percentage in the incongruent trials: {0:.2f}%'.format(... * 100))
 
 #%%
 '''
@@ -208,27 +206,20 @@ Check the accuracy of your trained model using the earlier defined code
 '''
 
 # split data in training and testing set
-X_train, X_test, y_train, y_test = train_test_split(inputted_patterns, 
-                                                    outputs)
-
+...
 
 # define MultiLayerPerceptron
-mlp = MLPClassifier(hidden_layer_sizes=(4,), 
-                    max_iter=500,
-                    solver='sgd', 
-                    verbose=0,
-                    random_state=1234,
-                    learning_rate_init=.7, 
-                    activation='logistic')
+        # use the same parameters as before
+...
 
 # fit ('train') MLP classifier to the training data
-mlp.fit(X_train, y_train)
+mlp.fit(...)
 
 # predict y based on x for the test data
-y_pred = mlp.predict(X_test)
+y_pred = mlp.predict(...)
 
 # print accuracy using dedicated function
-print('Accuracy percentage for the entire dataset: {0:.2f}%'.format(accuracy_score(y_test, y_pred) * 100))
+print('Accuracy percentage for the entire dataset: {0:.2f}%'.format(... * 100))
 
 #%%
 '''
@@ -279,39 +270,44 @@ np.printoptions(suppress=True)
 # copy the original weights to a new variable
 original_weights_to_hidden = np.copy(mlp.coefs_[0])
 
-# create an array with values in the interval [0.01, 1], equally spaced
+# create an array with values in the interval [1, 5], equally spaced
 standard_deviations        = np.linspace(1, 5)
 
 # number of simulations we want to run
 simulation_number          = 50
 
 # create an array of zeros that will contain the accuracy scores
-accuracy_general           = np.zeros(standard_deviations.shape)
-accuracy_congruent         = np.zeros(standard_deviations.shape)
-accuracy_incongruent       = np.zeros(standard_deviations.shape)
+# make sure the shape is right
+accuracy_general           = ...
+accuracy_congruent         = ...
+accuracy_incongruent       = ...
 
 # create an array that will contain all the accuracy scores for all simulations
     # this can be of use when we want to plot per simulations after running the
     # simulation
-simulations_general        = np.zeros((standard_deviations.shape[0], simulation_number))
-simulations_congruency     = np.zeros((standard_deviations.shape[0], simulation_number))
-simulations_incongruency   = np.zeros((standard_deviations.shape[0], simulation_number))
+    # make sure the shape of the array is correct!
+simulations_general        = ...
+simulations_congruency     = ...
+simulations_incongruency   = ...
 
 # loop for n amount of cycles, where n = simulation_number
 for simulation in range(simulation_number): 
 
     cycle_number = 0
-    random_array = np.random.randn(6, 4)
+    
+    # create an array of size 6 x 4, containing random standard normal
+    # variables
+    random_array = ...
     
     # loop over different standard deviations
-    for std in standard_deviations:
+    for ... in ...:
             
             # add random noise to the weights that connect the input layer and 
             # the hidden layer
             # mind that the standard deviation has a huge influence in this:
                 # dividing by 0.01 has huge effects, while dividing by 1 yields
                 # no differences at all when it comes to accuracy
-            mlp.coefs_[0] = mlp.coefs_[0] + (random_array * std)
+            mlp.coefs_[0] = mlp.coefs_[0] + (random_array * ...)
             
             # *****
             # Accuracy on all data
@@ -319,34 +315,34 @@ for simulation in range(simulation_number):
 
             # make a new prediction with the model, keeping in mind that the 
             # weights have been altered by the random noise
-            y_pred = mlp.predict(inputted_patterns)
+            y_pred = mlp.predict(...)
             
             # print the result: how is the accuracy of the model affected by
             # the change in weights?
             # (commented out for now, but please uncomment it to see how it works)
             '''
-            print('Simulation {0:2d} - Cycle {1:2d}: Accuracy = {2:.2f}%'.format(simulation + 1,
-                                                                                 cycle_number + 1,
-                                                                                 accuracy_score(outputs, y_pred) * 100))
+            print('Simulation {0:2d} - Cycle {1:2d}: Accuracy = {2:.2f}%'.format(...,
+                                                                                 ...,
+                                                                                 ... * 100))
             '''
             # assign the computed accuracy score to the array that keeps track
             # of this
-            accuracy_general[cycle_number] = accuracy_score(outputs, y_pred) * 100
+            ...[...] = ...
             
             # *****
             # Accuracy on congruent trials
             # *****
-            y_pred = mlp.predict(congruent_input)
-            accuracy_congruent[cycle_number] = accuracy_score(congruent_output, y_pred) * 100
+            y_pred = mlp.predict(...)
+            ...[...] = ...
             
             # *****
             # Accuracy on incongruent trials
             # *****
-            y_pred = mlp.predict(incongruent_input)
-            accuracy_incongruent[cycle_number] = accuracy_score(incongruent_output, y_pred) * 100        
+            y_pred = mlp.predict(...)
+            ...[...] = ...      
             
             # reset the altered weights to their original value
-            mlp.coefs_[0] = original_weights_to_hidden
+            mlp.coefs_[0] = ...
             
             # increment the variable 'cycle_number' with 1
             cycle_number += 1
@@ -359,16 +355,16 @@ for simulation in range(simulation_number):
     # standard deviations, with 50 different (random) starting distortions 
     # in the weights
     # by doing so, we can assess how often the decrease in model accuracy occurs
-    simulations_general[simulation]      = accuracy_general
-    simulations_congruency[simulation]   = accuracy_congruent
-    simulations_incongruency[simulation] = accuracy_incongruent
+    ...[...]      = ...
+    ...[...]   = ...
+    ...[...] = ...
     
     # rest 'accuracy_scores' = make it all-zero again
     # if this is not done, we will use a non-zero array in the next 
     # 'standard_deviation' loop
-    accuracy_general           = np.zeros(standard_deviations.shape)
-    accuracy_congruent         = np.zeros(standard_deviations.shape)
-    accuracy_incongruent       = np.zeros(standard_deviations.shape)
+    ...           = np.zeros(....shape)
+    ...         = np.zeros(....shape)
+    ...       = np.zeros(....shape)
 
 #%%
 '''
@@ -386,15 +382,15 @@ decrease in performance 50 times
 # noise-adding cycle
 # we expect to see that the model deteriorates over time, as more noise is added
 # with each cycle
-mean_accuracy = np.mean(simulations_general, axis = 0)
-median_accuracy = np.median(simulations_general, axis = 0)
+mean_accuracy = np.mean(..., axis = 0)
+median_accuracy = np.median(..., axis = 0)
 
 # plot both lines separately
 # basically, we plot all the values in each specific array
 # we also assign a color to the line, and label the line (this will be used 
 # by the legend() function we call immediately after this))
-median_acc, = plt.plot(median_accuracy, color = 'royalblue', label='Median accuracy')
-mean_acc,   = plt.plot(mean_accuracy, color = 'forestgreen', label='Mean accuracy')
+median_acc, = plt.plot(..., color = 'royalblue', label='Median accuracy')
+mean_acc,   = plt.plot(..., color = 'forestgreen', label='Mean accuracy')
 
 # create a legend, Python knows the colors and the labels due to the previous
 # piece of code, the legend will be plotted in the 'best' location
@@ -435,15 +431,15 @@ decrease in performance 50 times
 # noise-adding cycle
 # we expect to see that the model deteriorates over time, as more noise is added
 # with each cycle
-mean_congruent = np.mean(simulations_congruency, axis = 0)
-mean_incongruent = np.mean(simulations_incongruency, axis = 0)
+mean_congruent = np.mean(..., axis = 0)
+mean_incongruent = np.mean(..., axis = 0)
 
 # plot both lines separately
 # basically, we plot all the values in each specific array
 # we also assign a color to the line, and label the line (this will be used 
 # by the legend() function we call immediately after this))
-mean_congr,     = plt.plot(mean_congruent, color = 'Indigo', label='Congruent trials')
-mean_incongr,   = plt.plot(mean_incongruent, color = 'navajowhite', label='Incongruent trials')
+mean_congr,     = plt.plot(..., color = 'Indigo', label='Congruent trials')
+mean_incongr,   = plt.plot(..., color = 'navajowhite', label='Incongruent trials')
 
 # create a legend, Python knows the colors and the labels due to the previous
 # piece of code, the legend will be plotted in the 'best' location

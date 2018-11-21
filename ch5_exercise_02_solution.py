@@ -22,7 +22,7 @@ to let Python help you!
 
 import numpy                      as     np
 
-from   plotting_helper            import plot_confusion_matrix
+from   ch5_plotting_helper        import plot_confusion_matrix
 from   sklearn.linear_model       import Perceptron
 from   sklearn.metrics            import confusion_matrix, accuracy_score
 from   sklearn.model_selection    import train_test_split
