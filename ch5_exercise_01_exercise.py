@@ -22,6 +22,8 @@ to let Python help you!
 
 # import relevant modules
 import ch0_delta_learning      as     delta_learning
+import itertools
+import matplotlib.pyplot       as     plt
 import numpy                   as     np
 
 from   sklearn.linear_model    import Perceptron
@@ -45,10 +47,11 @@ This code is (almost entirely) adopted from the first part of the test.
 beta = .1
 
 # Training samples (activation (x) of each input unit)
+# Use 40 of each
 cat_proto = np.array([0, 1, 1])
-n_train_cats = 40
+n_train_cats = ...
 dog_proto = np.array([1, 1, -1])
-n_train_dogs = 40
+n_train_dogs = ...
 
 # Noise on exemplars
 std_noise = 0.01
@@ -85,21 +88,21 @@ their picture group, so if that was clear then this will also be clear!
 '''
 
 # Define a weight matrix exclusively filled with zeros
-weight_matrix = delta_learning.initialise_weights(train_samples[0], 
-                                                  targets[0], 
-                                                  zeros=True,
-                                                  predefined=False, 
-                                                  verbose=True)
+# Make a weight matrix that fits the data you are working with
+weight_matrix = delta_learning.initialise_weights(..., 
+                                                  ..., 
+                                                  ...,
+                                                  ..., 
+                                                  ...)
 
 # Show me what you got 
 print('Our original weight matrix, for now filled with zeros:\n', weight_matrix)
 
 # Make a copy of the original weight matrix
-original_weight_matrix = np.copy(weight_matrix)
+...
 
 # Activation associated with the all zero weight matrix
-activation_original = delta_learning.internal_input(train_samples[0],
-                                                    weight_matrix)[0]
+activation_original = ...
 print('\nActivation levels at output for the original weight matrix:\n', activation_original)
 
 # Change the original weight matrix towards the desired weight matrix
@@ -112,22 +115,20 @@ print('\nActivation levels at output for the original weight matrix:\n', activat
 # to show *every* example of a cat or dog that is available!
 # Mind that we defined a learning rate earlier ... 
     
-times_shown = 100
+times_shown = ...
 
-# define a random order
-random_order = np.random.permutation(train_samples.shape[0])
+# present the data in a random order
 
-for indices in random_order:
-    for loop_var in np.arange(1, times_shown + 1):
-        weights_after_learning = delta_learning.weight_change(beta,
-                                                              train_samples[indices],
-                                                              targets[indices],
-                                                              weight_matrix)
-        weight_matrix = weights_after_learning
+for ... in range(...):
+    for ... in np.arange(1, ... + 1):
+        weights_after_learning = delta_learning.weight_change(...,
+                                                              ...,
+                                                              ...,
+                                                              ...)
+        ... = weights_after_learning
 
 
-print('\nOur altered weight matrix after {} trials of delta learning:\n'.format(times_shown), 
-      weight_matrix)
+print('\nOur altered weight matrix after {0} trials of delta learning:\n{1}').format(...)
 
 #%%
 '''
@@ -140,14 +141,12 @@ See whether the model's output resembles the desired activation
 print('\n*\n* Testing model performance with the "home-made" form of Delta learning\n*\n')
 
 # Showing a cat to the model after performing Delta learning
-activation_after_seeing_cat = delta_learning.internal_input(train_samples[0],
-                                                          weight_matrix)[0]
+activation_after_seeing_cat = ...
 print('Activation levels after seeing a cat:', 
       np.round(activation_after_seeing_cat, 3))
 
 # Showing a dog to the model after performing Delta learning
-activation_after_seeing_dog = delta_learning.internal_input(train_samples[-1],
-                                                          weight_matrix)[0]
+activation_after_seeing_dog = ...
 print('Activation levels after seeing a dog:', 
       np.round(activation_after_seeing_dog, 3))
 
@@ -167,25 +166,26 @@ obtained with the code above...
 # Define new targets:
     # make sure that the array [1]  represents a cat
     # make sure that the array -[1] represents a dog
-targets = np.array(1)
-for loop in range(n_train_cats-1):
-    targets = np.vstack((targets, [1]))
+targets = np.array(...)
+for loop in range(...):
+    targets = np.vstack((...))
 for loop in range(n_train_dogs):
-    targets = np.vstack((targets, [-1]))
+    targets = np.vstack((...)))
 # Make a single array of the (for now) double array
-    # Print before and after if you don't understand what happens!
+    # Print before and after if you don't understand what happens! 
 targets = np.ravel(targets)
 
 # split data in training and testing set
-X_train, X_test, y_train, y_test = train_test_split(train_samples, 
-                                                    targets)
+X_train, X_test, y_train, y_test = ...
 
-# define classifier (Perceptron object from scikit-learn)
-classification_algorithm = Perceptron(max_iter = 100,
-                                      verbose = 0)
+# define the classifier (Perceptron object from scikit-learn)
+    # 100 cycles
+    # No random state
+    # Verbose set to False
+classification_algorithm = ...
 
-# fit ('train') classifier to the training data
-classification_algorithm.fit(X_train, y_train)
+# fit ('train') classifier to the training data (no scaling is required)
+classification_algorithm.fit(...)
 
 #%%
 '''
@@ -201,23 +201,21 @@ print('\n*\n* Testing model performance with the Perceptron from scikit-learn\n*
 # Remember that in this case, the output:
     # 'cat' is represented by [ 1]
     # 'dog' is represented by [-1]
-reaction_to_cat, reaction_to_dog = classification_algorithm.predict([train_samples[ 0]]), \
-                                   classification_algorithm.predict([train_samples[-1]])
+reaction_to_cat, reaction_to_dog = ..., \
+                                   ...
 
 # Presenting a cat
-print('We represented the following pattern (which is known to be a cat):\n', train_samples[0])
-if reaction_to_cat[0] == 1:
+print('We represented the following pattern (which is known to be a cat):\n', ...)
+if ...:
     print('After learning, the model labels this as a cat')
 else:
     print('After learning, the model labels this as a dog')
 
 # Presenting a dog
-print('\nWe represented the following pattern (which is known to be a dog):\n', train_samples[-1])
-if reaction_to_dog[0] == 1:
-    print('After learning, the model labels this as a cat')
-else:
-    print('After learning, the model labels this as a dog')
+print('\nWe represented the following pattern (which is known to be a dog):\n',...)
+if ...:
+    ...
 
 
-print('\n\n**\nBoth models are able to differentiate cats from dogs! *\n**')
+print(.. the conclusion of our little experiment)
 
