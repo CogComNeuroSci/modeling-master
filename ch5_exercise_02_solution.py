@@ -6,9 +6,6 @@
 @author: Pieter
 Pieter.Huycke@UGent.be
 
-Code adapted from the solution of test 01
-Credit to both Tom and Mehdi
-
 - - - - - - - - - - - - 
 
 Stuck using a function?
@@ -51,13 +48,13 @@ To keep things simple, we will only look at two words and two colors.
 You can imagine this as a Stroop task where participants see the words 'GREEN'
 and 'RED', written in the colors green and red.
 The cue that indicates to which dimension the subjects have to respond is also
-binomial: a subject should either react to the word itself, or to the color.
+binary: a subject should either react to the word itself, or to the color.
 
 In other words, we have three dimensions that can take two different values:
     - color of the word
     - written form
     - cue that represents the relevant dimension
-Given this, we know that we will need 6 input units (3 dimensions with each
+Given this, we know that we will need 6 input units (three dimensions with each
 two possible values).
 By doing so, we can represent every possible input that our participant might
 see.
@@ -66,7 +63,14 @@ How many output units do we need?
 Know that we have two response dimensions: "It's green" and "It's red"
 What the participant thinks is often measured by key presses (e.g. press right
 if the answer is 'green').
-Therefore, we will need to output units: to represent every possible outcome
+We actually only need one output unit: this is enough to represent 
+every possible outcome
+Why? To show you that every binary representation can be represented by a single
+unit that can two values
+In other words: our model could also be created with three input units and a single
+output unit
+We made it more intuitive though by "smearing out" the inputs, now we can see 
+which units are active, and which are not active, and what this represents
 
 For convenience, we will fix the cue units: this means that the participants 
 always have to respond to the same stimulus dimension.
@@ -127,8 +131,8 @@ inputted_patterns    = np.tile(all_possible_inputs,  (length_inputs * 50, 1))
 outputs              = np.ravel(np.tile(all_possible_outputs, (length_inputs * 50, 1)))
 
 # The strings associated with our possible outcomes
-# Here, only two labels are possible ('green', and 'red')
-class_names = ['Color relevant', 'Word relevant']
+# Here, only two labels are possible ('red', and 'green')
+class_names = ['Red', 'Green ']
 
 #%%
 '''
@@ -156,12 +160,12 @@ classification_algorithm.fit(X_train, y_train)
 * PLOTTING  *
 
 Test the model, show the confusion matrix.
-We should note that the accuracy is 100%.
+Take a look at the accuracy scores.
 '''
 # predict y based on x for the test data
 y_pred = classification_algorithm.predict(X_test)
 
-# select wrong predictions (absolute vals) and print them
+# select wrong predictions (integers, not percentages), and print them
 compared = np.array(y_pred == y_test)
 absolute_wrong = (compared == False).sum()
 print("Our classification was wrong for {0} out of the {1} cases.".format(absolute_wrong, len(compared)))
@@ -178,15 +182,15 @@ np.set_printoptions(precision=2)
 plot_confusion_matrix(cnf_matrix, 
                       classes = class_names,
                       normalize = False,
-                      plot_title = 'Confusion matrix for the Stroop task\nOnly the color is relevant for the participant')
-
+                      plot_title = 'Confusion matrix for the Stroop task\n' \
+                                   'Single task - Delta learning')
 #%%
 '''
 * TWO RELEVANT STIMULUS DIMENSIONS *
 
 In the following, we will create data for a model where the participant has to
 switch tasks. 
-In other words, the first two units will not have different activation patterns
+In other words, the first two units will have different activation patterns
 (while they were fixed previously).
 Try to use Delta learning to configure a correct set of weights.
 See whether this works out.
@@ -223,8 +227,8 @@ inputted_patterns    = np.tile(all_possible_inputs,  (length_inputs * 50, 1))
 outputs              = np.ravel(np.tile(all_possible_outputs, (length_inputs * 50, 1)))
 
 # The strings associated with our possible outcomes
-# Here, only two labels are possible ('green', and 'red')
-class_names = ['Color relevant', 'Word relevant']
+# Here, only two labels are possible ('red', and 'green')
+class_names = ['Red', 'Green']
 
 #%%
 '''
@@ -250,12 +254,12 @@ classification_algorithm.fit(X_train, y_train)
 * PLOTTING  *
 
 Test the model, show the confusion matrix.
-We should note that the model performs way worse than before.
+Investigate the yielded results, do they make sense?
 '''
 # predict y based on x for the test data
 y_pred = classification_algorithm.predict(X_test)
 
-# select wrong predictions (absolute vals) and print them
+# select wrong predictions (integers, not percentages), and print them
 compared = np.array(y_pred == y_test)
 absolute_wrong = (compared == False).sum()
 print("Our classification was wrong for {0} out of the {1} cases.".format(absolute_wrong, len(compared)))
@@ -272,8 +276,8 @@ np.set_printoptions(precision=2)
 plot_confusion_matrix(cnf_matrix, 
                       classes = class_names,
                       normalize = False,
-                      plot_title = 'Confusion matrix for the Stroop task\nThe participant has to switch tasks')
-
+                      plot_title = 'Confusion matrix for the Stroop task\n' \
+                                   'Task switch - Delta learning')
 #%%
 '''
 * TWO RELEVANT STIMULUS DIMENSIONS *
@@ -303,12 +307,12 @@ mlp.fit(X_train, y_train)
 * PLOTTING  *
 
 Test the model, show the confusion matrix.
-We should note that the model performs way worse than before.
+Look at the accuracies, what can we infer from this?
 '''
 # predict y based on x for the test data
 y_pred = mlp.predict(X_test)
 
-# select wrong predictions (absolute vals) and print them
+# select wrong predictions (integers, not percentages), and print them
 compared = np.array(y_pred == y_test)
 absolute_wrong = (compared == False).sum()
 print("Our classification was wrong for {0} out of the {1} cases.".format(absolute_wrong, len(compared)))
@@ -325,4 +329,5 @@ np.set_printoptions(precision=2)
 plot_confusion_matrix(cnf_matrix, 
                       classes = class_names,
                       normalize = False,
-                      plot_title = 'Confusion matrix for the Stroop task\nThe participant has to switch tasks')
+                      plot_title = 'Confusion matrix for the Stroop task\n' \
+                                   'Task switch - Backpropagation')

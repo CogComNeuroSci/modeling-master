@@ -117,6 +117,7 @@ times_shown = 100
 # define a random order
 random_order = np.random.permutation(train_samples.shape[0])
 
+# loop over the data in a random fashion
 for indices in random_order:
     for loop_var in np.arange(1, times_shown + 1):
         weights_after_learning = delta_learning.weight_change(beta,
@@ -165,8 +166,8 @@ obtained with the code above...
 '''
 
 # Define new targets:
-    # make sure that the array [1]  represents a cat
-    # make sure that the array -[1] represents a dog
+    # make sure that the array  [1]  represents a cat
+    # make sure that the array [-1] represents a dog
 targets = np.array(1)
 for loop in range(n_train_cats-1):
     targets = np.vstack((targets, [1]))
@@ -176,15 +177,17 @@ for loop in range(n_train_dogs):
     # Print before and after if you don't understand what happens!
 targets = np.ravel(targets)
 
-# split data in training and testing set
+# Split data in training and testing set
 X_train, X_test, y_train, y_test = train_test_split(train_samples, 
                                                     targets)
 
-# define classifier (Perceptron object from scikit-learn)
+# Define classifier (Perceptron object from scikit-learn) 
+    # 100 learning iterations
+    # verbose set to false
 classification_algorithm = Perceptron(max_iter = 100,
                                       verbose = 0)
 
-# fit ('train') classifier to the training data
+# Fit ('train') classifier to the training data
 classification_algorithm.fit(X_train, y_train)
 
 #%%

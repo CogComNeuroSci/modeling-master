@@ -117,8 +117,10 @@ print('\nActivation levels at output for the original weight matrix:\n', activat
     
 times_shown = ...
 
-# present the data in a random order
+# define a random order
+...
 
+# loop over the data in a random fashion
 for ... in range(...):
     for ... in np.arange(1, ... + 1):
         weights_after_learning = delta_learning.weight_change(...,
@@ -164,8 +166,8 @@ obtained with the code above...
 '''
 
 # Define new targets:
-    # make sure that the array [1]  represents a cat
-    # make sure that the array -[1] represents a dog
+    # make sure that the array  [1]  represents a cat
+    # make sure that the array [-1] represents a dog
 targets = np.array(...)
 for loop in range(...):
     targets = np.vstack((...))

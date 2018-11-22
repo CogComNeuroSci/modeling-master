@@ -59,12 +59,12 @@ def initialise_weights(input_pattern, output_pattern, zeros=False,
     """
     :param input_pattern:
     The input pattern which is provided
-    An example: [.99 .01 .99 .01 .99 .01]
+    An example: [.99, .01, .99, .01, .99, .01]
     What this input pattern represents is specified by the user
     Input patterns should be lists
 
     :param output_pattern:
-    The input pattern which is provided
+    The output pattern which is provided
     An example: [.99 .99 .01 .01]
     What this output pattern represents is specified by the user
     Output patterns should be lists

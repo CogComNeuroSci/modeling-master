@@ -30,7 +30,7 @@ from   sklearn.neural_network     import MLPClassifier
 
 In this code, we are going to recreate the Stroop model.
 Here, the idea is that a human is biased towards reading words.
-Because of this, we have to bias the model towards reading words.
+Because of this, we have to this kind of bias.
 To do this, we have to present the 'word naming task' more than the 
 'color naming task'
 This approach is similar to previous work where we presented more dogs than 
@@ -43,7 +43,8 @@ appropriate for each pattern.
 Remember to learn the 'word task' more to install the bias towards reading
 
 Then, we want to train our model with the data, which leads to a model that 
-is able to complete the task, but has a bias towards reading vs naming the color
+is able to complete the task, but has a bias towards reading the words
+vs naming the color
 '''
 
 # Unit interpretation:
@@ -74,7 +75,7 @@ green_red_word    = [1, 0, 1, 0, 0, 1] # Answer should be: 'red'
 
 # appropriate responses for each case
 response_1, response_2, response_3, response_4 =  [1], [-1],  [1], [-1]
-response_5, response_6, response_7, response_8 =  [1], [1], [-1],  [1]
+response_5, response_6, response_7, response_8 =  [1],  [1], [-1],  [1]
 
 # bundle them together
 color_inputs  = np.array([red_red_color, green_green_color, 
@@ -93,7 +94,7 @@ color_outputs = np.array([response_1, response_2, response_3, response_4])
 # define the appropriate responses for the 'read the word' task
 word_outputs  = np.array([response_5, response_6, response_7, response_8])
 
-# again make a copy of the original arrays
+# again, we make a copy of the original arrays
 color_outputs_copy, word_outputs_copy = np.copy(color_outputs), \
                                         np.copy(word_outputs)
 
@@ -113,12 +114,6 @@ word_outputs   = np.tile(word_outputs,  (length_inputs * 7, 1))
 # stack the input patterns and their associated responses
 inputted_patterns  = np.vstack((color_inputs, word_inputs))
 outputs            = np.ravel(np.vstack((color_outputs, word_outputs)))
-
-# the strings associated with our possible outcomes
-# here, only two labels are possible ('color' and 'word')
-# this because we have two different relevant dimensions: the color dimension
-# and the word dimension
-class_names = ['Color', 'Word']
 
 #%%
 '''
@@ -240,11 +235,8 @@ This is in line with the seminal paper of Cohen and Servan-Schreiber (1992).
 While a thorough review of this paper is beyond the scope of this comment block,
 we stress that this paper aimed to model the decreased performance of 
 schizophrenia patients in the Stroop task. 
-To this end, they manipulated a Stroop model by altering some of the parameters
-Specifically, they distorted certain parts of the model.
-Describing the specific model and their manipulations would take too much time,
-but it should suffice to know that making the model 'worse' reflects a subject
-suffering from schizophrenia.
+For the sake of parsimony, it should suffice to know that making the model 
+perform worse is an approximation of a subject suffering from schizophrenia.
 This because these patients also perform worse than healthy subjects.
 (i.e. the distorted model also performs worse than the healthy model)
 
@@ -256,7 +248,7 @@ Obviously, our model will perform worse when the weights are distorted, as
 our weight values after learning represent that the model will be able to 
 output an appropriate response for a certain input.
 Example: due to our configured weights, the model will respond with 'red', when
-the task is 'respond with the color' to the word GREEN written in a red font.
+the task is 'respond with the color' to the word GREEN written in a red color.
 After training, our model represents a human that is able to do this task 
 without any errors. Thus, our subject makes no errors when performing the 
 Stroop task.
@@ -265,7 +257,7 @@ perform on this task, as we highlighted earlier.
 
 In each step, we will add more noise (reflecting a patient that has more issues
 in processing).
-We will see how the performance of our model drops with more noise.
+Investigate how the performance of the model evolves with increasing noise.
 
 Reference:
 Cohen, J. D., & Servan-Schreiber, D. (1992). Context, cortex, and dopamine: 
@@ -309,8 +301,8 @@ for simulation in range(simulation_number):
             # add random noise to the weights that connect the input layer and 
             # the hidden layer
             # mind that the standard deviation has a huge influence in this:
-                # dividing by 0.01 has huge effects, while dividing by 1 yields
-                # no differences at all when it comes to accuracy
+                # multiplying by 100 has huge effects, while mulltiplying by 1 
+                # yields no differences at all when it comes to accuracy
             mlp.coefs_[0] = mlp.coefs_[0] + (random_array * std)
             
             # *****
@@ -354,9 +346,9 @@ for simulation in range(simulation_number):
     # when the previous loop is done, we have a filled 'accuracy_score' array
     # we now assign the entire array to one of the all-zero arrays in 
     # 'simulations_scores'
-    # at the end, we will have replaced all 50 all-zero arrays in this variable
+    # at the end, we will have replaced all n all-zero arrays in this variable
     # these arrays reflect the fluctuations in accuracy scores depending on the
-    # standard deviations, with 50 different (random) starting distortions 
+    # standard deviations, with n different (random) starting distortions 
     # in the weights
     # by doing so, we can assess how often the decrease in model accuracy occurs
     simulations_general[simulation]      = accuracy_general
@@ -379,13 +371,11 @@ general accuracy
 In this part, we will plot how the performance of the model decreases with 
 heavier distortions of the weights between the input layer and the hidden layer
 We will use data that comes from the previous part, where we simulated the
-decrease in performance 50 times
+decrease in performance n times
 '''
 
 # compute both the median- and the mean accuracy of the altered model for each
 # noise-adding cycle
-# we expect to see that the model deteriorates over time, as more noise is added
-# with each cycle
 mean_accuracy = np.mean(simulations_general, axis = 0)
 median_accuracy = np.median(simulations_general, axis = 0)
 
@@ -425,16 +415,13 @@ plt.close()
 
 congruent vs. incongruent
 
-In this part, we will plot how the performance of the model decreases with 
-heavier distortions of the weights between the input layer and the hidden layer
-We will use data that comes from the previous part, where we simulated the
-decrease in performance 50 times
+In this part, we will investigate how the performance of the model changes
+both on the congruent and the incongruent trials
+Plot the mean accuracy for both types of trials, and look at what we observe
 '''
 
-# compute both the median- and the mean accuracy of the altered model for each
+# compute mean accuracy on the congruent and incongruent trials for each
 # noise-adding cycle
-# we expect to see that the model deteriorates over time, as more noise is added
-# with each cycle
 mean_congruent = np.mean(simulations_congruency, axis = 0)
 mean_incongruent = np.mean(simulations_incongruency, axis = 0)
 
@@ -443,7 +430,7 @@ mean_incongruent = np.mean(simulations_incongruency, axis = 0)
 # we also assign a color to the line, and label the line (this will be used 
 # by the legend() function we call immediately after this))
 mean_congr,     = plt.plot(mean_congruent, color = 'Indigo', label='Congruent trials')
-mean_incongr,   = plt.plot(mean_incongruent, color = 'navajowhite', label='Incongruent trials')
+mean_incongr,   = plt.plot(mean_incongruent, color = 'sandybrown', label='Incongruent trials')
 
 # create a legend, Python knows the colors and the labels due to the previous
 # piece of code, the legend will be plotted in the 'best' location
@@ -458,7 +445,8 @@ plt.yticks(np.arange(0, 105, step=10))
 plt.xlabel('Number of loops (more noise added / loop)')
 
 # a definition that creates a title for our plot
-plt.title('The impact of distorted weights on model accuracy')
+plt.title('The impact of distorted weights on model accuracy\n' \
+          'Distinction between congruent and incongruent trials')
 
 # show me the plot
 plt.show()

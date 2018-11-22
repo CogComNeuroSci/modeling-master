@@ -50,8 +50,8 @@ def plot_confusion_matrix(cm,
                  horizontalalignment="center",
                  color="white" if cm[i, j] > thresh else "black")
 
-    plt.ylabel('True label')
-    plt.xlabel('Predicted label')
+    plt.ylabel('Correct answer')
+    plt.xlabel('Answer given by model')
 
     plt.tight_layout()
     plt.show()
