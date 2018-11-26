@@ -3,8 +3,8 @@
 """
 Created on Sat Jun 23 17:53:58 2018
 
-@author: tom
-data generator for decision making model
+@author: tom verguts
+data generator for two models; more can be added
 """
 
 import numpy as np
@@ -14,16 +14,16 @@ import random
 def logit(beta_in,x1,x2):
     return 1/(1+np.exp(beta_in*(x2-x1)))
 
-# generate data for the alpha-beta model
+# generate data for the alpha-beta (aka, log-linear) model
 def generate_ab(alpha = 0.5, beta = 0.3, ntrials = 100, file_name = "simulation_data.csv"):
-    column_list = ["stim", "choice"]
+    column_list = ["difficulty", "accuracy"]
     data = pd.DataFrame(columns=column_list)
     # simulate data
     for loop in range(ntrials):
-        # choose 2 stimuli out of nstim
-        X = (random.random()<0.5)
+        # choose stimulus difficulty X
+        X = (random.random()<0.5)*1 # *1 to change True to 1 and False to 0
         p1 = alpha*(beta**X)
-        choice = (random.random()<p1)
+        choice = (random.random()<p1)*1 # was subject successful or not
         data.loc[loop] = [X, choice]
     # write data to file
     data.to_csv(file_name, columns = column_list)
