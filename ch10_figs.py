@@ -5,8 +5,8 @@ Created on Tue Jul 24 12:11:57 2018
 
 @author: tom verguts
 estimate a value function using dynamic programming
-in particular, equation (3.14) from S&B
-note: all p() are deterministic in this case
+in particular, equation (3.14) from Sutton & Barto book
+note: all transition probs p() are deterministic in this case
 """
 import numpy as np
 import matplotlib.pyplot as plt
