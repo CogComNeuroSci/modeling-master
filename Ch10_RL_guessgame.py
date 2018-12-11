@@ -4,7 +4,7 @@
 Created on Sun Mar  4 21:03:05 2018
 Guessing game
 beat the algorithm!
-@author: tom
+@author: tom verguts
 1 = too low
 3 = too high
 """

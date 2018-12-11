@@ -7,6 +7,7 @@ Created on Tue Jul 24 12:11:57 2018
 estimate the optimal value function using dynamic programming
 in particular, equation (3.19) from S&B
 note: all p() are deterministic in this case
+this is for a slightly different grid
 """
 import numpy as np
 from ch10_DP_gridworld import plot_value
@@ -48,7 +49,7 @@ while stop == False:
             if (row==0) & (column==1):
                 action_v = 10+gamma*previous_value[state2rc(21)]
             elif (row==0) & (column==3):
-                action_v = 5+gamma*previous_value[state2rc(13)]
+                action_v = 5+gamma*previous_value[state2rc(24)]
             elif (column==0) & (action==3):
                 action_v = -1+gamma*previous_value[state2rc(state)]
             elif (column==4) & (action==1):

@@ -41,9 +41,9 @@ def plot_value(row, column, value_matrix):
 
 nstates = 25
 value = np.random.random((5,5))
-ntrials = 100
-gamma = 0.1 # discount factor
-stop, converge, threshold, max_iteration = False, False, 0.01, 20
+#ntrials = 1000
+gamma = 0.95 # discount factor
+stop, converge, threshold, max_iteration = False, False, 0.01, 10000
 halfway = 5 # intermediate-step value matrix to be printed
 
 fig, axs = plt.subplots(2, 2)
