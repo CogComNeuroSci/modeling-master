@@ -3,8 +3,12 @@
 """
 Created on Sun Mar  4 21:03:05 2018
 
-@author: tom
+@author: tom verguts
 Taxi!
+This program learns a taxi driver to pick up a client and drop him/her off
+Algorithms are Rescorla-Wagner (rw); Sarsa; Sarsa-lambda; and Q-learning
+All work fine except rw; this is because rw cannot "bridge" between current action
+and later reward
  rendering:
     - blue: passenger
     - magenta: destination
@@ -19,7 +23,7 @@ import matplotlib.pyplot as plt
 
 algo = "rw"
 env = gym.make('Taxi-v2')
-n_episodes, max_per_episode = 500, 200
+n_episodes, max_per_episode = 200, 300
 lr, gamma, lambd = 0.7, 0.95, 0.4
 Q = np.random.rand(env.observation_space.n, env.action_space.n) # giant Q matrix for flat RL
 tot_reward_epi, tot_finish = [], []
@@ -27,6 +31,7 @@ color_list = {"rw": "black", "sarsa": "red", "sarsalam": "blue", "ql": "green"}
 window_conv = 10
 
 # get to work
+env.render()
 for ep in range(n_episodes):
     observation = env.reset()
     observation0 = env.observation_space.sample()
@@ -35,10 +40,10 @@ for ep in range(n_episodes):
     tot_reward = 0
     if algo == "sarsalam":
         trace = np.zeros(env.observation_space.n)
-    print("episode {}".format(ep))
+    #print("episode {}".format(ep))
     for t in range(max_per_episode):
         t += 1
-#       env.render() # show the maze
+        #env.render() # show the maze
         try:
             prob = np.exp(Q[observation,:])
             prob = prob/np.sum(prob)
@@ -48,7 +53,7 @@ for ep in range(n_episodes):
         observation1, reward, done, info = env.step(action)
         if algo == "rw":
             backup = reward
-            Q[observation, action] += lr*(backup - Q[observation0, action])
+            Q[observation, action] += lr*(backup - Q[observation, action])
         elif algo == "sarsa":
             backup = reward0 + gamma*Q[observation, action]
             Q[observation0, action0] += lr*(backup - Q[observation0, action0])
@@ -58,9 +63,6 @@ for ep in range(n_episodes):
         else: # q-learning
             backup = reward + gamma*np.max(Q[observation1, :])
             Q[observation, action] += lr*(backup - Q[observation, action])
-        if done:
-            print("Episode finished after {} timesteps".format(t+1))
-            break
         if algo == "sarsalam": # decaying trace
             v = np.zeros(env.observation_space.n)
             v[observation] = 1
@@ -70,6 +72,9 @@ for ep in range(n_episodes):
         action0 = action           # previous action
         reward0 = reward
         tot_reward += reward
+        if done:
+            #print("Episode finished after {} timesteps".format(t+1))
+            break
     tot_reward /= t # average reward for this episode    
     print("Task{}completed".format([" not ", " "][reward>0]))
     tot_reward_epi.append(tot_reward)

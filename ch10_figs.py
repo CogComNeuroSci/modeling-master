@@ -42,7 +42,7 @@ def plot_value(row, column, value_matrix):
 nstates = 25
 value = np.random.random((5,5))
 ntrials = 100
-gamma = 0.9
+gamma = 0.9 # temporal discount parameter
 stop, converge, threshold, max_iteration = False, False, 0.01, 20
 halfway = 5 # intermediate-step value matrix to be printed
 
