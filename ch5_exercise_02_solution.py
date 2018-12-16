@@ -127,8 +127,8 @@ all_possible_outputs = np.array([response_1, response_2, response_3, response_4]
 length_inputs = len(all_possible_inputs)
     
 # Repeat every possible input pattern 50 times
-inputted_patterns    = np.tile(all_possible_inputs,  (length_inputs * 50, 1))
-outputs              = np.ravel(np.tile(all_possible_outputs, (length_inputs * 50, 1)))
+inputted_patterns    = np.tile(all_possible_inputs,  (1 * 50, 1))
+outputs              = np.ravel(np.tile(all_possible_outputs, (1 * 50, 1)))
 
 # The strings associated with our possible outcomes
 # Here, only two labels are possible ('red', and 'green')
@@ -223,8 +223,8 @@ all_possible_outputs = np.array([response_1, response_2, response_3, response_4,
 length_inputs = len(all_possible_inputs)
     
 # Repeat every possible input pattern 50 times
-inputted_patterns    = np.tile(all_possible_inputs,  (length_inputs * 50, 1))
-outputs              = np.ravel(np.tile(all_possible_outputs, (length_inputs * 50, 1)))
+inputted_patterns    = np.tile(all_possible_inputs,  (1 * 50, 1))
+outputs              = np.ravel(np.tile(all_possible_outputs, (1 * 50, 1)))
 
 # The strings associated with our possible outcomes
 # Here, only two labels are possible ('red', and 'green')

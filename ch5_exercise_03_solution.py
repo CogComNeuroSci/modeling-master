@@ -103,13 +103,13 @@ length_inputs = len(color_inputs)
 
 # repeat the input patterns (repeat the word task more, for the bias)
 # we defined the color inputs 2 times, and the word inputs 7 times
-color_inputs   = np.tile(color_inputs, (length_inputs * 2, 1))
-word_inputs    = np.tile(word_inputs,  (length_inputs * 7, 1))
+color_inputs   = np.tile(color_inputs, (1 * 2, 1))
+word_inputs    = np.tile(word_inputs,  (1 * 7, 1))
 
 # repeat the responses the same amount of times: our responses should match
 # our defined input patterns
-color_outputs  = np.tile(color_outputs, (length_inputs * 2, 1))
-word_outputs   = np.tile(word_outputs,  (length_inputs * 7, 1))
+color_outputs  = np.tile(color_outputs, (1 * 2, 1))
+word_outputs   = np.tile(word_outputs,  (1 * 7, 1))
 
 # stack the input patterns and their associated responses
 inputted_patterns  = np.vstack((color_inputs, word_inputs))
@@ -150,11 +150,11 @@ when the ink color is different to the word meaning
 (i.e., green written in red ink)
 '''
 
-color_inputs_congr  = np.tile(color_inputs_copy[0:2], (length_inputs * 10, 1))
-words_inputs_congr  = np.tile(word_inputs_copy[0:2], (length_inputs * 10, 1))
+color_inputs_congr  = np.tile(color_inputs_copy[0:2], (1 * 10, 1))
+words_inputs_congr  = np.tile(word_inputs_copy[0:2], (1 * 10, 1))
 
-color_outputs_congr = np.tile(color_outputs_copy[0:2], (length_inputs * 10, 1))
-word_outputs_congr  = np.tile(word_outputs_copy[0:2], (length_inputs * 10, 1))
+color_outputs_congr = np.tile(color_outputs_copy[0:2], (1 * 10, 1))
+word_outputs_congr  = np.tile(word_outputs_copy[0:2], (1 * 10, 1))
 
 congruent_input     = np.vstack((color_inputs_congr, words_inputs_congr))
 congruent_output    = np.ravel(np.vstack((color_outputs_congr, word_outputs_congr)))
@@ -175,11 +175,11 @@ incongruent trials.
 The same definitions with respect to (in)congruency hold
 '''
 
-color_inputs_incongr  = np.tile(color_inputs_copy[2:4], (length_inputs * 10, 1))
-words_inputs_incongr  = np.tile(word_inputs_copy[2:4], (length_inputs * 10, 1))
+color_inputs_incongr  = np.tile(color_inputs_copy[2:4], (1 * 10, 1))
+words_inputs_incongr  = np.tile(word_inputs_copy[2:4], (1 * 10, 1))
 
-color_outputs_incongr = np.tile(color_outputs_copy[2:4], (length_inputs * 10, 1))
-word_outputs_incongr  = np.tile(word_outputs_copy[2:4], (length_inputs * 10, 1))
+color_outputs_incongr = np.tile(color_outputs_copy[2:4], (1 * 10, 1))
+word_outputs_incongr  = np.tile(word_outputs_copy[2:4], (1 * 10, 1))
 
 incongruent_input     = np.vstack((color_inputs_incongr, words_inputs_incongr))
 incongruent_output    = np.ravel(np.vstack((color_outputs_incongr, word_outputs_incongr)))

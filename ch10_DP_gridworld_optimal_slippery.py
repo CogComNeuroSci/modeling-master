@@ -6,7 +6,8 @@ Created on Tue Jul 24 12:11:57 2018
 @author: tom verguts
 estimate the optimal value function using dynamic programming
 in particular, equation (3.19) from S&B
-note: all p() are deterministic in this case
+this is a slippery world: in 3 states close to B, the agent can accidentally be warped into state 24
+UNDER CONSTRUCTION
 """
 import numpy as np
 from ch10_DP_gridworld import plot_value
@@ -17,15 +18,20 @@ def state2rc(state_pass = 1):  # state to (row, column)
     return state_pass // 5, state_pass % 5
 
 def succ(state_pass = 1, action_pass = 1): # successor function
-    row, column = state2rc(state_pass)
-    if action_pass == 0:
-        row -= 1
-    elif action_pass == 1:
-        column += 1
-    elif action_pass == 2:
-        row += 1
-    else:
-        column -= 1
+    slippery_states = [2, 7, 8] # states close to B
+    prob_slip = 0.5
+    if (state_pass in slippery_states) and (np.random.rand()<prob_slip):
+        row, column = 4, 4
+    else:    
+        row, column = state2rc(state_pass)
+        if action_pass == 0:
+            row -= 1
+        elif action_pass == 1:
+            column += 1
+        elif action_pass == 2:
+            row += 1
+        else:
+            column -= 1
     return row, column    
     
 nstates = 25

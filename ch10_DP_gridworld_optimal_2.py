@@ -3,11 +3,11 @@
 """
 Created on Tue Jul 24 12:11:57 2018
 
-@author: tom
+@author: tom verguts
 estimate the optimal value function using dynamic programming
 in particular, equation (3.19) from S&B
 note: all p() are deterministic in this case
-this is for a slightly different grid
+this is for a slightly different grid where the agent in B is warped to state 24
 """
 import numpy as np
 from ch10_DP_gridworld import plot_value
