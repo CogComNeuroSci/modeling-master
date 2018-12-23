@@ -20,6 +20,7 @@ data = np.load(file_name)
 X =  data[:,[0,1]]
 y = [data[:,2], data[:,3]]
 
+n_sim = 10 # try it 10 times to cancel out noise
 threshold = 0.8 # when do we deem classification high enough?
 max_hidden_size = 10 # the max number of hidden units to be tested
 
@@ -27,15 +28,19 @@ counter = 0
 for y_labels in y:
     print("dataset nr...{}".format(counter))
     for hidden_size in range(max_hidden_size):
-        if hidden_size == 0:
-            classif = Perceptron()
-        else:
-            classif = MLPClassifier(hidden_layer_sizes = (hidden_size,), max_iter = 10000, tol = .0001)
-        classif.fit(X, y_labels)
-        y_pred = classif.predict(X)
-        acc = accuracy_score(y_labels, y_pred)
-        #print("accuracy in classification = {:.0%}".format(acc))
-        if acc > threshold:
+        acc_total = 0
+        for sim_loop in range(n_sim):
+            if hidden_size == 0:
+                classif = Perceptron()
+            else:
+                classif = MLPClassifier(hidden_layer_sizes = (hidden_size,), max_iter = 10000, tol = .0001)
+            classif.fit(X, y_labels)
+            y_pred = classif.predict(X)
+            acc = accuracy_score(y_labels, y_pred)
+            acc_total += acc
+        acc_total /= n_sim            
+        print("accuracy in classification = {:.0%}".format(acc_total))
+        if acc_total > threshold:
             break    
     print("total number of units needed = {}".format(3+hidden_size))
     counter += 1

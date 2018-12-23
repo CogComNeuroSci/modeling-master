@@ -3,18 +3,18 @@
 """
 Created on Mon Jul 16 14:28:40 2018
 
-@author: tom
+@author: tom verguts
 n-armed bandit
 solved with 
 - gradient ascent (chap 9)
 - epsilon-greedy algorithm (chap 10)
 - optimistic starts (chap 10)
 """
-# come in
+#%% come in
 import numpy as np
 import matplotlib.pyplot as plt
 
-# for starters
+#%% for starters
 # available algorithms: gradient ascent, epsilon-greedy, optimistic starts
 algo = "gradient" # options: gradient, epsilon, optimist
 np.set_printoptions(precision=2)
@@ -35,7 +35,7 @@ else:
     epsilon = 0.1
 color_list = {"gradient": "black", "epsilon": "red", "optimist": "blue"}
 
-# let's play
+#%% let's play: different algorithms
 for loop in range(ntrial):
     if algo == "gradient":
         prob = np.exp(beta*w)
@@ -52,7 +52,7 @@ for loop in range(ntrial):
     else:
         w[choice] += 1/(loop+1)*(r[-1]-w[choice])
 
-# end game
+#%% end game
 print(["weights",w])
 print("mean reward: {:.2f}".format(np.mean(r[-window:])))
 v = np.convolve(r,np.ones(window_conv)/window_conv)
