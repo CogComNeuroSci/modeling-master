@@ -82,6 +82,7 @@ n_d2 = 5
 speed = 0.01 # to make sure the lr doesn't decrease too quickly
 n_trials = 500
 w = np.random.uniform(0,1,(n_d1,n_d2,n_in))
+distr = [0.8, 0.1, 0.1]
 
 def distance(winner,x,y):
     y_win = winner // n_d2
@@ -91,7 +92,9 @@ def distance(winner,x,y):
 for loop in range(n_trials):
     lrate = alpha0/(loop*speed+1)
     x = np.zeros(n_in)
-    x[np.random.randint(0,n_in)] = 1
+#    x[np.random.randint(0,n_in)] = 1 # from uniform distribution
+    x[np.random.choice(range(n_in), p=distr)] = 1
+    print(x)
     y = x.dot(np.reshape(w.swapaxes(0,2).swapaxes(1,2),(n_in,n_d1*n_d2)))
     y_max = np.argmax(y)
     for d1loop in range(n_d1):
