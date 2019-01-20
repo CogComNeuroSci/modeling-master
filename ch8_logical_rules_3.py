@@ -6,6 +6,7 @@ Created on Thu Dec 27 15:24:48 2018
 @author: tom verguts
 boltzmann machine for implementing logical rules
 now it's a RESTRICTED boltzmann machine
+doesn't work for nonlinear mappings; I have no idea why
 """
 
 #%% initialize
@@ -16,8 +17,9 @@ n_burnin = 3000
 n_test_trials = 10000
 X_and = np.array( [[0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 1]] )
 X_or  = np.array( [[0, 0, 0], [1, 0, 1], [0, 1, 1], [1, 1, 1]] )
-X_xor = np.array( [[0, 0, 1], [1, 0, 0], [0, 1, 0], [1, 1, 1]] )
-X = X_xor
+X_101 = np.array( [[0, 0, 0], [1, 0, 1], [0, 1, 0], [1, 1, 0]] )
+X_xor = np.array( [[0, 0, 0], [1, 0, 1], [0, 1, 1], [1, 1, 0]] )
+X = X_and
 p = np.zeros((2**X.shape[1],))
 p_tot = np.copy(p)
 n_rep = 5
@@ -25,7 +27,7 @@ n_rep = 5
 #%% fit model n_rep times
 for rep_loop in range(n_rep):
     p = np.zeros((2**X.shape[1],))
-    model = BernoulliRBM(n_components = 7, n_iter = 10000, learning_rate = 0.1, batch_size = 1)
+    model = BernoulliRBM(n_components = 5, n_iter = 10000, batch_size = 1, learning_rate = .2)
     model.fit(X)
 
     # check equilibrium distribution
