@@ -4,12 +4,15 @@
 Created on Thu Dec 28 12:15:46 2017
 
 @author: tom
+plots figures 2.1b and 2.1c
 simple energy minimization model
 with RT simulation
-plots figures 2.1b and 2.1c
+
+plots fig 2.5
 """
 
 # import
+import numpy as np
 from numpy import maximum
 from numpy import random
 import matplotlib.pyplot as plt
@@ -57,4 +60,9 @@ axarr[1].hist(rt)
 axarr[1].set_title("RT distribution")
 print("accuracy: {:2.0%}".format(accuracy/n_trials))
 print("too late: {:2.0%}".format(too_late/n_trials))
+
 ##
+x = np.linspace(start = -5, stop = 3, num = 20)
+y = (x**4)/4 +(2/3)*(x**3)-(5/2)*(x**2)-6*x
+plt.plot(x,y)
+plt.ylabel("y = f(x)")
