@@ -2,7 +2,7 @@
 
 # Problem setting
 """
-author = pieter huycke (??)
+author = pieter huycke 
 This code can be used to illustrate the idea that output changes based on the values of the input and the weights of
 the connection from the input unit to the output unit
 In this toy network, we have three inputs, and thus three connections with specific weights from the input units to

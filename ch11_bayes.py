@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-simple bayes calculator
+simple bayes posterior probability calculator
 Tom Verguts, July 2019
 """
 

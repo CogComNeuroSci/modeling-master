@@ -7,12 +7,12 @@ Created on Thu Sep 20 13:34:00 2018
 """
 
 import matplotlib as mpl
-mpl.use('Qt5Agg')
+#mpl.use('TkAgg')
+#mpl.get_backend()
 from matplotlib import cm
 import pylab as pl
 import numpy as np
-import time
-# from psychopy
+#import time
 
 
 def quad_func(x):
@@ -40,7 +40,7 @@ fig, axes = pl.subplots(1, 1)
 axes.plot(x, y, 'k')
 
 x_desc = []
-x_desc.append(np.random.choice(x))
+x_desc.append(np.random.choice(x))    
 alpha = .2
 y_desc = []
 y_desc.append(func_to_use(x_desc[-1]))
@@ -62,9 +62,8 @@ for i in np.arange(n_steps):
     a = axes.plot(x_desc[-1], y_desc[-1], 'o', mec = 'k', color = col)
     axes.set_xlabel('alph * der = x_step\n%.2f * %.2f = %.2f' % (alpha, der, der*alpha))
     fig.canvas.draw()
-    fig.waitforbuttonpress(0)
+#    fig.waitforbuttonpress(0)
     
-
 
 pl.title('THE END\nstep: %i/%i' % (i+2, n_steps+1))
 

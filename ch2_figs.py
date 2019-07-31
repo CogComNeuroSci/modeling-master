@@ -63,7 +63,9 @@ print("too late: {:2.0%}".format(too_late/n_trials))
 
 #plots fig 2.5
 #
-x = np.linspace(start = -5, stop = 3, num = 20)
-y = (x**4)/4 +(2/3)*(x**3)-(5/2)*(x**2)-6*x
+fig = plt.subplots()
+x = np.linspace(start = -4, stop = 3, num = 100)
+y = (x**4)/4 +(2./3)*(x**3)-(5./2)*(x**2)-6*x
+#y = x**3 + 2*(x**2) - 5*x - 6
 plt.plot(x,y)
 plt.ylabel("y = f(x)")
