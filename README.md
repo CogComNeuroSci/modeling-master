@@ -21,7 +21,7 @@ Other relevant information can be found:
 ## Used folder structure   
 
 In this paragraph, we will quickly explain the folder structure that is used in this repository.
-This folder organisation can be explored by going through the [AC 2019 - 2020 folder][AC2019_2020].
+This folder organisation can be explored by going through the [AY 2019 - 2020 folder][AC2019_2020].
 
 [AC2019_2020]: https://github.com/CogComNeuroSci/modeling-master/tree/master/AY%202019%20-%202020
 
