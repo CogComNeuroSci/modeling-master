@@ -2,9 +2,8 @@
 # MCP - Modeling of Cognitive processes
 
 [![GitHub license](https://img.shields.io/apm/l/test.svg)](https://github.com/CogComNeuroSci/Pieter_H/blob/master/LICENSE)
-[![Repo_size](https://img.shields.io/badge/size%20-2.80%20MB-blue)](https://img.shields.io/badge/size%20-2.80%20MB-blue)
+[![Deadline](https://img.shields.io/badge/Deadline-24%2F09%2F2019-red)](https://img.shields.io/badge/Deadline-24%2F09%2F2019-red)
 [![Maintained](https://img.shields.io/maintenance/yes/2019.svg)](https://img.shields.io/maintenance/yes/2019.svg)
-
 
 ## Overview
 
@@ -22,13 +21,13 @@ Other relevant information can be found:
 ## Used folder structure   
 
 In this paragraph, we will quickly explain the folder structure that is used in this repository.
-This folder organisation can be seen clearly in the [AC 2019 - 2020 folder][AC2019_2020].
+This folder organisation can be explored by going through the [AC 2019 - 2020 folder][AC2019_2020].
 
 [AC2019_2020]: https://github.com/CogComNeuroSci/modeling-master/tree/master/AY%202019%20-%202020
 
 ---
 
-The folder is organised according to the teaching schedule:
+The folder is organized according to our current teaching schedule:
 
 - Lesson 01
 - Lesson 02
@@ -43,15 +42,15 @@ Possible folder names are:
 - Practical session
     - Which indicates that this lesson will be used to let the students gain _practical experience_
 - Test x
-    - Which indicates that this folder contains scripts used for testing the modeling students
+    - Which indicates that this folder contains scripts used for _testing_ our modeling students
 
 Finally, within each folder, another specific structure is enforced:
 
 - Chapter xx
-    - Course examples:
+    - course examples:
         - Contains code that is used during teaching, e.g. to show examples of certain modeling concepts
 - Practical session:
-    - Course examples:
+    - course examples:
         - Contains code that is used during teaching, e.g. to show examples of certain modeling concepts
     - exercises
         - Contains the scripts that the students will start with during the practical session
@@ -74,30 +73,27 @@ Finally, within each folder, another specific structure is enforced:
 #### Version control
 
 - Python 3
-    - **v3.7.0**
-        - Anaconda
-            - **v4.6.11**
-        - Spyder
-            - **v3.3.4**
+    - **v3.7.3**
+- Anaconda
+    - **v4.7.5**
+- Spyder
+    - **v3.3.6**
 
 #### Useful links
 
 - [Python 3.0 release page][py3]
-- [Anaconda can be downloaded here][anaconda]
+- The most recent version of Anaconda can be found [here][anaconda]
 
 [py3]: https://www.python.org/download/releases/3.0/
 [anaconda]: https://www.anaconda.com/distribution/
 
 ## Contact
 
-Author: &nbsp;Pieter Huycke  
+Responsible for this course:
 
-Mail: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Pieter.Huycke@UGent.be](mailto:Pieter.Huycke@UGent.be)  
-GitHub: [@phuycke][GitHub]
-
-[GitHub]: https://github.com/phuycke
-
-PhD student @ [Verguts lab][Labsite].  
+- Tom Verguts
+- Mehdi Senoussi
+- Pieter Huycke  
 
 [Labsite]: https://cogcomneurosci.com/
 
@@ -112,9 +108,6 @@ PhD student @ [Verguts lab][Labsite].
 [Department]: https://www.ugent.be/pp/experimentele-psychologie/en/research
 
 Henri Dunantlaan 2  
-B-9000 Gent  
-
-Phone: +32 (0)9 264 64 07  
-Fax: &nbsp;&nbsp;&nbsp;&nbsp;+32 (0)9 264 64 96 
+B-9000 Gent
 
 **Last edit: 01-08-2019**
