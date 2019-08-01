@@ -64,8 +64,6 @@ Finally, within each folder, another specific structure is enforced:
 
 ## Programming environment   
 
-### 2018 - 2019
-
 **Main software**
 
 - Python 3
