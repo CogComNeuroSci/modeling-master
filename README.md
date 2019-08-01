@@ -2,7 +2,7 @@
 # MCP - Modeling of Cognitive processes
 
 [![GitHub license](https://img.shields.io/apm/l/test.svg)](https://github.com/CogComNeuroSci/Pieter_H/blob/master/LICENSE)
-[![Deadline](https://img.shields.io/badge/Deadline-24%2F09%2F2019-red)](https://img.shields.io/badge/Deadline-24%2F09%2F2019-red)
+[![Deadline](https://img.shields.io/badge/First%20MCP%20course-24%2F09%2F2019-red)](https://img.shields.io/badge/First%20MCP%20course-24%2F09%2F2019-red)
 [![Maintained](https://img.shields.io/maintenance/yes/2019.svg)](https://img.shields.io/maintenance/yes/2019.svg)
 
 ## Overview
