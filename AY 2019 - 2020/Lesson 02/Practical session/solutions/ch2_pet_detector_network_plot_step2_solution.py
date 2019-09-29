@@ -28,7 +28,7 @@ n_units = len(layers)
 # here we set the first feature detector ('bites visitors') to 1 and the 2
 # others to 0. We also set the two output units ('cat' and 'dog') to 0 and we
 # will update their activation later
-activations = np.array([1., 0., 0., 0., 0.])
+activations = np.array([0., 0., 1., 0., 0.])
 weights = np.zeros(shape=[n_units, n_units])
 
 # setting up weights for the cat-dog detector
