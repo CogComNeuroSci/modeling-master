@@ -16,8 +16,8 @@ def func(x):
     return  (x/8)**2 - 3 * np.exp( - (x**2) / 50) - 2*np.exp( -((x+5)**2) / .2)
 
 
-def func(x):
-    return 5/(.7*x**3 + 10*np.sin(x)) + 10*np.cos(x) + .5*x**2
+#def func(x):
+#    return 5/(.7*x**3 + 10*np.sin(x)) + 10*np.cos(x) + .5*x**2
 
 
 # for plotting points with different colors depending on the order
@@ -69,7 +69,7 @@ axes.plot(x_grad[1], y_grad[1], 'o', mec = 'k', color = col)
 
 # optimization loop
 for step_i in np.arange(2, n_steps):
-    axes.set_title('step: %i/%i' % (step_i+2, n_steps+1))
+    axes.set_title('step: %i/%i' % (step_i, n_steps))
     # compute delta_x by using the derivative
     delta_x = -alpha * (y_grad[step_i-1] - y_grad[step_i-2]) / (x_grad[step_i-1] - x_grad[step_i-2])
     # update the new value of x in the array x_grad
@@ -83,7 +83,7 @@ for step_i in np.arange(2, n_steps):
     # to refresh the figure
     fig.canvas.draw()
     # wait before you go to the next iteration of the loop
-    fig.waitforbuttonpress(.1)
+    fig.waitforbuttonpress(.2)
 
 
 axes.set_title('End of the optimization!')
