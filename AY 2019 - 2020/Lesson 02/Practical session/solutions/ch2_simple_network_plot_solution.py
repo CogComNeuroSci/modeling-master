@@ -41,7 +41,7 @@ fig, axs, texts_handles, lines_handles, unit_pos =\
 update_network(fig = fig, axs = axs, texts_handles = texts_handles,
     lines_handles = lines_handles, activations = activations,
     unit_pos = unit_pos, weights = weights, layers = layers, change = 0,
-    cycle = i)
+    cycle = 0)
     
 
 # update the network multiple times (without changing its values except "cycle"
