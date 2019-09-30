@@ -11,6 +11,8 @@ import numpy as np
 import time
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import pyplot as plt
+from matplotlib import cm
+from matplotlib import ticker
 
 # the resolution of our plot
 n_unitsteps = 50
@@ -33,7 +35,7 @@ ax = fig.gca(projection='3d')
 surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
                       cmap=cm.RdBu,linewidth=0, antialiased=False)
 
-ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+ax.zaxis.set_major_formatter(ticker.FormatStrFormatter('%.02f'))
 
 ax.set_xlabel('$x_{cat}$')
 ax.set_ylabel('$y_{dog}$')
