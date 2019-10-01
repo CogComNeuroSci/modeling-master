@@ -28,7 +28,40 @@ def no_recurrence(weights):
 def plot_network(figsize = [13, 7], activations = np.random.rand(3),
                  weights = np.random.rand(3, 3), layers = np.array([1, 1, 2]),
                  energy = None):
+    '''
+    plot_network(figsize = [13, 7], activations = np.random.rand(3),
+                 weights = np.random.rand(3, 3), layers = np.array([1, 1, 2]),
+                 energy = None)
 
+    Creates a figure with 3 subplots: (1) a network, (2) each weight for each
+    cycle, (3) activations of each unit and the energy of the network if provided.
+    
+    This function returns the figure and axes, the texts and lines handles for
+    the network and its unit positions to be used in the update_network function.
+    
+    Parameters
+    ----------
+    figsize : a list or array of the size of the figure window
+    activations : array of N activations (floats or integers) for each of the
+                  units in the network
+    weights : array of N*N numbers (floats or integers) representing the
+              connection weights for all units only half of the matrix is used,
+              it's always weights[a, b] with a <= b
+    layers : an array of integers representing which unit  belongs to which
+             layer in the network, e.g. [1, 1, 2] for a 3 unit network with 2
+             units on the first layer and one on the second layer.
+    energy : (optional) the energy of the network which will be plotted on the
+             bottom left subplot in red.
+    
+    Returns
+    -------
+    fig : handle of the figure
+    axs : handle of the axes
+    texts_handles : handle of the texts (activations and cycle number)
+    lines_handles : handle of the lines (weights)
+    unit_pos : the position of the units to re-draw weight lines
+    
+    '''
     fig = pl.figure(figsize = figsize)
     axs = []; circles = []
     axs.append(fig.add_subplot(2, 2, (1, 3)))
@@ -115,8 +148,41 @@ def plot_network(figsize = [13, 7], activations = np.random.rand(3),
 
 def update_network(fig, axs, texts_handles, lines_handles, activations,
                    unit_pos, weights, layers, change, cycle, energy = None):
-    n_units = activations.shape[0]
+    '''
+    update_network(fig, axs, texts_handles, lines_handles, activations,
+                   unit_pos, weights, layers, change, cycle, energy = None)
 
+    Modify a figure plotted with plot_network.
+    
+    This function returns the figure and axes, the texts and lines handles for
+    the network and its unit positions to be used in the update_network function.
+    
+    Parameters
+    ----------
+    fig : handle of the figure
+    axs : handle of the axes
+    texts_handles : handle of the texts (activations and cycle number)
+    lines_handles : handle of the lines (weights)
+    unit_pos : the position of the units to re-draw weight lines
+    activations : array of N activations (floats or integers) for each of the
+                  units in the network
+    weights : array of N*N numbers (floats or integers) representing the
+              connection weights for all units only half of the matrix is used,
+              it's always weights[a, b] with a <= b
+    layers : an array of integers representing which unit  belongs to which
+             layer in the network, e.g. [1, 1, 2] for a 3 unit network with 2
+             units on the first layer and one on the second layer.
+    energy : (optional) the energy of the network which will be plotted on the
+             bottom left subplot in red.
+    cycle : (optional) cycle of the updating we are in.
+    change : (optional) unused for now.                         
+    
+    Returns
+    -------
+        [Nothing]
+    '''
+    
+    n_units = activations.shape[0]
     # update the connection lines depending on the new weight matrix
     for lay_n in np.unique(layers):
         lay_units = np.where(layers == lay_n)[0]

@@ -46,7 +46,7 @@ alpha = .05
 ##############################
 # start from a random x and store this first value in an array 'x_grad'
 x_grad = np.zeros(n_steps)
-x_grad[0] = np.random.randint(low = -10, high = 10)
+x_grad[0] = np.random.choice(x, size = 1, replace = False)
 # create a list 'y_grad' with the function's value for this random starting x
 y_grad = np.zeros(n_steps)
 y_grad[0] = func1(x_grad[0])

@@ -37,12 +37,12 @@ fig, axs, texts_handles, lines_handles, unit_pos =\
                   weights = weights, layers = layers)
 
 
-## update the network with random activation values using update_network(...)
+## update the network with random activation values using update_network functions
 #update_network(...)
-#    
+#
 #
 ## update the network multiple times (without changing its values except "cycle"
-## because otherwise it does update the plots on the right part) and wait a bit
+## because otherwise it does not update the plots on the right part) and wait a bit
 ## to see the changes at every step
 #for cycle_n in range(10):
 #    # update the network

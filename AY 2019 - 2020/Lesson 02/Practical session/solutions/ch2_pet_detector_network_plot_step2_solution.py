@@ -8,7 +8,7 @@ import numpy as np
 import time
 from ch0_course_functions import plot_network, update_network
 
-timesleep = .2
+timesleep = .1
 n_tsteps = 50
 times = np.arange(n_tsteps)
 t = 1
@@ -18,8 +18,8 @@ ycat = np.zeros(n_tsteps)
 incat = np.zeros(n_tsteps)
 indog = np.zeros(n_tsteps)
 # std of noise
-sigma = .01
-# learning rate
+sigma = .2
+# scaling parameter rate
 alpha = .2
 
 # we have 3 input unit on the first layer and 2 output units on the second layer
@@ -28,7 +28,7 @@ n_units = len(layers)
 # here we set the first feature detector ('bites visitors') to 1 and the 2
 # others to 0. We also set the two output units ('cat' and 'dog') to 0 and we
 # will update their activation later
-activations = np.array([0., 0., 1., 0., 0.])
+activations = np.array([0., 1., 1., 0., 0.])
 weights = np.zeros(shape=[n_units, n_units])
 
 # setting up weights for the cat-dog detector
@@ -57,8 +57,8 @@ fig, axs, texts_handles, lines_handles, unit_pos =\
 for t in times[1:]:
     ycat[t] = ycat[t-1] + alpha * (incat + weights[3, 4] * ydog[t-1]) + np.random.randn()*sigma
     ydog[t] = ydog[t-1] + alpha * (indog + weights[3, 4] * ycat[t-1]) + np.random.randn()*sigma
-    if ycat[t]<0 : ycat[t] = 0
-    if ydog[t]<0: ydog[t] = 0
+#    if ycat[t]<0 : ycat[t] = 0
+#    if ydog[t]<0: ydog[t] = 0
     activations[3:] = [ycat[t], ydog[t]]
     energy = -incat*ycat[t] - indog*ydog[t] - weights[3, 4]*ycat[t]*ydog[t]
     
