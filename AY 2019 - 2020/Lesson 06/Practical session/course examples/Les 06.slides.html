@@ -13310,12 +13310,11 @@ Please note that encountering one item (the song) will result in the second item
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Florence:-comparison-with-the-pet-detector">Florence: comparison with the pet detector<a class="anchor-link" href="#Florence:-comparison-with-the-pet-detector">&#182;</a></h2><p>Note that the pet detector also worked with specific features.<br>
-Based on these features being (un)available, the model will give a specific output:</p>
+<h2 id="Florence:-comparison-with-the-pet-detector">Florence: comparison with the pet detector<a class="anchor-link" href="#Florence:-comparison-with-the-pet-detector">&#182;</a></h2><p>Note that the pet detector also worked with specific features.</p>
 <p><img src="./fig01.jpg" alt="The pet detector"></p>
+<p>Based on the aforementioned features being (un)available, the model will give a specific output.</p>
 <p><strong>Example</strong><br>
 <code>input = np.array([0, 1, 1])</code>?</p>
-<p><em>What</em> does the model output?</p>
 
 </div>
 </div>
@@ -13356,7 +13355,8 @@ Based on these features being (un)available, the model will give a specific outp
 <h2 id="Florence:-the-modelling-aproach">Florence: the modelling aproach<a class="anchor-link" href="#Florence:-the-modelling-aproach">&#182;</a></h2><p>Our action plan:</p>
 <ol>
 <li>Open Spyder 🕸️</li>
-<li>Notice that "blocks" of code are defined by the <code>#%%</code> character</li>
+<li>Open <strong>'ch4_florence_delta_solution.py'</strong></li>
+<li>Notice that "blocks" of code are separated by the <code>#%%</code> character</li>
 <li>Run these blocks of code by clicking inside this block and pressing <code>shift + enter</code></li>
 <li>Look at the output</li>
 <li>Sit back and listen to my explanation of each block!</li>
@@ -13552,6 +13552,287 @@ Activation levels at output after 1000 trials of delta learning:
 <h1 id="2.-Delta-learning:-DIY-with-the-iris-dataset">2. Delta learning: DIY with the iris dataset<a class="anchor-link" href="#2.-Delta-learning:-DIY-with-the-iris-dataset">&#182;</a></h1>
 </div>
 </div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Iris-dataset?">Iris dataset?<a class="anchor-link" href="#Iris-dataset?">&#182;</a></h2><p>In this exercise, we will use the iris dataset <a href="https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1469-1809.1936.tb02137.x">(Fisher, 1936)</a>.<br>
+More specifically, we will use this dataset to <strong>predict the species</strong> of the flower <strong>based on the features</strong> of the flower.</p>
+<p>The dataset consists of 150 rows, where each row represents measurements of 150 different flowers.<br>
+Each flower is different, but they all belong to the same family: "iris".<br>
+There are 3 different species in the dataset, so we have 50 different flowers for each family.</p>
+<p><strong>The data available</strong> 🌹</p>
+<ul>
+<li>Features of the flower<ul>
+<li>Sepal width</li>
+<li>Sepal length</li>
+<li>Petal width</li>
+<li>Petal length</li>
+</ul>
+</li>
+<li>The name of the flower<ul>
+<li>Iris setosa</li>
+<li>Iris virginica</li>
+<li>Iris vericolor</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="An-example-of-the-provided-features">An example of the provided features<a class="anchor-link" href="#An-example-of-the-provided-features">&#182;</a></h2><p><img src="./fig02.jpg" alt="iris features"></p>
+<p><strong>Our question</strong><br>
+What iris <em>type (setosa, virginica or versicolor?)</em> is this based on the provided measures?</p>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import modules</span>
+<span class="kn">import</span> <span class="nn">pandas</span>  <span class="k">as</span>     <span class="nn">pd</span>
+<span class="kn">from</span>   <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">datasets</span>
+
+<span class="c1"># import the Iris flower dataset</span>
+<span class="n">iris</span>        <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
+<span class="n">X</span>           <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span>
+<span class="n">y</span>           <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
+<span class="n">class_names</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">target_names</span>
+
+<span class="c1"># glue data together</span>
+<span class="n">y</span>           <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> 
+                         <span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> 
+<span class="n">data_shown</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> 
+                             <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">iris_visual</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_shown</span><span class="p">)</span>
+
+<span class="c1"># make column names</span>
+<span class="n">colnames</span>            <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sep len&#39;</span><span class="p">,</span> <span class="s1">&#39;sep wid&#39;</span><span class="p">,</span> 
+                       <span class="s1">&#39;pet len&#39;</span><span class="p">,</span> <span class="s1">&#39;pet wid&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;family&#39;</span><span class="p">]</span>
+<span class="n">iris_visual</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">colnames</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># show me the way (first 10 rows)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;First 5 observations:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">iris_visual</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Last 5 observations:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">iris_visual</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>First 5 observations:
+    sep len  sep wid  pet len  pet wid  family
+0      5.1      3.5      1.4      0.2     0.0
+1      4.9      3.0      1.4      0.2     0.0
+2      4.7      3.2      1.3      0.2     0.0
+3      4.6      3.1      1.5      0.2     0.0
+4      5.0      3.6      1.4      0.2     0.0
+
+Last 5 observations:
+      sep len  sep wid  pet len  pet wid  family
+145      6.7      3.0      5.2      2.3     2.0
+146      6.3      2.5      5.0      1.9     2.0
+147      6.5      3.0      5.2      2.0     2.0
+148      6.2      3.4      5.4      2.3     2.0
+149      5.9      3.0      5.1      1.8     2.0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="...?">...?<a class="anchor-link" href="#...?">&#182;</a></h2><p>Our goal is to predict the family based on the provided features.<br>
+So, if we see the following:</p>
+<div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">X</span><span class="p">[</span><span class="mi">10</span><span class="p">,:]</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">array</span><span class="p">([</span><span class="mf">5.4</span><span class="p">,</span> <span class="mf">3.7</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">])</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span><span class="n">y</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="mi">0</span>
+</pre></div>
+<p>We know that observation 10 has a sepal length of 5.4 cm, sepal width of 3.7 cm ... .<br>
+We also know that observation 10 belongs to family 0 (i.e. setosa).</p>
+<p>Ideally, our model would be able to predict the family based on the features for every flower.<br>
+So, if we give the model the features for flower 62:</p>
+<div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="n">X</span><span class="p">[</span><span class="mi">61</span><span class="p">,:]</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="n">array</span><span class="p">([</span><span class="mf">5.9</span><span class="p">,</span> <span class="mf">3.</span> <span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
+</pre></div>
+<p>we want to output of the model to be equal to 1 (i.e. versicolor), which is the observed family for flower 62.</p>
+
+</div>
+</div>
+</div></section><section>Our action plan:
+
+1. Open **'ch4_iris_delta_exercise.py'** 
+2. Use delta learning to let your model respond with the correct flower family based on the features
+    * So, if the input ```[6.3, 2.3, 4.4, 1.3]``` is given, the model should output ```2``` (i.e. 'Virginica')     
+3. Take a look at the Python module ```scikit-learn```, which allows us to implement a single layered model
+    * i.e. there are no layers between the input- and the output layer   
+3. Split the data in a training set and a testing set, use the training set to optimize the model, use the test set to check the performance of your model
+    * Search online for _'split data train test scikit learn'_, see what Python functions might help you out 🌐     
+4. Use the ```Perceptron``` function to make a single layered model, and train this model on the training set
+    * Stuck? Consider using ```help(sklearn.linear_model.Perceptron)``` to read the docs  
+5. Finally, check whether your trained model is able to predict the family of new observations (your test set serves as "new observations")</section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import: general and scikit-learn specific</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">numpy</span>                 <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span>     <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">sklearn</span>                 <span class="k">import</span> <span class="n">datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span>    <span class="k">import</span> <span class="n">Perceptron</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span>         <span class="k">import</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span>   <span class="k">import</span> <span class="n">StandardScaler</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import the Iris flower dataset</span>
+<span class="n">iris</span>        <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
+<span class="n">X</span>           <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span>
+<span class="n">y</span>           <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
+<span class="n">class_names</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">target_names</span>
+
+<span class="c1"># split data in training and testing set</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> 
+                                                    <span class="n">y</span><span class="p">,</span> 
+                                                    <span class="n">random_state</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># train the standard scaler with a part of the data</span>
+<span class="n">sc</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+
+<span class="c1"># apply scaler to all x</span>
+<span class="n">X_train_std</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_test_std</span>  <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># define classifier (Perceptron object from scikit-learn)</span>
+<span class="n">classification_algorithm</span> <span class="o">=</span> <span class="n">Perceptron</span><span class="p">(</span><span class="n">max_iter</span>         <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+                                      <span class="n">tol</span>              <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
+                                      <span class="n">verbose</span>          <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                                      <span class="n">random_state</span>     <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                                      <span class="n">n_iter_no_change</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># fit (&#39;train&#39;) classifier to the training data</span>
+<span class="n">classification_algorithm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_std</span><span class="p">,</span> 
+                             <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># predict y based on x for the test data</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">classification_algorithm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_std</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># select wrong predictions (absolute vals) and print them</span>
+<span class="n">compared</span>       <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="n">y_test</span><span class="p">)</span>
+<span class="n">absolute_wrong</span> <span class="o">=</span> <span class="p">(</span><span class="n">compared</span> <span class="o">==</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Our classification was wrong for </span><span class="si">{0}</span><span class="s2"> out of the </span><span class="si">{1}</span><span class="s2"> cases.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">absolute_wrong</span><span class="p">,</span> 
+                                                                          <span class="nb">len</span><span class="p">(</span><span class="n">compared</span><span class="p">)))</span>
+
+
+<span class="c1"># print accuracy using dedicated function</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Accuracy percentage: </span><span class="si">{0:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Our classification was wrong for 5 out of the 38 cases.
+Accuracy percentage: 86.84
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
