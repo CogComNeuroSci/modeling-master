@@ -13310,14 +13310,27 @@ Please note that encountering one item (the song) will result in the second item
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Florence:-comparison-with-the-cat-dog-model">Florence: comparison with the cat-dog model<a class="anchor-link" href="#Florence:-comparison-with-the-cat-dog-model">&#182;</a></h2><p><strong>Model input</strong></p>
+<h2 id="Florence:-comparison-with-the-pet-detector">Florence: comparison with the pet detector<a class="anchor-link" href="#Florence:-comparison-with-the-pet-detector">&#182;</a></h2><p>Note that the pet detector also worked with specific features.<br>
+Based on these features being (un)available, the model will give a specific output:</p>
+<p><img src="./fig01.jpg" alt="The pet detector"></p>
+<p><strong>Example</strong><br>
+<code>input = np.array([0, 1, 1])</code>?</p>
+<p><em>What</em> does the model output?</p>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Florence:-comparison-with-the-pet-detector">Florence: comparison with the pet detector<a class="anchor-link" href="#Florence:-comparison-with-the-pet-detector">&#182;</a></h2><p><strong>Model input</strong></p>
 <ul>
-<li>has a picture on Facebook</li>
-<li>has 4 legs</li>
-<li>does not bite visitors</li>
+<li>Unit 1 is <strong>inactive</strong>: does not bite visitors</li>
+<li>Unit 2 is <strong>active</strong>: has 4 legs</li>
+<li>Unit 3 is <strong>active</strong>: has a picture on Facebook</li>
 </ul>
 <p><strong>Model output</strong><br>
-<img src="https://images2.minutemediacdn.com/image/upload/c_crop,h_1193,w_2121,x_0,y_64/f_auto,q_auto,w_1100/v1565279671/shape/mentalfloss/578211-gettyimages-542930526.jpg" alt="cat image"></p>
+<img src="https://images.pexels.com/photos/617278/pexels-photo-617278.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" alt="cat image"></p>
 
 </div>
 </div>
@@ -13343,7 +13356,10 @@ Please note that encountering one item (the song) will result in the second item
 <h2 id="Florence:-the-modelling-aproach">Florence: the modelling aproach<a class="anchor-link" href="#Florence:-the-modelling-aproach">&#182;</a></h2><p>Our action plan:</p>
 <ol>
 <li>Open Spyder 🕸️</li>
-<li></li>
+<li>Notice that "blocks" of code are defined by the <code>#%%</code> character</li>
+<li>Run these blocks of code by clicking inside this block and pressing <code>shift + enter</code></li>
+<li>Look at the output</li>
+<li>Sit back and listen to my explanation of each block!</li>
 </ol>
 
 </div>
@@ -13351,7 +13367,7 @@ Please note that encountering one item (the song) will result in the second item
 </div></section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import modules</span>
@@ -13361,8 +13377,8 @@ Please note that encountering one item (the song) will result in the second item
 <span class="c1"># alter print options for numpy: suppress scientific printing </span>
 <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">suppress</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 
-<span class="n">image_florence</span>   <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">,</span> <span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">,</span> <span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">]</span>     <span class="c1"># define image pattern</span>
-<span class="n">song_stand_by_me</span> <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">]</span>               <span class="c1"># define song pattern</span>
+<span class="n">image_florence</span>   <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">,</span> <span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">,</span> <span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">]</span>     <span class="c1"># represent image using this pattern</span>
+<span class="n">song_stand_by_me</span> <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">]</span>               <span class="c1"># represent song using this pattern</span>
 
 <span class="c1"># define a weight matrix exclusively filled with zeros</span>
 <span class="n">weight_matrix</span> <span class="o">=</span> <span class="n">delta_learning</span><span class="o">.</span><span class="n">initialise_weights</span><span class="p">(</span><span class="n">image_florence</span><span class="p">,</span> 
@@ -13400,6 +13416,128 @@ Our original weight matrix, for now filled with zeros:
  [0. 0. 0. 0. 0. 0.]
  [0. 0. 0. 0. 0. 0.]
  [0. 0. 0. 0. 0. 0.]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># activation associated with the all zero weight matrix</span>
+<span class="n">activation_original</span> <span class="o">=</span> <span class="n">delta_learning</span><span class="o">.</span><span class="n">internal_input</span><span class="p">(</span><span class="n">image_florence</span><span class="p">,</span>
+                                                    <span class="n">weight_matrix</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Activation levels at output for the original weight matrix:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> 
+      <span class="n">activation_original</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+Activation levels at output for the original weight matrix:
+ [0.5, 0.5, 0.5, 0.5]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">loops</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.5</span>
+    
+<span class="k">for</span> <span class="n">loop_var</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">loops</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">weights_after_learning</span> <span class="o">=</span> <span class="n">delta_learning</span><span class="o">.</span><span class="n">weight_change</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span>
+                                                          <span class="n">image_florence</span><span class="p">,</span>
+                                                          <span class="n">song_stand_by_me</span><span class="p">,</span>
+                                                          <span class="n">weight_matrix</span><span class="p">)</span>
+    <span class="n">weight_matrix</span> <span class="o">=</span> <span class="n">weights_after_learning</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Our altered weight matrix after </span><span class="si">{}</span><span class="s1"> trials of delta learning:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">loops</span><span class="p">),</span> 
+      <span class="n">weight_matrix</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+Our altered weight matrix after 1000 trials of delta learning:
+ [[ 1.31   0.006  1.243  0.004  1.181  0.004]
+ [ 1.31   0.006  1.243  0.004  1.181  0.004]
+ [-1.31  -0.006 -1.243 -0.004 -1.181 -0.004]
+ [-1.31  -0.006 -1.243 -0.004 -1.181 -0.004]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div></section><section>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># activation associated with this altered weight matrix</span>
+<span class="n">activation_after_learning</span> <span class="o">=</span> <span class="n">delta_learning</span><span class="o">.</span><span class="n">internal_input</span><span class="p">(</span><span class="n">image_florence</span><span class="p">,</span>
+                                                          <span class="n">weight_matrix</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Activation levels at output after </span><span class="si">{}</span><span class="s1"> trials of delta learning:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">loops</span><span class="p">),</span> 
+      <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">activation_after_learning</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+Activation levels at output after 1000 trials of delta learning:
+ [0.976 0.976 0.024 0.024]
 </pre>
 </div>
 </div>
