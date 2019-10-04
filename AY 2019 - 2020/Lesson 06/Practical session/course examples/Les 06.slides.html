@@ -13242,7 +13242,7 @@ a.anchor-link {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Modelling-of-Cognitive-Processes">Modelling of Cognitive Processes<a class="anchor-link" href="#Modelling-of-Cognitive-Processes">&#182;</a></h1><hr>
+<h1 id="Modelling-of-Cognitive-Processes">Modelling of Cognitive Processes<a class="anchor-link" href="#Modelling-of-Cognitive-Processes">&#182;</a></h1><h2 id="Delta-learning">Delta learning<a class="anchor-link" href="#Delta-learning">&#182;</a></h2><hr>
 <p>Lesson 06<br>
 29/10/2019<br>
 Pieter Huycke</p>
@@ -13255,12 +13255,11 @@ Pieter Huycke</p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Overview">Overview<a class="anchor-link" href="#Overview">&#182;</a></h1><h2 id="Theoretical">Theoretical<a class="anchor-link" href="#Theoretical">&#182;</a></h2><ul>
 <li>Delta learning: quick recap</li>
-<li>Activation functions: quick recap</li>
 </ul>
 <h2 id="Practical">Practical<a class="anchor-link" href="#Practical">&#182;</a></h2><ol>
 <li>Florence + the machine: a Delta learning tutorial</li>
-<li>Delta learning: DIY with the iris dataset</li>
-<li>Different patterns, equal learning?</li>
+<li>Modelling the blocking effect</li>
+<li>Flower recognition with <code>scikit-learn</code></li>
 </ol>
 
 </div>
@@ -13291,7 +13290,7 @@ After the song, the radio host mentions the song 'Stand by me' by 'Florence + th
 <li>Formed in London in 2007</li>
 <li>Lead singer: Florence Welch ⬇️</li>
 </ul>
-<p><img src="https://media.pitchfork.com/photos/5cbd2918ef5bbe6682d33c89/2:1/w_790/Florence-and-the-Machine.jpg" alt="Image of Florence"></p>
+<p><img src="./florence.jpg" alt="Image of Florence"></p>
 
 </div>
 </div>
@@ -13311,10 +13310,9 @@ Please note that encountering one item (the song) will result in the second item
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Florence:-comparison-with-the-pet-detector">Florence: comparison with the pet detector<a class="anchor-link" href="#Florence:-comparison-with-the-pet-detector">&#182;</a></h2><p>Note that the pet detector also worked with specific features.</p>
-<p><img src="./fig01.jpg" alt="The pet detector"></p>
-<p>Based on the aforementioned features being (un)available, the model will give a specific output.</p>
-<p><strong>Example</strong><br>
-<code>input = np.array([0, 1, 1])</code>?</p>
+<p><img src="./cat_dog_model.jpg" alt="The pet detector"></p>
+<p><strong>What do we expect here?</strong><br>
+<code>input = np.array([0, 1, 1])</code></p>
 
 </div>
 </div>
@@ -13329,7 +13327,7 @@ Please note that encountering one item (the song) will result in the second item
 <li>Unit 3 is <strong>active</strong>: has a picture on Facebook</li>
 </ul>
 <p><strong>Model output</strong><br>
-<img src="https://images.pexels.com/photos/617278/pexels-photo-617278.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500" alt="cat image"></p>
+<img src="./cat.jpg" alt="Cat"></p>
 
 </div>
 </div>
@@ -13549,7 +13547,100 @@ Activation levels at output after 1000 trials of delta learning:
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="2.-Delta-learning:-DIY-with-the-iris-dataset">2. Delta learning: DIY with the iris dataset<a class="anchor-link" href="#2.-Delta-learning:-DIY-with-the-iris-dataset">&#182;</a></h1>
+<h1 id="2.-Modelling-the-blocking-effect">2. Modelling the blocking effect<a class="anchor-link" href="#2.-Modelling-the-blocking-effect">&#182;</a></h1>
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Basic-classical-conditioning">Basic classical conditioning<a class="anchor-link" href="#Basic-classical-conditioning">&#182;</a></h2><p>We consider the following situation</p>
+<p><img src="./CS1_US.jpg" alt="CS1 + US"></p>
+<p>Here, the played sound is the <strong>first conditioned stimulus (CS1)</strong>.<br>
+We pair the sound with an electrical shock, which is referred to as the <strong>unconditioned stimulus (US)</strong>.<br>
+The reaction our subject has to the shock is often referred to as the <strong>unconditioned response (UR)</strong>.</p>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Basic-classical-conditioning">Basic classical conditioning<a class="anchor-link" href="#Basic-classical-conditioning">&#182;</a></h2><p>After pairing CS1 and US multiple times, the UR (confused screaming) will become the <strong>conditioned response (CR)</strong>.<br>
+Thus, the sound will elicit the screaming even though no shock was administered.</p>
+<p><img src="./CS1_conditioned.jpg" alt="CR after conditioning"></p>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-blocking-effect">The blocking effect<a class="anchor-link" href="#The-blocking-effect">&#182;</a></h2><p>Now we do extra conditiong, but we show CS1 together with a <strong>second conditioned stimulus (CS2)</strong> (e.g. a strong light).<br>
+After conditioning, CS1 + CS2 will also lead to confused screaming:</p>
+<p><img src="./CS1_CS2_US.jpg" alt="CS1 + CS2 + US"></p>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-blocking-effect">The blocking effect<a class="anchor-link" href="#The-blocking-effect">&#182;</a></h2><p>Interestingly, when we show CS2 alone, this will not lead to the CR <a href="https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19680014821.pdf">(Kamin, 1967)</a>.</p>
+<p><img src="./CS2_alone.jpg" alt="Reaction to CS2"></p>
+<p>It appears that a subject is not able to learn that the light also predicts the shock.<br>
+In other words: the learning of the CS2 - US association is <em>blocked</em> because the CS1 - US assocation already exists...</p>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Modelling-the-blocking-effect">Modelling the blocking effect<a class="anchor-link" href="#Modelling-the-blocking-effect">&#182;</a></h2><p>Now, we ask you to prove the blocking effect using a model.<br>
+You will have to do this yourself, relying on the code provided for exercise 1.<br>
+The questions asked below might help you out.</p>
+<ul>
+<li>How many units does your model need?<ul>
+<li>Input layer<ul>
+<li>The model can encounter two different stimuli: <strong>only sound</strong> and <strong>sound + light</strong></li>
+<li>Sound and light can be seen as two different units: if the unit is switched of, the stimulus is not available</li>
+</ul>
+</li>
+<li>Output layer<ul>
+<li>Only two outputs: aversion or no aversion --&gt; this is doable with one unit</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Modelling-the-blocking-effect">Modelling the blocking effect<a class="anchor-link" href="#Modelling-the-blocking-effect">&#182;</a></h2><ul>
+<li>Make a weight matrix to start with</li>
+<li>Use delta learning to learn the <strong>CS1 - US association</strong></li>
+<li>Use delta learning to learn the <strong>CS2 - US association</strong><ul>
+<li>Importantly, make sure that you use the weight matrix obtained from the previous step as a starting point</li>
+</ul>
+</li>
+<li>Does the end result prove blocking? Why / why not?<ul>
+<li>How can you check investigate whether the blocking occured or not?</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div></section></section><section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="3.-Delta-learning:-DIY-with-the-iris-dataset">3. Delta learning: DIY with the iris dataset<a class="anchor-link" href="#3.-Delta-learning:-DIY-with-the-iris-dataset">&#182;</a></h1>
 </div>
 </div>
 </div></section><section>
@@ -13584,46 +13675,12 @@ There are 3 different species in the dataset, so we have 50 different flowers fo
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="An-example-of-the-provided-features">An example of the provided features<a class="anchor-link" href="#An-example-of-the-provided-features">&#182;</a></h2><p><img src="./fig02.jpg" alt="iris features"></p>
+<h2 id="An-example-of-the-provided-features">An example of the provided features<a class="anchor-link" href="#An-example-of-the-provided-features">&#182;</a></h2><p><img src="./iris.jpg" alt="iris features"></p>
 <p><strong>Our question</strong><br>
 What iris <em>type (setosa, virginica or versicolor?)</em> is this based on the provided measures?</p>
 
 </div>
 </div>
-</div></section><section>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import modules</span>
-<span class="kn">import</span> <span class="nn">pandas</span>  <span class="k">as</span>     <span class="nn">pd</span>
-<span class="kn">from</span>   <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">datasets</span>
-
-<span class="c1"># import the Iris flower dataset</span>
-<span class="n">iris</span>        <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
-<span class="n">X</span>           <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span>
-<span class="n">y</span>           <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
-<span class="n">class_names</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">target_names</span>
-
-<span class="c1"># glue data together</span>
-<span class="n">y</span>           <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> 
-                         <span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> 
-<span class="n">data_shown</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> 
-                             <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">iris_visual</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_shown</span><span class="p">)</span>
-
-<span class="c1"># make column names</span>
-<span class="n">colnames</span>            <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sep len&#39;</span><span class="p">,</span> <span class="s1">&#39;sep wid&#39;</span><span class="p">,</span> 
-                       <span class="s1">&#39;pet len&#39;</span><span class="p">,</span> <span class="s1">&#39;pet wid&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;family&#39;</span><span class="p">]</span>
-<span class="n">iris_visual</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">colnames</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
 </div></section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -13683,8 +13740,8 @@ So, if we see the following:</p>
 <span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span><span class="n">y</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="mi">0</span>
 </pre></div>
-<p>We know that observation 10 has a sepal length of 5.4 cm, sepal width of 3.7 cm ... .<br>
-We also know that observation 10 belongs to family 0 (i.e. setosa).</p>
+<p>We know that flower 11 has a sepal length of 5.4 cm, sepal width of 3.7 cm ... .<br>
+We also know that flower 11 belongs to family 0 (i.e. setosa).</p>
 <p>Ideally, our model would be able to predict the family based on the features for every flower.<br>
 So, if we give the model the features for flower 62:</p>
 <div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="n">X</span><span class="p">[</span><span class="mi">61</span><span class="p">,:]</span>
@@ -13694,18 +13751,32 @@ So, if we give the model the features for flower 62:</p>
 
 </div>
 </div>
-</div></section><section>Our action plan:
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Our action plan:</p>
+<ol>
+<li>Open <strong>'ch4_iris_delta_exercise.py'</strong> </li>
+<li>Use delta learning to let your model respond with the correct flower family based on the features</li>
+<li>Take a look at the Python module <code>scikit-learn</code>, which allows us to implement a single layered model<ul>
+<li>i.e. there are no layers between the input- and the output layer   </li>
+</ul>
+</li>
+<li>Split the data in a training set and a testing set, use the training set to optimize the model, use the test set to check the performance of your model<ul>
+<li>Google <em>split data train test scikit learn</em>, and see which Python functions might help you out 🌐     </li>
+</ul>
+</li>
+<li>Use the <code>Perceptron</code> function to make a single layered model, and train this model on the training set<ul>
+<li>Stuck? Consider using <code>help(Perceptron)</code> to read the docs  </li>
+</ul>
+</li>
+<li>Finally, check whether your trained model is able to predict the family of new observations (your test set serves as "new observations")</li>
+</ol>
 
-1. Open **'ch4_iris_delta_exercise.py'** 
-2. Use delta learning to let your model respond with the correct flower family based on the features
-    * So, if the input ```[6.3, 2.3, 4.4, 1.3]``` is given, the model should output ```2``` (i.e. 'Virginica')     
-3. Take a look at the Python module ```scikit-learn```, which allows us to implement a single layered model
-    * i.e. there are no layers between the input- and the output layer   
-3. Split the data in a training set and a testing set, use the training set to optimize the model, use the test set to check the performance of your model
-    * Search online for _'split data train test scikit learn'_, see what Python functions might help you out 🌐     
-4. Use the ```Perceptron``` function to make a single layered model, and train this model on the training set
-    * Stuck? Consider using ```help(sklearn.linear_model.Perceptron)``` to read the docs  
-5. Finally, check whether your trained model is able to predict the family of new observations (your test set serves as "new observations")</section><section>
+</div>
+</div>
+</div></section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
@@ -13718,7 +13789,7 @@ So, if we give the model the features for flower 62:</p>
 
 <span class="kn">from</span> <span class="nn">sklearn</span>                 <span class="k">import</span> <span class="n">datasets</span>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span>    <span class="k">import</span> <span class="n">Perceptron</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span>         <span class="k">import</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span>         <span class="k">import</span> <span class="n">accuracy_score</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span>   <span class="k">import</span> <span class="n">StandardScaler</span>
 </pre></div>
@@ -13742,7 +13813,7 @@ So, if we give the model the features for flower 62:</p>
 <span class="c1"># split data in training and testing set</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> 
                                                     <span class="n">y</span><span class="p">,</span> 
-                                                    <span class="n">random_state</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+                                                    <span class="n">random_state</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13778,7 +13849,7 @@ So, if we give the model the features for flower 62:</p>
 <span class="n">classification_algorithm</span> <span class="o">=</span> <span class="n">Perceptron</span><span class="p">(</span><span class="n">max_iter</span>         <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
                                       <span class="n">tol</span>              <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
                                       <span class="n">verbose</span>          <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-                                      <span class="n">random_state</span>     <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                                      <span class="n">random_state</span>     <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
                                       <span class="n">n_iter_no_change</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
 
 <span class="c1"># fit (&#39;train&#39;) classifier to the training data</span>
@@ -13824,8 +13895,8 @@ So, if we give the model the features for flower 62:</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Our classification was wrong for 5 out of the 38 cases.
-Accuracy percentage: 86.84
+<pre>Our classification was wrong for 2 out of the 38 cases.
+Accuracy percentage: 94.74
 </pre>
 </div>
 </div>
@@ -13833,13 +13904,6 @@ Accuracy percentage: 86.84
 </div>
 </div>
 
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="3.-Different-patterns,-equal-learning?">3. Different patterns, equal learning?<a class="anchor-link" href="#3.-Different-patterns,-equal-learning?">&#182;</a></h1>
-</div>
-</div>
 </div></section></section>
 </div>
 </div>
