@@ -11,6 +11,9 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as pl
 
 
+# learning parameter
+beta = .4
+
 #############################
 # Some points
 

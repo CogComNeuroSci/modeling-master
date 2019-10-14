@@ -10,6 +10,9 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as pl
 
+# learning parameter
+beta = .4
+
 #############################
 # clouds of almost orthogonal random points
 
