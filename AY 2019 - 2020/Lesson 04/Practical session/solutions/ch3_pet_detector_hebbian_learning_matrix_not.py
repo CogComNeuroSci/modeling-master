@@ -78,7 +78,12 @@ for trial_n in np.arange(n_trials):
                                 beta * np.dot(targets[trial_n, :][:, np.newaxis],
                                               train_samples[trial_n, :][:, np.newaxis].T)
     
-    # update the network plot
+    ## Update the network plot
+    # Here we fixed the parameter "cycle" to 0 because we use it to represent
+    # the activation optimization cycle as seen in chapter 2 (which is not what
+    # we are doing in this loop).
+    # Also we added a parameter "learn_trial_n" which represents the cycle/trial
+    # of learning we are in, in other words the learning trial we are using.
     update_network(fig = fig, axs = axs, texts_handles = texts_handles,
         lines_handles = lines_handles, activations = activations, change =0,
         unit_pos = unit_pos, weights = weights[trial_n+1, :, :], layers = layers,
@@ -161,6 +166,11 @@ for t in times[1:]:
     activations[3:] = [ycat[t], ydog[t]]
     energy = -incat*ycat[t] - indog*ydog[t] - weights_end[4, 3]*ycat[t]*ydog[t]
     
+    ## Update the network plot
+    # Here we update the parameter "cycle" on every iteration because we use it
+    # to represent the activation optimization cycle as seen in chapter 2.
+    # The parameter "learn_trial_n" which represents the cycle/trial of
+    # learning we are in, is fixed because learning has been done already.
     update_network(fig = fig, axs = axs, texts_handles = texts_handles,
         lines_handles = lines_handles, activations = activations,
         unit_pos = unit_pos, weights = weights_end, layers = layers, change = 0,
