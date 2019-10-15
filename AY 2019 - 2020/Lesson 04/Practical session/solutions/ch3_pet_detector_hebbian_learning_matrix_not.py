@@ -58,7 +58,7 @@ weights[0, 3:5, :3] = randweight # random weight
 
 # plot the network to see how it initially looks like
 fig, axs, texts_handles, lines_handles, unit_pos =\
-    plot_network2(figsize = [13, 7], activations = activations,
+    plot_network(figsize = [13, 7], activations = activations,
                   weights = weights[0, :, :], layers = layers, energy = 0)
 
 # loop over all samples/trials to train our model
@@ -78,7 +78,12 @@ for trial_n in np.arange(n_trials):
                                 beta * np.dot(targets[trial_n, :][:, np.newaxis],
                                               train_samples[trial_n, :][:, np.newaxis].T)
     
-    # update the network plot
+    ## Update the network plot
+    # Here we fixed the parameter "cycle" to 0 because we use it to represent
+    # the activation optimization cycle as seen in chapter 2 (which is not what
+    # we are doing in this loop).
+    # Also we added a parameter "learn_trial_n" which represents the cycle/trial
+    # of learning we are in, in other words the learning trial we are using.
     update_network(fig = fig, axs = axs, texts_handles = texts_handles,
         lines_handles = lines_handles, activations = activations, change =0,
         unit_pos = unit_pos, weights = weights[trial_n+1, :, :], layers = layers,
@@ -87,7 +92,9 @@ for trial_n in np.arange(n_trials):
     # wait for a short time to see the changes
     time.sleep(timesleep)
 
-weights[-1, 4, 3] = -1
+# we add a negative weight between ydog and ycat by hand because the hebbian 
+# learning algorithm cannot create it
+weights[-1, 4, 3] = -.2
 
 # update the network plot
 update_network(fig = fig, axs = axs, texts_handles = texts_handles,
@@ -161,6 +168,11 @@ for t in times[1:]:
     activations[3:] = [ycat[t], ydog[t]]
     energy = -incat*ycat[t] - indog*ydog[t] - weights_end[4, 3]*ycat[t]*ydog[t]
     
+    ## Update the network plot
+    # Here we update the parameter "cycle" on every iteration because we use it
+    # to represent the activation optimization cycle as seen in chapter 2.
+    # The parameter "learn_trial_n" which represents the cycle/trial of
+    # learning we are in, is fixed because learning has been done already.
     update_network(fig = fig, axs = axs, texts_handles = texts_handles,
         lines_handles = lines_handles, activations = activations,
         unit_pos = unit_pos, weights = weights_end, layers = layers, change = 0,
