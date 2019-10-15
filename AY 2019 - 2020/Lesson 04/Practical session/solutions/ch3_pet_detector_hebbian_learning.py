@@ -13,7 +13,7 @@
 
 import numpy as np
 import time
-from ch0_course_functions import *
+from ch0_course_functions import plot_network2, update_network
 
 # first create the structure of the network
 # we have 3 input unit on the first layer and 2 output units on the second layer
@@ -27,6 +27,7 @@ activations = np.array([0., 0., 0., 0., 0.])
 # let's set energy to zero for now
 energy = 0
 
+#%%
 ###############################################################################
 ####    LEARNING PART
 ###############################################################################
