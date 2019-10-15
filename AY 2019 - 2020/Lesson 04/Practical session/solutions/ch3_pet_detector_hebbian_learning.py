@@ -63,7 +63,7 @@ weights[0, 3:5, :3] = randweight # random weight
 
 # plot the network to see how it initially looks like
 fig, axs, texts_handles, lines_handles, unit_pos =\
-    plot_network2(figsize = [13, 7], activations = activations,
+    plot_network(figsize = [13, 7], activations = activations,
                   weights = weights[0, :, :], layers = layers, energy = 0)
 
 fig.suptitle('Press any key to do a learning trial')
@@ -109,6 +109,15 @@ for trial_n in np.arange(n_trials):
 
 axs[0].set_title('')
 
+# we add a negative weight between ydog and ycat by hand because the hebbian 
+# learning algorithm cannot create it
+weights[-1, 4, 3] = -.2
+
+# update the network plot
+update_network(fig = fig, axs = axs, texts_handles = texts_handles,
+    lines_handles = lines_handles, activations = activations, change =0,
+    unit_pos = unit_pos, weights = weights[trial_n+1, :, :], layers = layers,
+    cycle = 0, learn_trial_n = trial_n+1, energy = energy)
 
 
 pl.suptitle('Learning phase finished!\nPress a key to input a certain pattern in the model and see how it behaves!')

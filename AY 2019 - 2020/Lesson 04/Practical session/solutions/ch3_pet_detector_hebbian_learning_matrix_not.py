@@ -58,7 +58,7 @@ weights[0, 3:5, :3] = randweight # random weight
 
 # plot the network to see how it initially looks like
 fig, axs, texts_handles, lines_handles, unit_pos =\
-    plot_network2(figsize = [13, 7], activations = activations,
+    plot_network(figsize = [13, 7], activations = activations,
                   weights = weights[0, :, :], layers = layers, energy = 0)
 
 # loop over all samples/trials to train our model
@@ -92,7 +92,9 @@ for trial_n in np.arange(n_trials):
     # wait for a short time to see the changes
     time.sleep(timesleep)
 
-weights[-1, 4, 3] = -1
+# we add a negative weight between ydog and ycat by hand because the hebbian 
+# learning algorithm cannot create it
+weights[-1, 4, 3] = -.2
 
 # update the network plot
 update_network(fig = fig, axs = axs, texts_handles = texts_handles,
