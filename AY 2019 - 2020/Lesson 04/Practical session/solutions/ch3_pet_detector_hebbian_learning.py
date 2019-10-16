@@ -13,7 +13,7 @@
 
 import numpy as np
 import time
-from ch0_course_functions import plot_network2, update_network
+from ch0_course_functions import plot_network, update_network
 
 # first create the structure of the network
 # we have 3 input unit on the first layer and 2 output units on the second layer
