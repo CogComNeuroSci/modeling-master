@@ -29,7 +29,7 @@ def no_recurrence(weights):
 def plot_network(figsize = [13, 7], activations = np.random.rand(3),
                  weights = np.random.rand(3, 3), layers = np.array([1, 1, 2]),
                  energy = None):
-   '''
+    '''
     plot_network(figsize = [13, 7], activations = np.random.rand(3),
                  weights = np.random.rand(3, 3), layers = np.array([1, 1, 2]),
                  energy = None)

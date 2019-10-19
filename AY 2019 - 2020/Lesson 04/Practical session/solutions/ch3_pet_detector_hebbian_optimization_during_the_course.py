@@ -6,12 +6,66 @@
 
 import numpy as np
 import time
-from ch0_course_functions import plot_network, update_network, plot_network2
+from ch0_course_functions import plot_network, update_network
+
+# we have 3 input unit on the first layer and 2 output units on the second layer
+layers = np.array([1, 1, 1, 2, 2])
+n_units = len(layers)
+# here we set the first feature detector ('bites visitors') to 1 and the 2
+# others to 0. We also set the two output units ('cat' and 'dog') to 0 and we
+# will update their activation later
+activations = np.array([0., 0., 0., 0., 0.])
+weights = np.zeros(shape=[n_units, n_units])
+weights += 0.01
+
+# plot the network
+fig, axs, texts_handles, lines_handles, unit_pos =\
+    plot_network(figsize = [13, 7], activations = activations,
+                  weights = weights, layers = layers, energy = 0)
+
+# UPDATE THE WEIGHTS USING SAMPLES AND TARGETS
+target = np.array([[1, 0], [1, 0],[1, 0], [0, 1], [0, 1], [0, 1]])
+sample = np.array([[1, 0, 0], [1, 0, 0],[1, 1, 0],
+                   [0, 0, 1], [0, 0, 1], [0, 1, 1]])
+beta = 1
+n_samples = target.shape[0]
+
+# updating all the weights
+for n in np.arange(n_samples):
+    for j in np.arange(3):
+        for i in np.arange(2):
+            delta_w = beta * sample[n, j] * target[n, i]
+            weights[i+3, j] = weights[i+3, j] + delta_w
+            
+    # update the figure of the network
+    update_network(fig = fig, axs = axs, texts_handles = texts_handles,
+        lines_handles = lines_handles, activations = activations,
+        unit_pos = unit_pos, weights = weights, layers = layers, change = 0,
+        cycle = 0, energy = 0, learn_trial_n = n)
     
+    time.sleep(.5)
+
+weights[4, 3] = -.2
+
+fig.suptitle('Learning phase finished!')
+fig.canvas.draw()
+time.sleep(1)
+
+
+#%%
+
+
+fig.suptitle('Let\'s now see how our trained network behaves!')
+fig.canvas.draw()
+
+# change the activations here to see how the network behaves with another input pattern
+activations = np.array([1., 1., 0., 0., 0.])
+
 timesleep = .1
 n_tsteps = 50
 times = np.arange(n_tsteps)
 t = 1
+
 # output units
 ydog = np.zeros(n_tsteps)
 ycat = np.zeros(n_tsteps)
@@ -22,28 +76,11 @@ sigma = .2
 # scaling parameter
 alpha = .2
 
-# we have 3 input unit on the first layer and 2 output units on the second layer
-layers = np.array([1, 1, 1, 2, 2])
-n_units = len(layers)
-# here we set the first feature detector ('bites visitors') to 1 and the 2
-# others to 0. We also set the two output units ('cat' and 'dog') to 0 and we
-# will update their activation later
-activations = np.array([0., 1., 1., 0., 0.])
-weights = np.zeros(shape=[n_units, n_units])
-
-weights[3, 0] = .8 # cats often bite visitors
-weights[4, 0] = .1 # dogs rarely bite visitors
-weights[3, 1] = .2 # cats often have four legs
-weights[4, 1] = .2 # dogs often have four legs
-weights[3, 2] = .1 # cats rarely have their pictures on FB
-weights[4, 2] = .8 # dogs often have their pictures on FB
-weights[4, 3] = -.2 # a cat cannot be a dog, and vice versa
-
 # computing the initial y activation values
 # eq. 2.1
 incat = weights[3, 0] * activations[0] + weights[3, 1] * activations[1] + weights[3, 2] * activations[2]
 # eq. 2.2
-indog = weights[4, 0] * activations[0] + weights[4, 3] * activations[1] + weights[4, 2] * activations[2]
+indog = weights[4, 0] * activations[0] + weights[4, 1] * activations[1] + weights[4, 2] * activations[2]
 # eq. 2.4
 ycat[t] = ycat[t-1] + alpha * (incat + weights[4, 3] * ydog[t-1]) + np.random.randn()*sigma
 # eq. 2.5
@@ -54,10 +91,6 @@ activations[3:] = [ycat[t], ydog[t]]
 # eq. 2.3
 energy = -incat*ycat[t] - indog*ydog[t] - weights[4, 3]*ycat[t]*ydog[t]
 
-# plot the network
-fig, axs, texts_handles, lines_handles, unit_pos =\
-    plot_network2(figsize = [13, 7], activations = activations,
-                  weights = weights, layers = layers, energy = energy)
 
 #%%
 for t in times[1:]:
