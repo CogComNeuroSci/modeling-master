@@ -137,8 +137,6 @@ t = 1
 # output units
 ydog = np.zeros(n_tsteps)
 ycat = np.zeros(n_tsteps)
-incat = np.zeros(n_tsteps)
-indog = np.zeros(n_tsteps)
 
 # std of noise
 sigma = .7
@@ -155,25 +153,39 @@ activations[:3] = 1, 1, 0
 ################################
 ################################
 # computing the initial y activation values
-activations = np.dot(weights, activations)
+# here we only keep the last 2 values of the dot product result because otherwise
+# we will also update the input values and we do not want this (see last slide of lesson 4 presentation)
+activations[3:] = np.dot(weights, activations)[3:]
 ################################
 ################################
 
-
-incat = activations[3]
-indog = activations[4]
-
+# eq. 2.1
+incat = weights[3, 0] * activations[0] + weights[3, 1] * activations[1] + weights[3, 2] * activations[2]
+# eq. 2.2
+indog = weights[4, 0] * activations[0] + weights[4, 1] * activations[1] + weights[4, 2] * activations[2]
+# eq. 2.4
 ycat[t] = ycat[t-1] + alpha * (incat + weights[4, 3] * ydog[t-1]) + np.random.randn()*sigma
+# eq. 2.5
 ydog[t] = ydog[t-1] + alpha * (indog + weights[4, 3] * ycat[t-1]) + np.random.randn()*sigma
+# this is just for plotting: put the ydog and ycat values at their respective 
+# index in the activation array to plot these values on the network figure
 activations[3:] = [ycat[t], ydog[t]]
+# eq. 2.3
 energy = -incat*ycat[t] - indog*ydog[t] - weights[4, 3]*ycat[t]*ydog[t]
 
 for t in times[1:]:
+    # update the ycat value (eq. 2.4)
     ycat[t] = ycat[t-1] + alpha * (incat + weights[4, 3] * ydog[t-1]) + np.random.randn()*sigma
+    # update the ydog value (eq. 2.5)
     ydog[t] = ydog[t-1] + alpha * (indog + weights[4, 3] * ycat[t-1]) + np.random.randn()*sigma
+    # rectify the y values: if they are smaller than zero put them at zero
     if ycat[t]<0 : ycat[t] = 0
     if ydog[t]<0: ydog[t] = 0
+    # this is just for plotting: put the new ydog and ycat at their respective 
+    # index in the activation array to plot the updated values on the network
+    # plot
     activations[3:] = [ycat[t], ydog[t]]
+    # compute the new energy of the network (eq. 2.3)
     energy = -incat*ycat[t] - indog*ydog[t] - weights[4, 3]*ycat[t]*ydog[t]
     
     ## Update the network plot
