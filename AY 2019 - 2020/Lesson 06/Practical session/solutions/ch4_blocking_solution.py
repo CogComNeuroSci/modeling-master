@@ -85,8 +85,44 @@ for loop_var in np.arange(1, loops + 1):
                                                           weight_matrix)
     weight_matrix = weights_after_learning
     
-# show that the light leads to the desired response
-activation_after_learning = delta_learning.internal_input(light,
+# show that the light + tone leads to the desired response
+activation_after_learning = delta_learning.internal_input(light_and_tone,
                                                           weight_matrix)[0]
 print('\nActivation levels at output after {} trials of delta learning:\n'.format(loops), 
       np.round(activation_after_learning, 3))
+
+#%%
+
+# --------------------- #
+# THE PROOF OF BLOCKING #
+# --------------------- #
+
+# -------- #
+# OPTION 1 #
+# -------- #
+
+tone = np.array([0, 1])
+
+# show that the light + tone leads to the desired response
+activation_after_learning = delta_learning.internal_input(tone,
+                                                          weight_matrix)[0]
+print('\nActivation levels at output after {} trials of delta learning:\n'.format(loops), 
+      np.round(activation_after_learning, 3))
+
+'''
+Result: after training, presenting the tone alone will not lead to an active
+        output unit.
+        thus, the subject will not be scared from the tone alone
+'''
+
+# -------- #
+# OPTION 2 #
+# -------- #
+
+if np.array_equal(weight_matrix_light[0], weight_matrix[0]):
+    print('No association between the "tone" unit and the output unit was learned')
+
+'''
+Result: the weight matrix did not change after the first learning period
+        thus, no association was learned between the tone unit and the output
+'''
