@@ -39,12 +39,10 @@ Instructions for the exercise:
 
 # import
 import numpy as np
-from numpy import random
 
-
-# the weight value for the different weights of the network
-w_p = 1
-w_m = -1
+# the value for the different weights of the network
+w_p = 1 # plus one
+w_m = -1 # minus one
 
 # define the number of units in our hopfield network
 # To use the same example as in chapters 2 and 3 here are the "name" of each
