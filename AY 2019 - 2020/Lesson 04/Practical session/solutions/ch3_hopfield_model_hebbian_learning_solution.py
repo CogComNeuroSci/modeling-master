@@ -39,7 +39,7 @@ Instructions for the exercise:
 
 # import
 import numpy as np
-beta = .8
+beta = .1
 
 # define the number of units in our hopfield network
 # To use the same example as in chapters 2 and 3 here are the "name" of each
