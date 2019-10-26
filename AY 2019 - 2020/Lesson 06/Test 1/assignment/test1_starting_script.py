@@ -3,7 +3,9 @@
 """
 @author: Mehdi Senoussi
 
-To write this script I used the ch3_pet_detector_hebbian_and_optimization_solution.py to start with.
+Write your answers to the test questions here.
+...
+
 """
 
 # this script is divided in two parts
@@ -24,22 +26,23 @@ n_units = 5
 ###############################################################################
 
 # our learning parameter is set at 0.1
-beta = .1
+beta = 0.1
 
-# learning samples (activation (x) of each input unit)
-# 10 cats (i.e. [1, .5, 0]) and 10 dogs (i.e. [0, .5, 1])
+# Because we will use the dot product to compute the delta weights we will use
+# matrices that represent the activations of all units in the network (both 
+# inputs and output units). See figure below question 1 of the test instructions.
 
 # Define the cat prototype
-cat_prototype = np.array([1, .5, 0, 0, 0])
-# set the number of samples we want to present of this prototype
-n_cat_samples = 10
+cat_prototype = np.array([1, 0.5, 0, 0, 0])
 # Define the dog prototype
-dog_prototype = np.array([0, .5, 1, 0, 0])
-# set the number of samples we want to present of this prototype
+dog_prototype = np.array([0, 0.5, 1, 0, 0])
+# set the number of samples we want to present of the cat prototype
+n_cat_samples = 10
+# set the number of samples we want to present of the dog prototype
 n_dog_samples = 10
 
-train_cat_samples = np.tile(cat_prototype,(n_cat_samples,1))
-train_dog_samples = np.tile(dog_prototype,(n_cat_samples,1))
+train_cat_samples = np.tile(cat_prototype, (n_cat_samples, 1))
+train_dog_samples = np.tile(dog_prototype, (n_cat_samples, 1))
 train_samples     = np.vstack((train_cat_samples, train_dog_samples))
 
 # add gaussian noise with mean = 0 and standard deviation = 0.01
@@ -55,8 +58,9 @@ cat_target = np.array([0, 0, 0, 1, 0])
 # Define the dog target
 dog_target = np.array([0, 0, 0, 0, 1])
 # create all the targets
-targets = np.vstack([np.tile(cat_target, n_cat_samples).reshape([n_cat_samples, n_units]),
-                     np.tile(dog_target, n_dog_samples).reshape([n_dog_samples, n_units])])
+train_cat_targets = np.tile(cat_target, (n_cat_samples, 1))
+train_dog_targets = np.tile(dog_target, (n_cat_samples, 1))
+targets = np.vstack((train_cat_targets, train_dog_targets))
 
 
 # how many learning samples do we have (hence, how many trials are we going to do?)
@@ -71,12 +75,11 @@ weights = np.zeros(shape = [n_units, n_units])
 
 # loop over all samples/trials to train our model
 for trial_n in np.arange(n_trials):
-    
     weights = weights + beta * np.dot(targets[trial_n, :][:, np.newaxis],
                                               train_samples[trial_n, :][:, np.newaxis].T)
 
-# we add a negative weight between ydog and ycat by hand
-weights[4, 3] = -.2
+# we add a negative weight between ydog and ycat "by hand"
+weights[4, 3] = -0.2
 
 
 #%%
@@ -93,15 +96,15 @@ times = np.arange(n_tsteps)
 t = 1
 
 # std of noise
-sigma = 0.7
+sigma = 2.5
 # learning rate
-alpha = .2
+alpha = 0.2
 
 # how many test inputs will we use? (n_test/2 for each prototype)
 n_test = 10
 # use n_test/2 cat_prototype and n_test/2 dog_prototypes as inputs
-test_inputs = np.vstack((np.tile(cat_prototype, (int(n_test/2),1)),
-                         np.tile(dog_prototype, (int(n_test/2),1))))
+test_inputs = np.vstack((np.tile(cat_prototype, (int(n_test/2), 1)),
+                         np.tile(dog_prototype, (int(n_test/2), 1))))
 
 # we add some noise so that they are all a bit different
 test_inputs[:, :3] = test_inputs[:, :3] + np.random.randn(n_test, 3) * samples_noise_std
@@ -110,6 +113,7 @@ test_inputs[:, :3] = test_inputs[:, :3] + np.random.randn(n_test, 3) * samples_n
 # array to store the results of the activation optimization
 output_result = np.zeros(shape = (n_test, 2))
 
+# loop over all the test inputs
 for test_input_n in np.arange(n_test):
     ydog = np.zeros(n_tsteps)
     ycat = np.zeros(n_tsteps)
@@ -131,9 +135,6 @@ for test_input_n in np.arange(n_test):
         # rectify the y values: if they are smaller than zero put them at zero
         if ycat[t]<0: ycat[t] = 0
         if ydog[t]<0: ydog[t] = 0
-        
-    # compute the new energy of the network (eq. 2.3)
-    energy = -incat*ycat[t] - indog*ydog[t] - weights[4, 3]*ycat[t]*ydog[t]
     
     # store the results of the network optimization
     output_result[test_input_n, :] = [ycat[-1], ydog[-1]]

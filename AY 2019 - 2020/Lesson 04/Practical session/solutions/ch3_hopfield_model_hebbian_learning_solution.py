@@ -103,21 +103,23 @@ stop_threshold = 0.5
 x_test = np.vstack([np.array([0, 0, 0, 1, 0, 1]), # [John, Male]
                    np.array([1, 0, 1, 0, 0, 0])]) # [Mary, Female]
 
-## for question 4)
-## We will give our network 2 incomplete mixed input:
-##    0: [Mary, Female, Poor], 1: [Rich, John, Male]
+# for question 4)
+# We will give our network 2 incomplete mixed input:
+#    0: [Mary, Female, Poor], 1: [Rich, John, Male]
+    
 #x_test = np.vstack([np.array([1, 0, 1, 0, 1, 0]), # [Mary, Female, Poor]
 #                   np.array([0, 1, 0, 1, 0, 1])]) # [Rich, John, Male]
-#    
-#    
-## for question 6)
-## We generate 20 random inputs (array of six 0s or 1s)
-## To do this we create an array of size 20-by-6 (20 inputs, each of size 6
-##   because we have 6 units) using the function np.random.random_sample().
-##   This function draws numbers between 0 and 1 from uniform distribution.
-##   We then threshold these numbers (if they are below 0.5 -> 0, above 0.5 -> 1)
-##   Because we get booleans when we threshold like this, we then need to transform
-##   these numbers into integers (from True and False to 0 and 1) using the array.astype(np.int) method
+    
+    
+# for question 6)
+# We generate 20 random inputs (array of six 0s or 1s)
+# To do this we create an array of size 20-by-6 (20 inputs, each of size 6
+#   because we have 6 units) using the function np.random.random_sample().
+#   This function draws numbers between 0 and 1 from uniform distribution.
+#   We then threshold these numbers (if they are below 0.5 -> 0, above 0.5 -> 1)
+#   Because we get booleans when we threshold like this, we then need to transform
+#   these numbers into integers (from True and False to 0 and 1) using the array.astype(np.int) method
+    
 #x_test = (np.random.random_sample(size = [20, 6])>.5).astype(np.int)
 
 # initialize
