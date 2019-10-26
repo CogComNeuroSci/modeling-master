@@ -4,27 +4,23 @@
 @author: Mehdi Senoussi
 
 To write this script I used the ch3_pet_detector_hebbian_and_optimization_solution.py to start with.
-In this script we will not use the matrix notation to implement hebbian learning
 """
 
 # this script is divided in two parts
     # 1) a learning part in which we use hebbian learning to train the model, 
     #    i.e change its weights
     #
-    # 2) a testing part in which we present cat and dog examplars (vectors of 
-    #    input units) to this trained model and use the optimize the energy function.
+    # 2) a testing part in which we present cat and dog examplars (arrays of 
+    #    input units) to this trained model and optimize the energy function.
 
 import numpy as np
-import time
-from matplotlib import pyplot as pl
-
-timesleep = .1
 
 # how many units does this network have in total?
 n_units = 5
 
+#%%
 ###############################################################################
-####    LEARNING PART
+####    1) LEARNING PART
 ###############################################################################
 
 # our learning parameter is set at 0.1
@@ -42,12 +38,9 @@ dog_prototype = np.array([0, .5, 1, 0, 0])
 # set the number of samples we want to present of this prototype
 n_dog_samples = 10
 
-# the function tile repeats a certain set of values in the same order a certain
-# number of times but it creates a 1-dimensional array of these values so we use
-# the method reshape() to rearrange them into an array of n_samples-by-n_values
-# finally we use np.vstack() to put the cat and dog samples into the same array
-train_samples = np.vstack([np.tile(cat_prototype, n_cat_samples).reshape(n_cat_samples, n_units),
-                           np.tile(dog_prototype, n_dog_samples).reshape(n_dog_samples, n_units)])
+train_cat_samples = np.tile(cat_prototype,(n_cat_samples,1))
+train_dog_samples = np.tile(dog_prototype,(n_cat_samples,1))
+train_samples     = np.vstack((train_cat_samples, train_dog_samples))
 
 # add gaussian noise with mean = 0 and standard deviation = 0.01
 # we create an array of size (n_cat_samples + n_dog_samples)-by-3 to add some
@@ -61,7 +54,7 @@ train_samples[:, :3] = train_samples[:, :3] + np.random.randn(n_cat_samples + n_
 cat_target = np.array([0, 0, 0, 1, 0])
 # Define the dog target
 dog_target = np.array([0, 0, 0, 0, 1])
-# create the all the targets
+# create all the targets
 targets = np.vstack([np.tile(cat_target, n_cat_samples).reshape([n_cat_samples, n_units]),
                      np.tile(dog_target, n_dog_samples).reshape([n_dog_samples, n_units])])
 
@@ -88,7 +81,7 @@ weights[4, 3] = -.2
 
 #%%
 ###############################################################################
-####    TESTING PART
+####    2) TESTING PART
 ###############################################################################
 
 # the fixed number of time steps for which we will optimize the output unit activations
@@ -100,15 +93,15 @@ times = np.arange(n_tsteps)
 t = 1
 
 # std of noise
-sigma = .7
+sigma = 0.7
 # learning rate
 alpha = .2
 
 # how many test inputs will we use? (n_test/2 for each prototype)
 n_test = 10
 # use n_test/2 cat_prototype and n_test/2 dog_prototypes as inputs
-test_inputs = np.vstack([np.tile(cat_prototype, int(n_test/2)).reshape(int(n_test/2), n_units),
-                           np.tile(dog_prototype, int(n_test/2)).reshape(int(n_test/2), n_units)])
+test_inputs = np.vstack((np.tile(cat_prototype, (int(n_test/2),1)),
+                         np.tile(dog_prototype, (int(n_test/2),1))))
 
 # we add some noise so that they are all a bit different
 test_inputs[:, :3] = test_inputs[:, :3] + np.random.randn(n_test, 3) * samples_noise_std
