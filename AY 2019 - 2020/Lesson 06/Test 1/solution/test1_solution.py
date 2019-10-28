@@ -6,20 +6,21 @@
 Write your answers to the test questions here.
 
 1)
-    The model reaches a correct pet detection 9/10 times. The test inputs for
+    The model reaches a correct pet detection 9/20 times. The test inputs for
     which it does not converge to the correct pet are due to noise.
     
-    The model reaches a correct pet detection 6/10 times. Its performance is
-    lower than with sigma = 0.7. This is due to the fact that when there is
-    more noise in the network the incorrect output unit can by chance reach a
-    higher activation and therefore inhibit the activation of the correct
-    output unit.
+    The model reaches a correct pet detection 11/20 times when sigma = 3.0.
+    Its performance is lower than with sigma = 0.5. This is due to the fact
+    that when there is more noise in the input to the network the incorrect
+    output unit can by chance reach a higher activation and therefore inhibit
+    the activation of the correct output unit.
     
 4)
-    The model reaches a correct pet detection 10/10 times. The model yields a
-    better performance for pet detection with 5 than with 3 input units.
-    This is because it has more input units, and therefore more information to
-    detect which pet it is.
+    The model reaches a correct pet detection 20/20 times. 
+    
+5)  The model yields a better performance for pet detection with 5 than with 3
+    input units. This is because it has more input units, and therefore more
+    information to detect which pet it is.
     A second reason why it performs better is that it has been trained on more
     samples (10 by prototype in question 1 and 20 in question 4) which
     increases the weights and therefore leads to better performances.
@@ -30,8 +31,8 @@ Write your answers to the test questions here.
     # 1) a learning part in which we use hebbian learning to train the model, 
     #    i.e change its weights
     #
-    # 2) a testing part in which we present cat and dog examplars (arrays of 
-    #    input units) to this trained model and optimize the energy function.
+    # 2) a testing part in which we present cat and dog prototypes (arrays of 
+    #    input units) to this trained model and optimize the output activations
 
 import numpy as np
 
@@ -63,10 +64,14 @@ train_cat_samples = np.tile(cat_prototype, (n_cat_samples, 1))
 train_dog_samples = np.tile(dog_prototype, (n_cat_samples, 1))
 train_samples     = np.vstack((train_cat_samples, train_dog_samples))
 
-# add gaussian noise with mean = 0 and standard deviation = 0.01
-# we create an array of size (n_cat_samples + n_dog_samples)-by-3 to add some
-# independent gaussian noise to each value in the train_sample array
-# we also multiply these values by the standard deviation we want in our samples
+## Add random normally distributed noise (mean = 0, standard deviation = 0.01)
+# To do this we create an array of size (n_cat_samples + n_dog_samples)-by-3 (
+# because we have 3 input units) to add some random noise to each value in the
+# train_sample array.
+# The function np.random.randn() returns a matrix of random normally distributed
+# values of mean = 0 and standard deviation = 1.
+# We then multiply these values by the standard deviation we want in our
+# training samples.
 samples_noise_std = 0.01
 train_samples[:, :5] = train_samples[:, :5] + np.random.randn(n_cat_samples + n_dog_samples, 5) * samples_noise_std
 
@@ -113,26 +118,26 @@ times = np.arange(n_tsteps)
 # need to use the previous time step's activations
 t = 1
 
-# std of noise
-sigma = 2.5
-# learning rate
+# standard deviation of random normally distributed noise
+sigma = 3.0
+# update rate
 alpha = 0.2
 
 # how many test inputs will we use? (n_test/2 for each prototype)
-n_test = 10
+n_test_total = 20
 # use n_test/2 cat_prototype and n_test/2 dog_prototypes as inputs
-test_inputs = np.vstack((np.tile(cat_prototype, (int(n_test/2), 1)),
-                         np.tile(dog_prototype, (int(n_test/2), 1))))
+test_inputs = np.vstack((np.tile(cat_prototype, (int(n_test_total/2), 1)),
+                         np.tile(dog_prototype, (int(n_test_total/2), 1))))
 
 # we add some noise so that they are all a bit different
-test_inputs[:, :5] = test_inputs[:, :5] + np.random.randn(n_test, 5) * samples_noise_std
+test_inputs[:, :5] = test_inputs[:, :5] + np.random.randn(n_test_total, 5) * samples_noise_std
 
 
 # array to store the results of the activation optimization
-output_result = np.zeros(shape = (n_test, 2))
+output_result = np.zeros(shape = (n_test_total, 2))
 
 # loop over all the test inputs
-for test_input_n in np.arange(n_test):
+for test_input_n in np.arange(n_test_total):
     ydog = np.zeros(n_tsteps)
     ycat = np.zeros(n_tsteps)
     
