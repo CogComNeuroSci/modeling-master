@@ -96,7 +96,7 @@ times = np.arange(n_tsteps)
 t = 1
 
 # std of noise
-sigma = 2.5
+sigma = 0.7
 # learning rate
 alpha = 0.2
 
