@@ -97,7 +97,7 @@ t = 1
 
 # std of noise
 sigma = 0.7
-# learning rate
+# update rate
 alpha = 0.2
 
 # how many test inputs will we use? (n_test/2 for each prototype)
