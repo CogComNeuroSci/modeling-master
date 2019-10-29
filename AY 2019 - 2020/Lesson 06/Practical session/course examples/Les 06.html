@@ -13017,45 +13017,6 @@ ul.typeahead-list  > li > a.pull-right {
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
     </style>
-<style type="text/css">
-    
-/* Temporary definitions which will become obsolete with Notebook release 5.0 */
-.ansi-black-fg { color: #3E424D; }
-.ansi-black-bg { background-color: #3E424D; }
-.ansi-black-intense-fg { color: #282C36; }
-.ansi-black-intense-bg { background-color: #282C36; }
-.ansi-red-fg { color: #E75C58; }
-.ansi-red-bg { background-color: #E75C58; }
-.ansi-red-intense-fg { color: #B22B31; }
-.ansi-red-intense-bg { background-color: #B22B31; }
-.ansi-green-fg { color: #00A250; }
-.ansi-green-bg { background-color: #00A250; }
-.ansi-green-intense-fg { color: #007427; }
-.ansi-green-intense-bg { background-color: #007427; }
-.ansi-yellow-fg { color: #DDB62B; }
-.ansi-yellow-bg { background-color: #DDB62B; }
-.ansi-yellow-intense-fg { color: #B27D12; }
-.ansi-yellow-intense-bg { background-color: #B27D12; }
-.ansi-blue-fg { color: #208FFB; }
-.ansi-blue-bg { background-color: #208FFB; }
-.ansi-blue-intense-fg { color: #0065CA; }
-.ansi-blue-intense-bg { background-color: #0065CA; }
-.ansi-magenta-fg { color: #D160C4; }
-.ansi-magenta-bg { background-color: #D160C4; }
-.ansi-magenta-intense-fg { color: #A03196; }
-.ansi-magenta-intense-bg { background-color: #A03196; }
-.ansi-cyan-fg { color: #60C6C8; }
-.ansi-cyan-bg { background-color: #60C6C8; }
-.ansi-cyan-intense-fg { color: #258F8F; }
-.ansi-cyan-intense-bg { background-color: #258F8F; }
-.ansi-white-fg { color: #C5C1B4; }
-.ansi-white-bg { background-color: #C5C1B4; }
-.ansi-white-intense-fg { color: #A1A6B2; }
-.ansi-white-intense-bg { background-color: #A1A6B2; }
-
-.ansi-bold { font-weight: bold; }
-
-    </style>
 
 
 <style type="text/css">
@@ -13149,8 +13110,29 @@ Pieter Huycke</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="The-delta-rule">The delta rule<a class="anchor-link" href="#The-delta-rule">&#182;</a></h2><p>Information will be addded soon</p>
+<h2 id="The-delta-rule">The delta rule<a class="anchor-link" href="#The-delta-rule">&#182;</a></h2><p>In the last theoretical lesson, we considered the mean squared error (MSE) function, which has the following form:</p>
+$$E = \frac{1}{n} \sum_{i=1}^{n} (t_{i} - y_{i})^2$$<p>where $t_{i}$ are the values provided by the supervisor.<br>
+Hence, this type of learning belongs to the category of <strong>supervised learning</strong>.<br>
+Recall that minimizing this function is straightforward: we have to minimize the difference between the predicted values $y_{i}$ and the 'required' values $t_{i}$.</p>
 
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-delta-rule">The delta rule<a class="anchor-link" href="#The-delta-rule">&#182;</a></h2><p>We apply gradient descent in weight space, expressed mathematically using the following equation:</p>
+$$\Delta w_{ij} = - \beta \frac{\partial E}{\partial w_{ij}}$$<p>Mind that the notation $\frac{\partial f(x,y)}{\partial y}$ refers to the partial derivative of the function $f(x,y)$ with respect to variable $y$.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-delta-rule">The delta rule<a class="anchor-link" href="#The-delta-rule">&#182;</a></h2><p>Working out this equation algebraically brings us to the following equation:</p>
+$$\Delta w_{ij} = \beta_{j} (t_{i} - y_{i}) \frac{\partial}{\partial in_{i}} f(in_{i})$$<p>Which can be simplified if we use the linear activation function to:</p>
+$$\Delta w_{ij} = \beta_{j} (t_{i} - y_{i})$$
 </div>
 </div>
 </div>
@@ -13271,8 +13253,8 @@ Please note that encountering one item (the song) will result in the second item
 <span class="c1"># alter print options for numpy: suppress scientific printing </span>
 <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">suppress</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 
-<span class="n">image_florence</span>   <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">,</span> <span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">,</span> <span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">]</span>     <span class="c1"># represent image using this pattern</span>
-<span class="n">song_stand_by_me</span> <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">]</span>               <span class="c1"># represent song using this pattern</span>
+<span class="n">image_florence</span>   <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">,</span> <span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">,</span> <span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">]</span>     <span class="c1"># represents image</span>
+<span class="n">song_stand_by_me</span> <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">99</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">,</span> <span class="o">.</span><span class="mi">01</span><span class="p">]</span>               <span class="c1"># represents song</span>
 
 <span class="c1"># define a weight matrix exclusively filled with zeros</span>
 <span class="n">weight_matrix</span> <span class="o">=</span> <span class="n">delta_learning</span><span class="o">.</span><span class="n">initialise_weights</span><span class="p">(</span><span class="n">image_florence</span><span class="p">,</span> 
@@ -13317,6 +13299,16 @@ Our original weight matrix, for now filled with zeros:
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-weight-matrix">The weight matrix<a class="anchor-link" href="#The-weight-matrix">&#182;</a></h2><p>Mind that the weight matrix looks different than the one we used in lesson 4.<br>
+To help you understand how our matrix looks like, we show this photo to make it clearer:</p>
+<p><img src="./weights.jpg" alt="Weights"></p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -13472,7 +13464,7 @@ Thus, the sound will elicit the screaming even though no shock was administered.
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="The-blocking-effect">The blocking effect<a class="anchor-link" href="#The-blocking-effect">&#182;</a></h2><p>Now we do extra conditiong, but we show CS1 together with a <strong>second conditioned stimulus (CS2)</strong> (e.g. a strong light).<br>
+<h2 id="The-blocking-effect">The blocking effect<a class="anchor-link" href="#The-blocking-effect">&#182;</a></h2><p>Now we do extra conditioning, but we show CS1 together with a <strong>second conditioned stimulus (CS2)</strong> (e.g. a strong light).<br>
 After conditioning, CS1 + CS2 will also lead to confused screaming:</p>
 <p><img src="./CS1_CS2_US.jpg" alt="CS1 + CS2 + US"></p>
 
@@ -13500,7 +13492,7 @@ The questions asked below might help you out.</p>
 <li>How many units does your model need?<ul>
 <li>Input layer<ul>
 <li>The model can encounter two different stimuli: <strong>only sound</strong> and <strong>sound + light</strong></li>
-<li>Sound and light can be seen as two different units: if the unit is switched of, the stimulus is not available</li>
+<li>Sound and light can be seen as two different units: if the unit is switched off, the stimulus is not available</li>
 </ul>
 </li>
 <li>Output layer<ul>
@@ -13519,8 +13511,8 @@ The questions asked below might help you out.</p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Modelling-the-blocking-effect">Modelling the blocking effect<a class="anchor-link" href="#Modelling-the-blocking-effect">&#182;</a></h2><ul>
 <li>Make a weight matrix to start with</li>
-<li>Use delta learning to learn the <strong>CS1 - US association</strong></li>
-<li>Use delta learning to learn the <strong>CS2 - US association</strong><ul>
+<li>Use delta learning to learn the outcome associated with <strong>CS1</strong></li>
+<li>Use delta learning to learn the outcome associated with <strong>CS1 + CS2</strong><ul>
 <li>Importantly, make sure that you use the weight matrix obtained from the previous step as a starting point</li>
 </ul>
 </li>
@@ -13537,6 +13529,24 @@ The questions asked below might help you out.</p>
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="3.-Delta-learning:-DIY-with-the-iris-dataset">3. Delta learning: DIY with the iris dataset<a class="anchor-link" href="#3.-Delta-learning:-DIY-with-the-iris-dataset">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Why-scikit-learn?">Why scikit-learn?<a class="anchor-link" href="#Why-scikit-learn?">&#182;</a></h2><p>Let's take a look at their own definition of what this package is about:</p>
+<blockquote><p>sklearn is a Python module integrating classical machine
+    learning algorithms in the tightly-knit world of scientific Python
+    packages (numpy, scipy, matplotlib).<br>
+    It aims to provide simple and efficient solutions to learning problems
+    that are accessible to everybody and reusable in various contexts:
+    machine-learning as a versatile tool for science and engineering.</p>
+</blockquote>
+<p>Thus, <code>scikit-learn</code> is about machine learning, and can be used for larger scale problems.<br>
+The drawback is that it solves problems in a 'black box' kind of way: the way how we get to the solution is not always clear.<br>
+We will use this module for this lesson and the next practical because it it allows us to do modelling, and it is quite famous in science.</p>
+
 </div>
 </div>
 </div>
@@ -13693,7 +13703,7 @@ So, if we give the model the features for flower 62:</p>
 <li>i.e. there are no layers between the input- and the output layer   </li>
 </ul>
 </li>
-<li>Split the data in a training set and a testing set, use the training set to optimize the model, use the test set to check the performance of your model<ul>
+<li>Split the data in a training set and a testing set, use the training set to train the model, use the test set to check the performance of your model<ul>
 <li>Google <em>split data train test scikit learn</em>, and see which Python functions might help you out 🌐     </li>
 </ul>
 </li>
@@ -13713,9 +13723,7 @@ So, if we give the model the features for flower 62:</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import: general and scikit-learn specific</span>
-<span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">numpy</span>                 <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span>     <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="kn">from</span> <span class="nn">sklearn</span>                 <span class="k">import</span> <span class="n">datasets</span>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span>    <span class="k">import</span> <span class="n">Perceptron</span>
@@ -13776,15 +13784,14 @@ So, if we give the model the features for flower 62:</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># define classifier (Perceptron object from scikit-learn)</span>
-<span class="n">classification_algorithm</span> <span class="o">=</span> <span class="n">Perceptron</span><span class="p">(</span><span class="n">max_iter</span>         <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+<span class="n">classification_algorithm</span> <span class="o">=</span> <span class="n">Perceptron</span><span class="p">(</span><span class="n">max_iter</span>         <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
                                       <span class="n">tol</span>              <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
                                       <span class="n">verbose</span>          <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                                       <span class="n">random_state</span>     <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
                                       <span class="n">n_iter_no_change</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
 
 <span class="c1"># fit (&#39;train&#39;) classifier to the training data</span>
-<span class="n">classification_algorithm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_std</span><span class="p">,</span> 
-                             <span class="n">y_train</span><span class="p">)</span>
+<span class="n">classification_algorithm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_std</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 
 <span class="c1"># predict y based on x for the test data</span>
 <span class="n">y_pred</span> <span class="o">=</span> <span class="n">classification_algorithm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_std</span><span class="p">)</span>
@@ -13825,8 +13832,8 @@ So, if we give the model the features for flower 62:</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Our classification was wrong for 2 out of the 38 cases.
-Accuracy percentage: 94.74
+<pre>Our classification was wrong for 6 out of the 38 cases.
+Accuracy percentage: 84.21
 </pre>
 </div>
 </div>

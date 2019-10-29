@@ -27,12 +27,12 @@ from sklearn.model_selection import train_test_split
 
 # import the Iris flower dataset
 iris        = datasets.load_iris()
-X           = iris.data
-y           = iris.target
+X           = ...
+y           = ...
 
 # binarize the data: we relabel 1 to 2
    # thus, the flower is either class 0 or class 2
-y[np.where(y == 1)] = 2
+...
 
 # split data in training and testing set
 X_train, X_test, y_train, y_test = train_test_split(X, 
@@ -40,24 +40,23 @@ X_train, X_test, y_train, y_test = train_test_split(X,
                                                     random_state = 20)
 
 # define classifier (Perceptron object from scikit-learn)
-classification_algorithm = Perceptron(max_iter         = 100,
+classification_algorithm = Perceptron(max_iter         = ...,
                                       tol              = 1e-3,
                                       verbose          = 0,
                                       random_state     = 20,
                                       n_iter_no_change = 5)
 
 # fit ('train') classifier to the training data
-classification_algorithm.fit(X_train, y_train)
+classification_algorithm.fit(..., ...)
 
 # predict y based on x for the test data
-y_pred = classification_algorithm.predict(X_test)
+y_pred = classification_algorithm.predict(...)
 
 # select wrong predictions (absolute vals) and print them
-compared       = np.array(y_pred == y_test)
-absolute_wrong = (compared == False).sum()
-print("Our classification was wrong for {0} out of the {1} cases.".format(absolute_wrong, 
-                                                                          len(compared)))
+...
+print("Our classification was wrong for {0} out of the {1} cases.".format(..., 
+                                                                          ...))
 
 
 # print accuracy using dedicated function
-print('Accuracy percentage: {0:.2f}'.format(accuracy_score(y_test, y_pred) * 100))
+print('Accuracy percentage: {0:.2f}'.format(accuracy_score(..., ...) * 100))

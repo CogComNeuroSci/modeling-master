@@ -32,18 +32,18 @@ np.set_printoptions(suppress=True)
 
 #%%
 
-# ------------------------------------------ #
-# LEARN ASSOCIATION BETWEEN LIGHT AND CHEESE #
-# ------------------------------------------ #
+# ----------------------------------------- #
+# LEARN ASSOCIATION BETWEEN TONE AND SHOCK #
+# ----------------------------------------- #
 
 # define inputs
-light          = np.array([1, 0])
-light_and_tone = np.array([1, 1])
-salivating     = np.array([1])
+tone           = np.array([1, 0])
+tone_and_light = np.array([1, 1])
+shock          = np.array([1])
 
 # define a weight matrix exclusively filled with zeros
-weight_matrix = delta_learning.initialise_weights(light, 
-                                                  salivating, 
+weight_matrix = delta_learning.initialise_weights(tone, 
+                                                  shock, 
                                                   zeros      = True,
                                                   predefined = False, 
                                                   verbose    = False)
@@ -54,13 +54,13 @@ alpha = 1.5
     
 for loop_var in np.arange(1, loops + 1):
     weights_after_learning = delta_learning.weight_change(alpha,
-                                                          light,
-                                                          salivating,
+                                                          tone,
+                                                          shock,
                                                           weight_matrix)
     weight_matrix = weights_after_learning
     
 # show that the light leads to the desired response
-activation_after_learning = delta_learning.internal_input(light,
+activation_after_learning = delta_learning.internal_input(tone,
                                                           weight_matrix)[0]
 print('\nActivation of output unit after {} trials of delta learning:\n'.format(loops), 
       np.round(activation_after_learning, 3))
@@ -70,9 +70,9 @@ print('\nActivation of output unit after {} trials of delta learning:\n'.format(
 # make a copy of the original weight matrix
 weight_matrix_light = np.copy(weight_matrix)
 
-# ------------------------------------------------- #
-# LEARN ASSOCIATION BETWEEN LIGHT + TONE AND CHEESE #
-# ------------------------------------------------- #
+# ------------------------------------------------ #
+# LEARN ASSOCIATION BETWEEN TONE + LIGHT AND SHOCK #
+# ------------------------------------------------ #
   
 # actual learning
 loops = 1000
@@ -80,13 +80,13 @@ alpha = 1.5
     
 for loop_var in np.arange(1, loops + 1):
     weights_after_learning = delta_learning.weight_change(alpha,
-                                                          light_and_tone,
-                                                          salivating,
+                                                          tone_and_light,
+                                                          shock,
                                                           weight_matrix)
     weight_matrix = weights_after_learning
     
 # show that the light + tone leads to the desired response
-activation_after_learning = delta_learning.internal_input(light_and_tone,
+activation_after_learning = delta_learning.internal_input(tone_and_light,
                                                           weight_matrix)[0]
 print('\nActivation levels at output after {} trials of delta learning:\n'.format(loops), 
       np.round(activation_after_learning, 3))

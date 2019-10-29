@@ -13358,7 +13358,7 @@ Please note that encountering one item (the song) will result in the second item
 <li>Open Spyder 🕸️</li>
 <li>Open <strong>'ch4_florence_delta_solution.py'</strong></li>
 <li>Notice that "blocks" of code are separated by the <code>#%%</code> character</li>
-<li>Run these blocks of code by clicking inside this block and pressing <code>shift + enter</code></li>
+<li>Run these blocks of code by clicking inside this block and pressing <code>shift + enter</code> (<code>Ctrl + enter</code> for Mac OS)</li>
 <li>Look at the output</li>
 <li>Sit back and listen to my explanation of each block!</li>
 </ol>
@@ -13424,6 +13424,16 @@ Our original weight matrix, for now filled with zeros:
 </div>
 </div>
 
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-weight-matrix">The weight matrix<a class="anchor-link" href="#The-weight-matrix">&#182;</a></h2><p>Mind that the weight matrix looks different than the one we used in lesson 4.<br>
+To help you understand how our matrix looks like, we show this photo to make it clearer:</p>
+<p><img src="./weights.jpg" alt="Weights"></p>
+
+</div>
+</div>
 </div></section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -13498,10 +13508,10 @@ Activation levels at output for the original weight matrix:
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
 Our altered weight matrix after 1000 trials of delta learning:
- [[ 1.31   0.006  1.243  0.004  1.181  0.004]
- [ 1.31   0.006  1.243  0.004  1.181  0.004]
- [-1.31  -0.006 -1.243 -0.004 -1.181 -0.004]
- [-1.31  -0.006 -1.243 -0.004 -1.181 -0.004]]
+ [[ 1.47000591  0.01417701  1.40351737  0.01356316  1.34274688  0.01301225]
+ [ 1.47000591  0.01417701  1.40351737  0.01356316  1.34274688  0.01301225]
+ [-1.47000591 -0.01417701 -1.40351737 -0.01356316 -1.34274688 -0.01301225]
+ [-1.47000591 -0.01417701 -1.40351737 -0.01356316 -1.34274688 -0.01301225]]
 </pre>
 </div>
 </div>
@@ -13538,7 +13548,7 @@ Our altered weight matrix after 1000 trials of delta learning:
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
 Activation levels at output after 1000 trials of delta learning:
- [0.976 0.976 0.024 0.024]
+ [0.985 0.985 0.015 0.015]
 </pre>
 </div>
 </div>
@@ -13644,6 +13654,24 @@ The questions asked below might help you out.</p>
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="3.-Delta-learning:-DIY-with-the-iris-dataset">3. Delta learning: DIY with the iris dataset<a class="anchor-link" href="#3.-Delta-learning:-DIY-with-the-iris-dataset">&#182;</a></h1>
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Why-scikit-learn?">Why scikit-learn?<a class="anchor-link" href="#Why-scikit-learn?">&#182;</a></h2><p>Let's take a look at their own definition of what this package is about:</p>
+<blockquote><p>sklearn is a Python module integrating classical machine
+    learning algorithms in the tightly-knit world of scientific Python
+    packages (numpy, scipy, matplotlib).<br>
+    It aims to provide simple and efficient solutions to learning problems
+    that are accessible to everybody and reusable in various contexts:
+    machine-learning as a versatile tool for science and engineering.</p>
+</blockquote>
+<p>Thus, <code>scikit-learn</code> is about machine learning, and can be used for larger scale problems.<br>
+The drawback is that it solves problems in a 'black box' kind of way: the way how we get to the solution is not always clear.<br>
+We will use this module for this lesson and the next practical because it it allows us to do modelling, and it is quite famous in science.</p>
+
 </div>
 </div>
 </div></section><section>
@@ -13758,152 +13786,40 @@ So, if we give the model the features for flower 62:</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-modelling-perspective">The modelling perspective<a class="anchor-link" href="#The-modelling-perspective">&#182;</a></h2><p>So, why the iris dataset?<br>
+When doing computational modelling, we might be interested in the processes behind object recognition.<br>
+In that case, we might train a model that is able to recognize flowers based on certain flower characteristics.<br>
+Additionally, we might even go further, and model how someone becomes an expert in recognizing flowers, what happens when we presents other objects to a flower expert ...</p>
+<p>Now that the reason we use the iris dataset is (hopefully) clear, we move on to the actual exercise.</p>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <p>Our action plan:</p>
 <ol>
-<li>Open <strong>'ch4_iris_delta_exercise.py'</strong> </li>
-<li>Use delta learning to let your model respond with the correct flower family based on the features</li>
-<li>Take a look at the Python module <code>scikit-learn</code>, which allows us to implement a single layered model<ul>
-<li>i.e. there are no layers between the input- and the output layer   </li>
+<li>Open <strong>'ch4_iris_exercise.py'</strong> </li>
+<li>Go through the script step by step and fill in the <code>...</code> spread throughout the code.<ul>
+<li>Load the iris dataset, and select the flower features (named <code>X</code>), and the labels ( named <code>y</code>)</li>
+<li>Binarize the data: all observations that belong to class 1 should be relabeled so that they belong to class 2<ul>
+<li>Think it through, why can we only handle two labels?</li>
 </ul>
 </li>
-<li>Split the data in a training set and a testing set, use the training set to train the model, use the test set to check the performance of your model<ul>
-<li>Google <em>split data train test scikit learn</em>, and see which Python functions might help you out 🌐     </li>
+<li>Let the model learn 100 times<ul>
+<li>Confused about the <code>Perceptron</code> object? No worries: ask us, or read through <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Perceptron.html">the docs</a></li>
 </ul>
 </li>
-<li>Use the <code>Perceptron</code> function to make a single layered model, and train this model on the training set<ul>
-<li>Stuck? Consider using <code>help(Perceptron)</code> to read the docs  </li>
+<li>Train the model by providing the correct arguments to the <code>classification_algorithm.fit</code> code</li>
+<li>Check the model accuracy by completing the <code>classification_algorithm.predict</code> code</li>
+<li>Print some statistics: how well did your model perform?</li>
 </ul>
 </li>
-<li>Finally, check whether your trained model is able to predict the family of new observations (your test set serves as "new observations")</li>
 </ol>
 
 </div>
 </div>
-</div></section><section>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import: general and scikit-learn specific</span>
-<span class="kn">import</span> <span class="nn">numpy</span>                 <span class="k">as</span> <span class="nn">np</span>
-
-<span class="kn">from</span> <span class="nn">sklearn</span>                 <span class="k">import</span> <span class="n">datasets</span>
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span>    <span class="k">import</span> <span class="n">Perceptron</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span>         <span class="k">import</span> <span class="n">accuracy_score</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span>   <span class="k">import</span> <span class="n">StandardScaler</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div></section><section>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import the Iris flower dataset</span>
-<span class="n">iris</span>        <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
-<span class="n">X</span>           <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span>
-<span class="n">y</span>           <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
-<span class="n">class_names</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">target_names</span>
-
-<span class="c1"># split data in training and testing set</span>
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> 
-                                                    <span class="n">y</span><span class="p">,</span> 
-                                                    <span class="n">random_state</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div></section><section>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># train the standard scaler with a part of the data</span>
-<span class="n">sc</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
-<span class="n">sc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
-
-<span class="c1"># apply scaler to all x</span>
-<span class="n">X_train_std</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
-<span class="n">X_test_std</span>  <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div></section><section>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># define classifier (Perceptron object from scikit-learn)</span>
-<span class="n">classification_algorithm</span> <span class="o">=</span> <span class="n">Perceptron</span><span class="p">(</span><span class="n">max_iter</span>         <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
-                                      <span class="n">tol</span>              <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
-                                      <span class="n">verbose</span>          <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-                                      <span class="n">random_state</span>     <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-                                      <span class="n">n_iter_no_change</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
-
-<span class="c1"># fit (&#39;train&#39;) classifier to the training data</span>
-<span class="n">classification_algorithm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_std</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-
-<span class="c1"># predict y based on x for the test data</span>
-<span class="n">y_pred</span> <span class="o">=</span> <span class="n">classification_algorithm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_std</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div></section><section>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># select wrong predictions (absolute vals) and print them</span>
-<span class="n">compared</span>       <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="n">y_test</span><span class="p">)</span>
-<span class="n">absolute_wrong</span> <span class="o">=</span> <span class="p">(</span><span class="n">compared</span> <span class="o">==</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Our classification was wrong for </span><span class="si">{0}</span><span class="s2"> out of the </span><span class="si">{1}</span><span class="s2"> cases.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">absolute_wrong</span><span class="p">,</span> 
-                                                                          <span class="nb">len</span><span class="p">(</span><span class="n">compared</span><span class="p">)))</span>
-
-
-<span class="c1"># print accuracy using dedicated function</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Accuracy percentage: </span><span class="si">{0:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Our classification was wrong for 2 out of the 38 cases.
-Accuracy percentage: 94.74
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div></section></section>
 </div>
 </div>
