@@ -74,6 +74,7 @@ train_samples     = np.vstack((train_cat_samples, train_dog_samples))
 # training samples.
 samples_noise_std = 0.01
 train_samples[:, :5] = train_samples[:, :5] + np.random.randn(n_cat_samples + n_dog_samples, 5) * samples_noise_std
+n_trials = train_samples.shape[0]
 
 # the targets (basically representing "dog" or "cat"):
 # Define the cat target
@@ -86,18 +87,14 @@ train_dog_targets = np.tile(dog_target, (n_cat_samples, 1))
 targets = np.vstack((train_cat_targets, train_dog_targets))
 
 
-# how many learning samples do we have (hence, how many trials are we going to do?)
-n_trials = train_samples.shape[0]
-# get the number of dimensions (i.e. units) in the samples
-n_sample_dim = train_samples.shape[1]
-# get the number of dimensions (i.e. units) in the targets
-n_target_dim = targets.shape[1]
-
 # create a weight matrix of size n_units-by-n_units
 weights = np.zeros(shape = [n_units, n_units])
 
+# random permutation
+random_array = np.random.permutation(np.arange(n_trials))
+
 # loop over all samples/trials to train our model
-for trial_n in np.arange(n_trials):
+for trial_n in random_array:
     weights = weights + beta * np.dot(targets[trial_n, :][:, np.newaxis],
                                               train_samples[trial_n, :][:, np.newaxis].T)
 
