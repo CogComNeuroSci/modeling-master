@@ -13217,8 +13217,10 @@ Pieter Huycke</p>
 <li>$scikit-learn?$</li>
 </ul>
 <h2 id="Practical">Practical<a class="anchor-link" href="#Practical">&#182;</a></h2><ol>
-<li>Florence + the machine, but now in $scikit-learn$</li>
-<li>Delta learning: DIY with the iris dataset</li>
+<li>Florence + the machine: novice</li>
+<li>The iris dataset: journeyman</li>
+<li>The iris dataset: adept</li>
+<li>The digits dataset: expert</li>
 </ol>
 
 </div>
@@ -13339,7 +13341,7 @@ See http://scikit-learn.org for complete documentation.
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="1.-Florence-+-the-machine,-but-now-in-$scikit-learn$">1. Florence + the machine, but now in $scikit-learn$<a class="anchor-link" href="#1.-Florence-+-the-machine,-but-now-in-$scikit-learn$">&#182;</a></h1>
+<h1 id="1.-Florence-+-the-machine:-novice">1. Florence + the machine: novice<a class="anchor-link" href="#1.-Florence-+-the-machine:-novice">&#182;</a></h1>
 </div>
 </div>
 </div></section><section>
@@ -13370,7 +13372,7 @@ See http://scikit-learn.org for complete documentation.
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Making-the-old-code-work">Making the old code work<a class="anchor-link" href="#Making-the-old-code-work">&#182;</a></h2><p>Now, we will adapt and extend the code from the previous practical and use $scikit-learn$ to perform learning.<br>
-Below, we define a list of adaptations that have to be done to make sure the code from the previous practical works for $scikit-learn$</p>
+Below, we define a list of adaptations that has to be completed to make sure the code from the previous practical works using $scikit-learn$</p>
 
 </div>
 </div>
@@ -13379,16 +13381,15 @@ Below, we define a list of adaptations that have to be done to make sure the cod
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Adaptations-to-be-done">Adaptations to be done<a class="anchor-link" href="#Adaptations-to-be-done">&#182;</a></h2><ol>
-<li>Open <strong>'ch4_florence_sklearn_exercise.py'</strong></li>
 <li>The output should be a 1D array, meaning that we cannot work with patterns like <code>song_florence</code> anymore.<br>
 Instead, we should work with integer values (i.e. <code>song_florence = 1</code>).<br>
-To convert an array to a 1D array, use the NumPy function <code>np.ravel()</code></li>
+To convert an array to a 1D array, use the NumPy function <code>np.ravel()</code>.</li>
 <li>Note that $scikit-learn$ works best with NumPy arrays.<br>
 So, the variables <code>image_florence</code> and <code>song_florence</code> should be converted to NumPy arrays.</li>
 <li>The input should be an $N \times P$ array.<br>
 Here, $N$ represents how many times the pattern is shown to the model.<br>
 In contrast, $P$ is the length of the pattern.   <ul>
-<li>So, if we showed the image 50 times, this would result in an array with dimensions 50 x 6.</li>
+<li>So, if we showed the image 50 times, this would result in an array with dimensions $50 \times 6$.</li>
 </ul>
 </li>
 </ol>
@@ -13400,17 +13401,17 @@ In contrast, $P$ is the length of the pattern.   <ul>
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Extensions-to-be-done">Extensions to be done<a class="anchor-link" href="#Extensions-to-be-done">&#182;</a></h2><ol>
-<li>Because <code>scikit-learn</code> works only when instances from several <strong>different</strong> classes are offered, we will add another group image, and their associated label<ul>
+<li>Because <code>scikit-learn</code> works only when instances from several <strong>different</strong> classes are offered, we will add another group image, and their associated label.<ul>
 <li>Add a variabel refering to the image of your favorite group:<br>
 <code>groupname = np.array([.01, .99, .01, .99, .01, .99])</code></li>
 </ul>
 </li>
-<li>Add a label associated with this new group: <code>song_... = 0</code></li>
-<li>We will use $N = 50$, meaning that we will show each image 50 times to the model</li>
-<li>Link the associated label with each image, meaning that the model should react 0 if the image of florence is shown, and 1 if the image of the other group is presented</li>
-<li>Comply with the needed array notation defined in <em>steps 2 &amp; 3</em> from the <em>Adaptations</em> list</li>
-<li>Find a way to shuffle the input array and the output array <strong>together</strong></li>
-<li>Use 75% of the input array to train your model, and test performance on the other 25%</li>
+<li>Add a label associated with this new group: <code>songname = 0</code>.</li>
+<li>We will use $N = 50$, meaning that we will show each image 50 times to the model.</li>
+<li>Link the associated label with each image, meaning that the model should react $0$ if the image of florence is shown, and $1$ if the image of the other group is presented.</li>
+<li>Comply with the needed array notation defined in <em>steps 2 &amp; 3</em> from the <em>Adaptations</em> list.</li>
+<li>Find a way to shuffle the input array and the output array <strong>together</strong>.</li>
+<li>Use 75% of the input array to train your model, and test performance on the other 25%.</li>
 </ol>
 
 </div>
@@ -13422,11 +13423,12 @@ In contrast, $P$ is the length of the pattern.   <ul>
 <h2 id="Florence:-the-modelling-aproach">Florence: the modelling aproach<a class="anchor-link" href="#Florence:-the-modelling-aproach">&#182;</a></h2><p>Our action plan:</p>
 <ol>
 <li>Open <strong>'ch4_florence_sklearn_exercise.py'</strong></li>
-<li>Fill in the blanks<ul>
-<li>Mind that <em>how</em> you fill in the blanks does not matter, <strong>what matters is that it works</strong></li>
+<li>Fill in the blanks using the aforementioned explanation and the comments<ul>
+<li>Mind that <em>how</em> you fill in the blanks does not matter, <strong>what matters is that it works...</strong></li>
 </ul>
 </li>
 <li>Stuck? <font color='blue'>G</font><font color='red'>o</font><font color='yellow'>o</font><font color='blue'>g</font><font color='green'>l</font><font color='red'>e</font> is your friend 😉</li>
+<li>Really stuck? Ask us!</li>
 </ol>
 
 </div>
@@ -13435,7 +13437,7 @@ In contrast, $P$ is the length of the pattern.   <ul>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="2.-Delta-learning:-DIY-with-the-iris-dataset">2. Delta learning: DIY with the iris dataset<a class="anchor-link" href="#2.-Delta-learning:-DIY-with-the-iris-dataset">&#182;</a></h1>
+<h1 id="2.-The-iris-dataset:-journeyman">2. The iris dataset: journeyman<a class="anchor-link" href="#2.-The-iris-dataset:-journeyman">&#182;</a></h1>
 </div>
 </div>
 </div></section><section>
@@ -13457,9 +13459,9 @@ There are 3 different species in the dataset, so we have 50 different flowers fo
 </ul>
 </li>
 <li>The name of the flower<ul>
-<li>Iris setosa</li>
-<li>Iris virginica</li>
+<li>Iris setosa    </li>
 <li>Iris vericolor</li>
+<li>Iris virginica</li>
 </ul>
 </li>
 </ul>
@@ -13596,136 +13598,50 @@ Additionally, we might even go further, and model how someone becomes an expert 
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Our action plan:</p>
-<ol>
-<li>Open <strong>'ch4_iris_exercise.py'</strong> </li>
-<li>Go through the script step by step and fill in the <code>...</code> spread throughout the code.<ul>
-<li>Load the iris dataset, and select the flower features (named <code>X</code>), and the labels ( named <code>y</code>)</li>
-<li>Binarize the data: all observations that belong to class 1 should be relabeled so that they belong to class 2<ul>
-<li>Think it through, why can we only handle two labels?</li>
-</ul>
-</li>
-<li>Let the model learn 100 times<ul>
-<li>Confused about the <code>Perceptron</code> object? No worries: ask us, or read through <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Perceptron.html">the docs</a></li>
-</ul>
-</li>
-<li>Train the model by providing the correct arguments to the <code>classification_algorithm.fit</code> code</li>
-<li>Check the model accuracy by completing the <code>classification_algorithm.predict</code> code</li>
-<li>Print some statistics: how well did your model perform?</li>
-</ul>
-</li>
-</ol>
+<h2 id="The-iris-dataset:-journeyman">The iris dataset: journeyman<a class="anchor-link" href="#The-iris-dataset:-journeyman">&#182;</a></h2><p><ins>Problem statement</ins></p>
+<p>Your task is to implement an algorithm in Python that is able to successfully separate flowers belonging to the <strong>setosa</strong> and <strong>virginica</strong> family, and to find out whether this task is linearly separable or not.<br>
+For now, we will use the entire Iris dataset, but we ask you to relabel the observations belonging to the 'versicolor' family to 'virginica'.</p>
+<p>In line with the previous exercise, you should train your model on part of the data, and after training test the model on the rest of the data (extra: look for a built-in function in $scikit-learn$ that is able to shuffle and split the data in a training - and a testing part).</p>
+<p>Print your classification accuracy at the end of your script, and infer based on your results whether your algorithm succeeded or not.</p>
 
+</div>
+</div>
+</div></section></section><section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="The-iris-dataset:-adept">The iris dataset: adept<a class="anchor-link" href="#The-iris-dataset:-adept">&#182;</a></h1>
 </div>
 </div>
 </div></section><section>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import: general and scikit-learn specific</span>
-<span class="kn">import</span> <span class="nn">numpy</span>                 <span class="k">as</span> <span class="nn">np</span>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-iris-dataset:-adept">The iris dataset: adept<a class="anchor-link" href="#The-iris-dataset:-adept">&#182;</a></h2><p>Note: no start script is provided as this script relies partly on the code from previous exercises.</p>
+<p><ins>Problem statement</ins></p>
+<p>As we already saw in the theoretical part about delta learning, this learning algorithm only works when the provided inputs are linearly separable. For this assignment, we ask you to find out which flower families are linearly separable. Thus, can a delta learning algorithm separate setosa from virginica, or setosa from versicolor...?</p>
+<p>Write a script that loops over each family comparison 50 times to account for variability in data shuffling and data splitting (in line with this, <em>don't use a random seed</em>). Store the accuracies of your model predictions in a <code>Pandas.DataFrame</code>. Compute the minimal accuracy across simulations for each family comparison, and determine based on this which flower families are linearly separable, and which ones are not.</p>
+<p>The desired output DataFrame should be of the form $50 \times 3$, where $50$ represents the amount of simulations, and $3$ represents the amount of category comparisons that are made.</p>
 
-<span class="kn">from</span> <span class="nn">sklearn</span>                 <span class="k">import</span> <span class="n">datasets</span>
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span>    <span class="k">import</span> <span class="n">Perceptron</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span>         <span class="k">import</span> <span class="n">accuracy_score</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span>
-</pre></div>
-
-    </div>
 </div>
 </div>
-
+</div></section></section><section><section>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="The-iris-dataset:-expert">The iris dataset: expert<a class="anchor-link" href="#The-iris-dataset:-expert">&#182;</a></h1>
+</div>
+</div>
 </div></section><section>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import the Iris flower dataset</span>
-<span class="n">iris</span>        <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
-<span class="n">X</span>           <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span>
-<span class="n">y</span>           <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
-
-<span class="c1"># binarize the data: we relabel 1 to 2</span>
-   <span class="c1"># thus, the flower is either class 0 or class 2</span>
-<span class="n">y</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">2</span>
-
-<span class="c1"># split data in training and testing set</span>
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> 
-                                                    <span class="n">y</span><span class="p">,</span> 
-                                                    <span class="n">random_state</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div></section><section>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># define classifier (Perceptron object from scikit-learn)</span>
-<span class="n">classification_algorithm</span> <span class="o">=</span> <span class="n">Perceptron</span><span class="p">(</span><span class="n">max_iter</span>         <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
-                                      <span class="n">tol</span>              <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
-                                      <span class="n">verbose</span>          <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-                                      <span class="n">random_state</span>     <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-                                      <span class="n">n_iter_no_change</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
-
-<span class="c1"># fit (&#39;train&#39;) classifier to the training data</span>
-<span class="n">classification_algorithm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-
-<span class="c1"># predict y based on x for the test data</span>
-<span class="n">y_pred</span> <span class="o">=</span> <span class="n">classification_algorithm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div></section><section>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># select wrong predictions (absolute vals) and print them</span>
-<span class="n">compared</span>       <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="n">y_test</span><span class="p">)</span>
-<span class="n">absolute_wrong</span> <span class="o">=</span> <span class="p">(</span><span class="n">compared</span> <span class="o">==</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Our classification was wrong for </span><span class="si">{0}</span><span class="s2"> out of the </span><span class="si">{1}</span><span class="s2"> cases.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">absolute_wrong</span><span class="p">,</span> 
-                                                                          <span class="nb">len</span><span class="p">(</span><span class="n">compared</span><span class="p">)))</span>
-
-
-<span class="c1"># print accuracy using dedicated function</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Accuracy percentage: </span><span class="si">{0:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Our classification was wrong for 0 out of the 38 cases.
-Accuracy percentage: 100.00
-</pre>
-</div>
-</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-digits-dataset">The digits dataset<a class="anchor-link" href="#The-digits-dataset">&#182;</a></h2><p>This dataset is made up of 1797 $8 \times 8$ images.<br>
+Each image, like the one shown below (representing number 1), is of a hand-written digit.</p>
+<p><img src="./digit_1.jpg" alt="Digit example"></p>
 
 </div>
 </div>
-
 </div></section></section>
 </div>
 </div>
