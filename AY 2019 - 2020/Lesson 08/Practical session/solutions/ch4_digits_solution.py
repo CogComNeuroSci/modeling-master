@@ -1,54 +1,84 @@
-print(__doc__)
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
-# Author: Gael Varoquaux <gael dot varoquaux at normalesup dot org>
-# License: BSD 3 clause
 
-# Standard scientific Python imports
+"""
+@author: Pieter
+Pieter.Huycke@UGent.be
+
+- - - - - - - - - - - - 
+
+Stuck using a function?
+No idea about the arguments that should be defined?
+
+Type:
+help(module_name)
+help(function_name)
+to let Python help you!
+"""
+
+#%%
+
+# import the most relevant modules
 import matplotlib.pyplot as plt
+import numpy             as np
 
-# Import datasets, classifiers and performance metrics
-from sklearn import datasets, svm, metrics
+from   sklearn                 import datasets
+from   sklearn.linear_model    import Perceptron
+from   sklearn.metrics         import accuracy_score
 
-# The digits dataset
+#%%
+
+# load the data
 digits = datasets.load_digits()
 
-# The data that we are interested in is made of 8x8 images of digits, let's
-# have a look at the first 4 images, stored in the `images` attribute of the
-# dataset.  If we were working from image files, we could load them using
-# matplotlib.pyplot.imread.  Note that each image must have the same size. For these
-# images, we know which digit they represent: it is given in the 'target' of
-# the dataset.
-images_and_labels = list(zip(digits.images, digits.target))
-for index, (image, label) in enumerate(images_and_labels[:4]):
-    plt.subplot(2, 4, index + 1)
-    plt.axis('off')
-    plt.imshow(image, cmap=plt.cm.gray_r, interpolation='nearest')
-    plt.title('Training: %i' % label)
+X      = digits.images
+y      = digits.target
 
-# To apply a classifier on this data, we need to flatten the image, to
-# turn the data in a (samples, feature) matrix:
-n_samples = len(digits.images)
-data      = digits.images.reshape((n_samples, -1))
+# flatten the array to use it in the classifier
+n_samples = len(X)
+data      = X.reshape((n_samples, -1))
 
-# Create a classifier: a support vector classifier
-classifier = svm.SVC(gamma=0.001)
+#%%
 
-# We learn the digits on the first half of the digits
-classifier.fit(data[:n_samples // 2], digits.target[:n_samples // 2])
+# shuffle arrays together
+indx = np.arange(data.shape[0])
+np.random.shuffle(indx)
 
-# Now predict the value of the digit on the second half:
-expected  = digits.target[n_samples // 2:]
-predicted = classifier.predict(data[n_samples // 2:])
+data  = data[indx]
+y     = y[indx]
 
-print("Classification report for classifier %s:\n%s\n"
-      % (classifier, metrics.classification_report(expected, predicted)))
-print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
+#%%
 
-images_and_predictions = list(zip(digits.images[n_samples // 2:], predicted))
+# split the data in the training proportion and the test proportion
+percent_75 = round(len(X) * .75)
+X_train, y_train, X_test, y_test = data[:percent_75,:], y[:percent_75], \
+                                   data[percent_75:,:], y[percent_75:]
+# classifier
+classification_algorithm = Perceptron(max_iter         = 100,
+                                      tol              = 1e-3,
+                                      verbose          = 0,
+                                      n_iter_no_change = 5)
+
+# fit ('train') classifier to the training data
+classification_algorithm.fit(X_train, y_train)
+
+# predict y based on x for the test data
+y_pred = classification_algorithm.predict(X_test)
+
+# accuracy
+print('Accuracy percentage: {0:.2f} %'.format(accuracy_score(y_test, y_pred) * 100))
+
+#%%
+
+# show some input images and their predicted label
+images_and_predictions = list(zip(X[indx][percent_75:,:], y_pred))
 for index, (image, prediction) in enumerate(images_and_predictions[:4]):
-    plt.subplot(2, 4, index + 5)
+    plt.subplot(1, 4, index + 1)
     plt.axis('off')
-    plt.imshow(image, cmap=plt.cm.gray_r, interpolation='nearest')
+    plt.imshow(image, 
+               cmap=plt.cm.gray_r, 
+               interpolation='nearest')
     plt.title('Prediction: %i' % prediction)
 
 plt.show()
