@@ -27,11 +27,11 @@ import numpy              as np
 #%%
 
 # define the patterns we need to associate
-image_florence   = np.array([.99, .01, .99, .01, .99, .01])
-song_florence    = 1
+image_1  = np.array([.99, .01, .99, .01, .99, .01])
+output_1 = 0
 
-your_image       = np.array([.01, .99, .01, .99, .01, .99])
-your_song        = 0
+image_2  = np.array([.01, .99, .01, .99, .01, .99])
+output_2 = 1
 
 # make an input - and an output array
   # dimensions should be (100, 6) and (100, ) respectively

@@ -13394,10 +13394,10 @@ Below, we define a list of adaptations that has to be completed to make sure the
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Adaptations-to-be-done">Adaptations to be done<a class="anchor-link" href="#Adaptations-to-be-done">&#182;</a></h2><ol>
-<li>The output should be a 1D array, so we should work with integer values as output (i.e. <code>group_1 = 0</code>).<br>
+<li>The output should be a 1D array, so we should work with integer values as output (i.e. <code>output_1 = 0</code>).<br>
 Mind that if you would check the dimensionality of a 1D array (<code>arr.shape</code>), your output would be: <code>(x,)</code>.</li>
 <li>Note that $scikit-learn$ works best with NumPy arrays.<br>
-So, the variables <code>image_1</code> and <code>group_1</code> should be converted to NumPy arrays.</li>
+So, the variables <code>image_1</code> and <code>output_1</code> should be converted to NumPy arrays.</li>
 <li>The input should be an $N \times P$ array.<br>
 Here, $N$ represents how many times the pattern is shown to the model.<br>
 In contrast, $P$ is the length of the pattern.   <ul>
@@ -13418,7 +13418,7 @@ In contrast, $P$ is the length of the pattern.   <ul>
 <code>image_2 = np.array([.01, .99, .01, .99, .01, .99])</code></li>
 </ul>
 </li>
-<li>Add a label associated with this new group: <code>group_2 = 1</code>.</li>
+<li>Add a label associated with this new group: <code>output_2 = 1</code>.</li>
 <li>We will use $N = 50$, meaning that we will show each image 50 times to the model.</li>
 <li>Link the associated label with each image, meaning that the model should react $0$ if the image of florence is shown, and $1$ if the image of the other group is presented.</li>
 <li>Comply with the needed array notation defined in <em>steps 2 &amp; 3</em> from the <em>Adaptations</em> list.</li>

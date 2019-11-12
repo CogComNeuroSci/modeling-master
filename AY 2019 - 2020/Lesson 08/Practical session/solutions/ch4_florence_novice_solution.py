@@ -28,27 +28,27 @@ from sklearn.metrics      import accuracy_score
 #%%
 
 # define the patterns we need to associate
-image_florence   = np.array([.99, .01, .99, .01, .99, .01])
-group_1          = 0
+image_1  = np.array([.99, .01, .99, .01, .99, .01])
+output_1 = 0
 
-image_bfmv       = np.array([.01, .99, .01, .99, .01, .99])
-group_2          = 1
+image_2  = np.array([.01, .99, .01, .99, .01, .99])
+output_2 = 1
 
 # make an input - and an output array
   # dimensions should be (100, 6) and (100, ) respectively
-images           = np.vstack((image_florence, image_bfmv))
-songs            = np.vstack((group_1, group_2))
+images           = np.vstack((image_1, image_2))
+output           = np.vstack((output_1, output_2))
 
 n                = 50
 image_array      = np.repeat(images, 
                              n, 
                              axis = 0)
-song_array       = np.ravel(np.repeat(songs, 
+output_array     = np.ravel(np.repeat(output, 
                                       n, 
                                       axis = 0))
 
 # delete unneeded items from workspace for clear scripting
-del image_florence, group_1, image_bfmv, group_2, images, songs, n
+del image_1, output_1, image_2, output_2, images, output, n
 
 #%%
 
@@ -56,16 +56,16 @@ del image_florence, group_1, image_bfmv, group_2, images, songs, n
 indx = np.arange(image_array.shape[0])
 np.random.shuffle(indx)
 
-image_array = image_array[indx]
-song_array  = song_array[indx]
+image_array  = image_array[indx]
+output_array = output_array[indx]
 
 #%%
 
 # split the data in the training proportion and the test proportion
-X_train, y_train, X_test, y_test = image_array[:75,:], song_array[:75], \
-                                   image_array[75:,:], song_array[75:]
+X_train, y_train, X_test, y_test = image_array[:75,:], output_array[:75], \
+                                   image_array[75:,:], output_array[75:]
 
-del indx, image_array, song_array
+del indx, image_array, output_array
 
 # define classifier (Perceptron object from scikit-learn)
 classification_algorithm = Perceptron(max_iter         = 100,

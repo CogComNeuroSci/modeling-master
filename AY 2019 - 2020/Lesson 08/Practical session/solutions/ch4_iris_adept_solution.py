@@ -85,6 +85,6 @@ simulation_results         = pd.DataFrame(arr)
 colnames                   = ['Set - Vers', 'Set - Virg', 'Vers - Virg']
 simulation_results.columns = colnames
 
-print('Mininum accuracy of Setosa vs Versicolor: {} %'.format(np.min(simulation_results['Set - Vers'])))
-print('Mininum accuracy of Setosa vs Virginica: {} %'.format(np.min(simulation_results['Set - Virg'])))
-print('Mininum accuracy of Versicolor vs Virginica: {} %'.format(np.min(simulation_results['Vers - Virg'])))
+print('Mininum accuracy of Setosa vs Versicolor: {0:.2f} %'.format(np.min(simulation_results['Set - Vers'])))
+print('Mininum accuracy of Setosa vs Virginica: {0:.2f} %'.format(np.min(simulation_results['Set - Virg'])))
+print('Mininum accuracy of Versicolor vs Virginica: {0:.2f} %'.format(np.min(simulation_results['Vers - Virg'])))
