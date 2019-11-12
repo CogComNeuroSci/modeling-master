@@ -29,15 +29,15 @@ from sklearn.metrics      import accuracy_score
 
 # define the patterns we need to associate
 image_florence   = np.array([.99, .01, .99, .01, .99, .01])
-song_florence    = 1
+group_1          = 0
 
 image_bfmv       = np.array([.01, .99, .01, .99, .01, .99])
-song_bfmv        = 0
+group_2          = 1
 
 # make an input - and an output array
   # dimensions should be (100, 6) and (100, ) respectively
 images           = np.vstack((image_florence, image_bfmv))
-songs            = np.vstack((song_florence, song_bfmv))
+songs            = np.vstack((group_1, group_2))
 
 n                = 50
 image_array      = np.repeat(images, 
@@ -48,7 +48,7 @@ song_array       = np.ravel(np.repeat(songs,
                                       axis = 0))
 
 # delete unneeded items from workspace for clear scripting
-del image_florence, song_florence, image_bfmv, song_bfmv, images, songs, n
+del image_florence, group_1, image_bfmv, group_2, images, songs, n
 
 #%%
 

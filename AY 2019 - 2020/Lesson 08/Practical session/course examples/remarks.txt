@@ -1,0 +1,11 @@
+florence recap:
+v rename the variables -> is it this group or not this group?
+v make the dimensions clearer, not use np ravel
+v add some noise, more or less training, patterns more resembling
+v say that there will be more programming than in the other test
+v relabel to 0, 1, 2 --> setosa, virginica
+v which variables are linearly separable?
+v Use features, and check whether the problem is linearly separable
+v Dont use a fixed seed, or even better: leave it out
+v leave pandas out for the adept exercise
+v Rephrase as classify 0 vs the rest, or 1 vs the rest 

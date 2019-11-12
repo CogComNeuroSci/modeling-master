@@ -14,13 +14,14 @@ GitHub:  phuycke
 # IMPORT MODULES #
 # -------------- #
 
+import cv2
 import matplotlib.pyplot as plt
 import numpy             as np
 import os
 import pickle
 import sklearn.datasets
 
-import cv2
+from tqdm import tqdm
 
 #%%
 
@@ -28,9 +29,10 @@ import cv2
 # CONSTANTS #
 # --------- #
 
-SAMPLESIZE   = 250
 DIM_SIZE     = 80
-SANITY_CHECK = False
+SANITY_CHECK = True
+CAT_COUNT    = 0
+DOG_COUNT    = 0 
 
 ROOT         = r'C:\Users\pieter\Downloads\dogs-vs-cats'
 TRAIN_DIR    = os.path.join(ROOT, 'train')
@@ -48,14 +50,16 @@ def process_image(file_location, file_name, dimension):
     :param str file_location: The path where the image is located
     :param str file_name: The name of the image
     
-    :return: The rescaled (80 x 80) and grayscaled NumPy array depicting image
+    :return: The rescaled (80 x 80), normalized and grayscaled 
+             NumPy array depicting image
     '''
     
     file = os.path.join(file_location, file_name)
     imag = cv2.imread(file,
                       cv2.IMREAD_GRAYSCALE)
-    return cv2.resize(imag,
-                      dsize = (dimension, dimension))
+    imag = cv2.resize(imag,
+                      dsize = (dimension, dimension)) / 255.0
+    return imag
 
 #%%
 
@@ -64,16 +68,12 @@ def process_image(file_location, file_name, dimension):
 # ------ #
     
 # define our list of training and test samples
-images     = os.listdir(TRAIN_DIR)
-train_cats = images[:SAMPLESIZE]
-train_dogs = images[-SAMPLESIZE:]
-
-del images
+images = os.listdir(TRAIN_DIR)
 
 if SANITY_CHECK:
     # show we are actually working with images in RGB values using a random image
     img = process_image(TRAIN_DIR, 
-                        train_dogs[np.random.randint(100)], 
+                        images[np.random.randint(100)], 
                         DIM_SIZE)
     plt.imshow(img,
                cmap = "gray")
@@ -86,57 +86,38 @@ if SANITY_CHECK:
 # SAVE PROCESSED ARR #
 # ------------------ #
 
-# create arrays for both animals
-data_cat = np.zeros((SAMPLESIZE, DIM_SIZE, DIM_SIZE))
-data_dog = np.zeros((SAMPLESIZE, DIM_SIZE, DIM_SIZE))
+# count instances of each animal
+for file_name in images:
+    if 'dog' in file_name.lower():
+        DOG_COUNT += 1
+    elif 'cat' in file_name.lower():
+        CAT_COUNT += 1
+    else:
+        raise Warning('Unknown file found in folder')
 
-for i in range(len(train_cats)):
+del file_name
 
-    # cats
-    img_cat = process_image(TRAIN_DIR, 
-                            train_cats[i], 
-                            DIM_SIZE)
-    data_cat[i,:,:] = img_cat
+# create data -, and target arrays for both animals
+data    = np.zeros((CAT_COUNT + DOG_COUNT, DIM_SIZE, DIM_SIZE))
+targets = np.zeros((CAT_COUNT + DOG_COUNT))
+
+# loop over all files and process them (and show progress bar)
+for i in tqdm(range(len(images))):
+
+    # dog = 1 / cat = 0
+    if 'cat' in images[i].lower():
+        img_cat = process_image(TRAIN_DIR, 
+                                images[i], 
+                                DIM_SIZE)
+        data[i,:,:] = img_cat
+    else:
+        targets[i] = 1
+        img_dog = process_image(TRAIN_DIR, 
+                                images[i], 
+                                DIM_SIZE)
+        data[i,:,:] = img_dog
     
-    # dogs
-    img_dog = process_image(TRAIN_DIR, 
-                            train_dogs[i], 
-                            DIM_SIZE)
-    data_dog[i,:,:] = img_dog
-    
-del i, img_cat, img_dog, train_cats, train_dogs
-
-#%%
- 
-# ------------ #
-# SAVE TARGETS #
-# ------------ #
-   
-# define the target arrays
-cat_target = np.zeros(SAMPLESIZE)
-dog_target = np.ones(SAMPLESIZE)
-
-targets    = np.ravel(np.array((cat_target, dog_target)))
-
-del cat_target, dog_target
-
-#%%
-
-# ----------- #
-# FINAL ARRAY #
-# ----------- #
-
-# store together
-cat_dog = np.vstack((data_cat, data_dog))
-
-# shuffle together
-indx = np.arange(len(targets))
-np.random.shuffle(indx)
-
-cat_dog = cat_dog[indx, :, :]
-targets = targets[indx]
-
-del indx
+del i, img_cat, img_dog, images
 
 #%%
 
@@ -147,17 +128,24 @@ del indx
 if SANITY_CHECK:
     # hopefully a cat
     plt.subplot(1, 2, 1)
-    plt.imshow(data_cat[np.random.randint(len(data_cat))],
+    plt.imshow(data[np.random.randint(0, len(data) // 2)],
                cmap = "gray")
     plt.title('Cat?')
     
     # hopefully a dog
     plt.subplot(1, 2, 2)
-    plt.imshow(data_dog[np.random.randint(len(data_dog))],
+    plt.imshow(data[np.random.randint(len(data) // 2, len(data))],
                cmap = "gray")
     plt.title('Dog?')
 
-del data_cat, data_dog
+#%%
+
+# ----------- #
+# FINAL ARRAY #
+# ----------- #
+
+#  final manipulations before storage (normalize + reshape)
+data  = np.array(data).reshape(-1, DIM_SIZE, DIM_SIZE, 1)
 
 #%%
 
@@ -165,21 +153,21 @@ del data_cat, data_dog
 # WRITE TO BUNCH #
 # -------------- #
 
-description = 'The Asirra dataset (Animal Species Recognition for '         + \
-              'Restricting Access) is contains millions of images of both ' + \
-              'cats and dogs. The smaller dataset that you just loaded in ' + \
-              'contains 500 pictures: 250 images of cats and 250 images '   + \
-              'of dogs. These images are already processed for you to use ' + \
-              'in your classifcation endeavors. Preprocessing means that '  + \
-              'the images are grayscaled and all have the same dimensions.'
+description = 'The Asirra dataset (Animal Species Recognition for '       + \
+              'Restricting Access) contains millions of images of both '  + \
+              'cats and dogs. The images in the dataset that you just '   + \
+              'loaded in (25 000 images) are already processed for you '  + \
+              'to use in your classification endeavors. Preprocessing '    + \
+              'means that the images are grayscaled, and all have the '   + \
+              'same dimensions.'
               
 dataset = sklearn.datasets.base.Bunch(DESC         = description,
-                                      images       = cat_dog, 
+                                      images       = data, 
                                       target       = targets, 
                                       target_names = {0: 'cat', 
                                                       1: 'dog'})
 
-del description, cat_dog, targets
+del description, data, targets
 
 f = open(os.path.join(ROOT, 'processed', 'cats_dogs.pkl'),"wb")
 pickle.dump(dataset, f)
