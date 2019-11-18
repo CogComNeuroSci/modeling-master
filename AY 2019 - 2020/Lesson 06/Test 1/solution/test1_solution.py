@@ -6,13 +6,13 @@
 Write your answers to the test questions here.
 
 1)
-    - The model reaches a correct pet detection 19/20 times (sometimes 20/20)
+    a) The model reaches a correct pet detection 19/20 times (sometimes 20/20)
     when sigma = 0.5
     
-    - The model reaches a correct pet detection 12/20 times (it varies between
+    b) The model reaches a correct pet detection 12/20 times (it varies between
     9/20 and 15/20) when sigma = 3.0.
 
-    - Its performance is lower when sigma = 3.0. This is due to the fact
+    c) Its performance is lower when sigma = 3.0. This is due to the fact
     that when there is more noise in the input to the network the incorrect
     output unit can by chance reach a higher activation and therefore inhibit
     the activation of the correct output unit.
@@ -22,10 +22,10 @@ Write your answers to the test questions here.
     16/20 and 20/20).
     
 5)  
-    - The model yields a better performance for pet detection in this version
+    a) The model yields a better performance for pet detection in this version
     of the model than in the version in question 1 for a sigma at 3.0.
     
-    - It performs better because it has been trained on more samples (10 by
+    b) It performs better because it has been trained on more samples (10 by
     prototype in question 1 and 20 in question 4) which increases the weights
     and impact of learning and therefore leads to better performances.
 
