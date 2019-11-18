@@ -6,24 +6,28 @@
 Write your answers to the test questions here.
 
 1)
-    The model reaches a correct pet detection 9/20 times. The test inputs for
-    which it does not converge to the correct pet are due to noise.
+    - The model reaches a correct pet detection 19/20 times (sometimes 20/20)
+    when sigma = 0.5
     
-    The model reaches a correct pet detection 11/20 times when sigma = 3.0.
-    Its performance is lower than with sigma = 0.5. This is due to the fact
+    - The model reaches a correct pet detection 12/20 times (it varies between
+    9/20 and 15/20) when sigma = 3.0.
+
+    - Its performance is lower when sigma = 3.0. This is due to the fact
     that when there is more noise in the input to the network the incorrect
     output unit can by chance reach a higher activation and therefore inhibit
     the activation of the correct output unit.
     
 4)
-    The model reaches a correct pet detection 20/20 times. 
+    The model reaches a correct pet detection 18/20 times (it varies between
+    16/20 and 20/20).
     
-5)  The model yields a better performance for pet detection with 5 than with 3
-    input units. This is because it has more input units, and therefore more
-    information to detect which pet it is.
-    A second reason why it performs better is that it has been trained on more
-    samples (10 by prototype in question 1 and 20 in question 4) which
-    increases the weights and therefore leads to better performances.
+5)  
+    - The model yields a better performance for pet detection in this version
+    of the model than in the version in question 1 for a sigma at 3.0.
+    
+    - It performs better because it has been trained on more samples (10 by
+    prototype in question 1 and 20 in question 4) which increases the weights
+    and impact of learning and therefore leads to better performances.
 
 """
 
@@ -166,5 +170,4 @@ for test_input_n in np.arange(n_test_total):
 print(np.round(output_result, 1))
 
 
-
-
+print('number of correct detections: {}/20'.format(np.sum((output_result[:, 0]>output_result[:, 1]) == np.repeat([1, 0], 10).astype(np.bool))))
