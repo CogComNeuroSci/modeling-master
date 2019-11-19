@@ -1,32 +1,29 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 @author: Mehdi Senoussi
 
 Write your answers to the test questions here.
 
 1)
-    a) The model reaches a correct pet detection 19/20 times (sometimes 20/20)
+    a) The model reaches a correct pet detection 12/20 times (it varies between
+    9/20 and 15/20) when sigma = 3.0
+
+    b) The model reaches a correct pet detection 19/20 times (sometimes 20/20)
     when sigma = 0.5
     
-    b) The model reaches a correct pet detection 12/20 times (it varies between
-    9/20 and 15/20) when sigma = 3.0.
-
     c) Its performance is lower when sigma = 3.0. This is due to the fact
     that when there is more noise in the input to the network the incorrect
     output unit can by chance reach a higher activation and therefore inhibit
     the activation of the correct output unit.
     
 4)
-    The model reaches a correct pet detection 18/20 times (it varies between
-    16/20 and 20/20).
+    The model always reaches a correct pet detection 20/20 times.
     
 5)  
     a) The model yields a better performance for pet detection in this version
     of the model than in the version in question 1 for a sigma at 3.0.
     
     b) It performs better because it has been trained on more samples (10 by
-    prototype in question 1 and 20 in question 4) which increases the weights
+    prototype in question 1 and 30 in question 4) which increases the weights
     and impact of learning and therefore leads to better performances.
 
 """
@@ -41,7 +38,7 @@ Write your answers to the test questions here.
 import numpy as np
 
 # how many units does this network have in total?
-n_units = 7
+n_units = 8
 
 #%%
 ###############################################################################
@@ -56,13 +53,13 @@ beta = 0.1
 # inputs and output units)
 
 # Define the cat prototype
-cat_prototype = np.array([1, 0.5, 0, 0.8, 0.1, 0, 0])
+cat_prototype = np.array([1, 0.5, 0, 1, -0.9, -0.3, 0, 0])
 # set the number of samples we want to present of this prototype
-n_cat_samples = 20
+n_cat_samples = 30
 # Define the dog prototype
-dog_prototype = np.array([0, 0.5, 1, 0.1, 0.8, 0, 0])
+dog_prototype = np.array([0, 0.5, 1, -0.9, 1, 1.5, 0, 0])
 # set the number of samples we want to present of this prototype
-n_dog_samples = 20
+n_dog_samples = 30
 
 train_cat_samples = np.tile(cat_prototype, (n_cat_samples, 1))
 train_dog_samples = np.tile(dog_prototype, (n_cat_samples, 1))
@@ -77,14 +74,14 @@ train_samples     = np.vstack((train_cat_samples, train_dog_samples))
 # We then multiply these values by the standard deviation we want in our
 # training samples.
 samples_noise_std = 0.01
-train_samples[:, :5] = train_samples[:, :5] + np.random.randn(n_cat_samples + n_dog_samples, 5) * samples_noise_std
+train_samples[:, :6] = train_samples[:, :6] + np.random.randn(n_cat_samples + n_dog_samples, 6) * samples_noise_std
 n_trials = train_samples.shape[0]
 
 # the targets (basically representing "dog" or "cat"):
 # Define the cat target
-cat_target = np.array([0, 0, 0, 0, 0, 1, 0])
+cat_target = np.array([0, 0, 0, 0, 0, 0, 1, 0])
 # Define the dog target
-dog_target = np.array([0, 0, 0, 0, 0, 0, 1])
+dog_target = np.array([0, 0, 0, 0, 0, 0, 0, 1])
 # create all the targets
 train_cat_targets = np.tile(cat_target, (n_cat_samples, 1))
 train_dog_targets = np.tile(dog_target, (n_cat_samples, 1))
@@ -103,7 +100,7 @@ for trial_n in random_array:
                                               train_samples[trial_n, :][:, np.newaxis].T)
 
 # we add a negative weight between ydog and ycat "by hand"
-weights[6, 5] = -0.2
+weights[7, 6] = -0.2
 
 
 #%%
@@ -131,7 +128,7 @@ test_inputs = np.vstack((np.tile(cat_prototype, (int(n_test_total/2), 1)),
                          np.tile(dog_prototype, (int(n_test_total/2), 1))))
 
 # we add some noise so that they are all a bit different
-test_inputs[:, :5] = test_inputs[:, :5] + np.random.randn(n_test_total, 5) * samples_noise_std
+test_inputs[:, :6] = test_inputs[:, :6] + np.random.randn(n_test_total, 6) * samples_noise_std
 
 
 # array to store the results of the activation optimization
@@ -144,18 +141,18 @@ for test_input_n in np.arange(n_test_total):
     
     this_input = test_inputs[test_input_n, :]
     
-    incat = weights[5, 0] * this_input[0] + weights[5, 1] * this_input[1] + weights[5, 2] * this_input[2] + weights[5, 3] * this_input[3] + weights[5, 4] * this_input[4]
-    indog = weights[6, 0] * this_input[0] + weights[6, 1] * this_input[1] + weights[6, 2] * this_input[2] + weights[6, 3] * this_input[3] + weights[6, 4] * this_input[4]
+    incat = weights[6, 0] * this_input[0] + weights[6, 1] * this_input[1] + weights[6, 2] * this_input[2] + weights[6, 3] * this_input[3] + weights[6, 4] * this_input[4] + weights[6, 5] * this_input[5]
+    indog = weights[7, 0] * this_input[0] + weights[7, 1] * this_input[1] + weights[7, 2] * this_input[2] + weights[7, 3] * this_input[3] + weights[7, 4] * this_input[4] + weights[7, 5] * this_input[5]
 
     # update the ycat value (eq. 2.4)
-    ycat[t] = ycat[t-1] + alpha * (incat + weights[6, 5] * ydog[t-1]) + np.random.randn()*sigma
+    ycat[t] = ycat[t-1] + alpha * (incat + weights[7, 6] * ydog[t-1]) + np.random.randn()*sigma
     # update the ydog value (eq. 2.5)
-    ydog[t] = ydog[t-1] + alpha * (indog + weights[6, 5] * ycat[t-1]) + np.random.randn()*sigma
+    ydog[t] = ydog[t-1] + alpha * (indog + weights[7, 6] * ycat[t-1]) + np.random.randn()*sigma
 
     # optimize the activation of the output units
     for t in times[1:]:
-        ycat[t] = ycat[t-1] + alpha * (incat + weights[6, 5] * ydog[t-1]) + np.random.randn()*sigma
-        ydog[t] = ydog[t-1] + alpha * (indog + weights[6, 5] * ycat[t-1]) + np.random.randn()*sigma
+        ycat[t] = ycat[t-1] + alpha * (incat + weights[7, 6] * ydog[t-1]) + np.random.randn()*sigma
+        ydog[t] = ydog[t-1] + alpha * (indog + weights[7, 6] * ycat[t-1]) + np.random.randn()*sigma
         # rectify the y values: if they are smaller than zero put them at zero
         if ycat[t]<0: ycat[t] = 0
         if ydog[t]<0: ydog[t] = 0

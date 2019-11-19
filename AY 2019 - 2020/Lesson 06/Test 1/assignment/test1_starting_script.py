@@ -55,6 +55,7 @@ train_samples     = np.vstack((train_cat_samples, train_dog_samples))
 # training samples.
 samples_noise_std = 0.01
 train_samples[:, :3] = train_samples[:, :3] + np.random.randn(n_cat_samples + n_dog_samples, 3) * samples_noise_std
+n_trials = train_samples.shape[0]
 
 # the targets (basically representing "dog" or "cat"):
 # Define the cat target
@@ -93,7 +94,7 @@ times = np.arange(n_tsteps)
 t = 1
 
 # standard deviation of random normally distributed noise
-sigma = 0.5
+sigma = 3.0
 # update rate
 alpha = 0.2
 
@@ -143,5 +144,5 @@ for test_input_n in np.arange(n_test_total):
 print(np.round(output_result, 1))
 
 
-
+print('number of correct detections: {}/20'.format(np.sum((output_result[:, 0]>output_result[:, 1]) == np.repeat([1, 0], 10).astype(np.bool))))
 
