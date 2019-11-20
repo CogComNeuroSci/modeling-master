@@ -10,10 +10,7 @@ GitHub:  phuycke
 
 #%%
 
-# -------------- #
-# IMPORT MODULES #
-# -------------- #
-
+# import relevant modules
 import numpy             as np
 import os
 import pickle
@@ -40,6 +37,7 @@ dataset = objects[0]
 del objects
 
 # some background
+print('')
 print(dataset.DESC)
 
 # load data
@@ -68,12 +66,12 @@ X_train, y_train, X_test, y_test = X_shuffled[:29,:], y_shuffled[:29], \
 del indx, X_shuffled, y_shuffled
 
 # define classifier (Perceptron object from scikit-learn)
-classification_algorithm = MLPClassifier(hidden_layer_sizes = (100, 50, 8,),
+classification_algorithm = MLPClassifier(hidden_layer_sizes = (100,),
                                          activation         = 'logistic',
                                          solver             = 'sgd',
-                                         learning_rate      = 'constant',
-                                         max_iter           = 2000, 
-                                         early_stopping     = True)
+                                         learning_rate      = 'adaptive',
+                                         max_iter           = 200000, 
+                                         early_stopping     = False)
 
 # fit ('train') classifier to the training data
 classification_algorithm.fit(X_train, y_train)

@@ -57,7 +57,8 @@ del input_arr, target_arr
 
 # train test split
 X_train, X_test, y_train, y_test = train_test_split(inputs, 
-                                                    targets)
+                                                    targets,
+                                                    train_size = .75)
 
 #%%
 
@@ -89,7 +90,7 @@ print('Perceptron accuracy:\n\t {0:.2f}%'.format(accuracy_score(y_test, y_pred) 
 # --- #
 
 # define classifier (Perceptron object from scikit-learn)
-classification_algorithm = MLPClassifier(hidden_layer_sizes = (10,10, ),
+classification_algorithm = MLPClassifier(hidden_layer_sizes = (7, ),
                                          max_iter           = 10000, 
                                          n_iter_no_change   = 10)
 
@@ -98,6 +99,3 @@ classification_algorithm.fit(X_train, y_train)
 
 # predict y based on x for the test data
 y_pred = classification_algorithm.predict(X_test)
-
-# print accuracy using a built-in sklearn function
-print('MLP accuracy:\n\t {0:.2f}%'.format(accuracy_score(y_test, y_pred) * 100))
