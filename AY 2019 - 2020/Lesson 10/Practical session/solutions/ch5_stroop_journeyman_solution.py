@@ -58,7 +58,7 @@ del input_arr, target_arr
 # train test split
 X_train, X_test, y_train, y_test = train_test_split(inputs, 
                                                     targets,
-                                                    train_size = .75)
+                                                    train_size = .25)
 
 #%%
 
@@ -101,7 +101,7 @@ for hidden_units in range(1, max_hidden + 1):
         # train test split
         X_train, X_test, y_train, y_test = train_test_split(inputs, 
                                                             targets,
-                                                            train_size = .75)
+                                                            train_size = .25)
 
         # define classifier (Perceptron object from scikit-learn)
         classification_algorithm = MLPClassifier(hidden_layer_sizes = (hidden_units, ),
