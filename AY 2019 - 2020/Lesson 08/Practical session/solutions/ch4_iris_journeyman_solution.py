@@ -17,6 +17,8 @@ help(function_name)
 to let Python help you!
 """
 
+#%%
+
 # import: general and scikit-learn specific
 import numpy                 as np
 
@@ -24,6 +26,8 @@ from sklearn                 import datasets
 from sklearn.linear_model    import Perceptron
 from sklearn.metrics         import accuracy_score
 from sklearn.model_selection import train_test_split
+
+#%%
 
 # import the Iris flower dataset
 iris        = datasets.load_iris()
@@ -34,10 +38,15 @@ y           = iris.target
    # thus, the flower is either class 0 or class 2
 y[np.where(y == 1)] = 2
 
+#%%
+
 # split data in training and testing set
 X_train, X_test, y_train, y_test = train_test_split(X, 
                                                     y, 
-                                                    random_state = 2019)
+                                                    random_state = 2019, 
+                                                    test_size    = .25)
+
+#%%
 
 # define classifier (Perceptron object from scikit-learn)
 classification_algorithm = Perceptron(max_iter         = 100,
@@ -51,6 +60,8 @@ classification_algorithm.fit(X_train, y_train)
 
 # predict y based on x for the test data
 y_pred = classification_algorithm.predict(X_test)
+
+#%%
 
 # select wrong predictions (absolute vals) and print them
 compared       = np.array(y_pred == y_test)

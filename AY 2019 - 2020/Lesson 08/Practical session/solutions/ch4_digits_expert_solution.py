@@ -45,8 +45,13 @@ data      = X.reshape((n_samples, -1))
 indx = np.arange(data.shape[0])
 np.random.shuffle(indx)
 
-data  = data[indx]
-y     = y[indx]
+data = data[indx]
+y    = y[indx]
+
+# binarize: 7 vs not 7
+y[np.where(y != 7)] = 0
+y[np.where(y == 7)] = 1
+
 
 #%%
 
@@ -71,14 +76,22 @@ print('Accuracy percentage: {0:.2f} %'.format(accuracy_score(y_test, y_pred) * 1
 
 #%%
 
+mapping_preds = {0: 'Not 7', 
+                 1: '7'}
+
 # show some input images and their predicted label
 images_and_predictions = list(zip(X[indx][percent_75:,:], y_pred))
-for index, (image, prediction) in enumerate(images_and_predictions[:4]):
+
+# get some random index to print (show a predicted 7 and some "Not 7"'s)
+random_indx = np.random.choice(np.where(y_pred == 1)[0])
+
+# print some predictions
+for index, (image, prediction) in enumerate(images_and_predictions[random_indx:random_indx+4]):
     plt.subplot(1, 4, index + 1)
     plt.axis('off')
     plt.imshow(image, 
                cmap=plt.cm.gray_r, 
                interpolation='nearest')
-    plt.title('Prediction: %i' % prediction)
+    plt.title('Prediction: %s' % mapping_preds.get(prediction))
 
 plt.show()

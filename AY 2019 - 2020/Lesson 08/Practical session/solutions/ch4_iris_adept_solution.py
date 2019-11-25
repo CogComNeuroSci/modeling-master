@@ -22,7 +22,6 @@ to let Python help you!
 # import: general and scikit-learn specific
 import itertools
 import numpy                 as np
-import pandas                as pd
 
 from sklearn                 import datasets
 from sklearn.linear_model    import Perceptron
@@ -56,7 +55,8 @@ for i in range(50):
     
         # split data in training and testing set
         X_train, X_test, y_train, y_test = train_test_split(X_selec, 
-                                                            y_selec)
+                                                            y_selec, 
+                                                            test_size = .25)
         
         # classifier
         classification_algorithm = Perceptron(max_iter         = 100,
@@ -81,10 +81,6 @@ for i in range(50):
 #%%
     
 # results of the simulation    
-simulation_results         = pd.DataFrame(arr)
-colnames                   = ['Set - Vers', 'Set - Virg', 'Vers - Virg']
-simulation_results.columns = colnames
-
-print('Mininum accuracy of Setosa vs Versicolor: {0:.2f} %'.format(np.min(simulation_results['Set - Vers'])))
-print('Mininum accuracy of Setosa vs Virginica: {0:.2f} %'.format(np.min(simulation_results['Set - Virg'])))
-print('Mininum accuracy of Versicolor vs Virginica: {0:.2f} %'.format(np.min(simulation_results['Vers - Virg'])))
+print('Mininum accuracy of Setosa vs Versicolor: {0:.2f} %'.format(np.min(arr[:,0])))
+print('Mininum accuracy of Setosa vs Virginica: {0:.2f} %'.format(np.min(arr[:,1])))
+print('Mininum accuracy of Versicolor vs Virginica: {0:.2f} %'.format(np.min(arr[:,2])))
