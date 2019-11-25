@@ -13202,7 +13202,7 @@ a.anchor-link {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Modelling-of-Cognitive-Processes">Modelling of Cognitive Processes<a class="anchor-link" href="#Modelling-of-Cognitive-Processes">&#182;</a></h1><h2 id="Backpropagation">Backpropagation<a class="anchor-link" href="#Backpropagation">&#182;</a></h2><hr>
+<h1 id="Modelling-of-Cognitive-Processes">Modelling of Cognitive Processes<a class="anchor-link" href="#Modelling-of-Cognitive-Processes">&#182;</a></h1><h2 id="Chapter-05:-backpropagation">Chapter 05: backpropagation<a class="anchor-link" href="#Chapter-05:-backpropagation">&#182;</a></h2><hr>
 <p>Lesson 10<br>
 26/11/2019<br>
 Pieter Huycke</p>
@@ -13244,8 +13244,7 @@ Pieter Huycke</p>
 The dataset was created by us, and you will load in the full dataset later on.<br>
 Before we start with the assignment, we will first start with inspecting the dataset.</p>
 <p>The dataset contains values for 2 different features, and a label for each observation. To stay in line with the previous practical, you can imagine that you have two different types of <strong>flowers</strong>, and that you can classify a flower based on <strong>two different flower features</strong>. To inspect whether we can classify the flowers based on the given features, we look at the plot immediately below.</p>
-<p>The plots were made using the Python package <code>seaborn</code>.<br>
-How the plots were construed is of no importance to you, <strong>only what the plots represent is important</strong>.</p>
+<p>How the plots were construed is of no importance to you, <strong>only what the plots represent is important</strong>.</p>
 
 </div>
 </div>
@@ -13314,9 +13313,9 @@ How the plots were construed is of no importance to you, <strong>only what the p
 <h2 id="The-iris-dataset:-novice">The iris dataset: novice<a class="anchor-link" href="#The-iris-dataset:-novice">&#182;</a></h2><p><ins>Problem statement</ins></p>
 <p>Looking at the plot, we see that flower B is clearly seperated from flower A.<br>
 We stored the data in a NumPy array, and saved the data for you to use.</p>
-<p>Your task is straightforward: load in the data, and attempt to classify the flowers using both a single-layered Perceptron, and a multi-layered-Perceptron (MLP). Remember that a single-layered perceptron has no hidden layers (like the ones you used in the previous practical session), and an MLP has per definition at least one hidden layer. For now, start with <strong>a single hidden layer</strong> when building your MLP. Manually try a certain amount of hidden units (e.g. 10, 100, 1000).</p>
+<p>Your task is straightforward: load in the data, and attempt to classify the flowers using both a two-layered Perceptron, and a multi-layered-Perceptron (MLP, 2+ layers of units). Remember that a two-layered perceptron has no hidden layers (like the ones you used in the previous practical session), and an MLP has per definition at least one hidden layer. For now, start with <strong>a single hidden layer</strong> when building your MLP. Manually try a certain amount of hidden units (e.g. 10, 100, 1000).</p>
 <p>Try to formulate an answer to the following questions:<br>
-Are both models able to classify the flower observations? Is one model clearly superior to the other? Why (not)?<br>
+Are both models able to classify the flower observations? Is one model clearly superior to the other in terms of classification accuracy? Why (not)?<br>
 Try to relate your empirical findings back to the course material.</p>
 <hr>
 <p>Note: The file "ch5_circular_novice_exercise.py" serves as your starting script, and shows a way to load a downloaded NumPy file.</p>
@@ -13361,7 +13360,7 @@ Only two possible answers are available: LEFT (coded as 1), and RIGHT (coded as 
 First train your model using a model without hidden units (i.e. a Perceptron), then compare this result with the performance of an MLP with one hidden layer.<br>
 Is there a difference?</p>
 <p>Finally, try to find <strong>the minimal MLP model</strong>. The minimal MLP model is the MLP that you train 50 times on <em>different</em> train data, and where the performance on the test data never drops below 100%.</p>
-<p>Try to find an elegant way to find the minimal model (hint: using <code>break</code> and <code>continue</code> might help you out here).</p>
+<p>Try to find an elegant way to find the minimal model (i.e. the model with the lowest amount of units &amp; hidden layers which still achieves maximal performance).</p>
 
 </div>
 </div>

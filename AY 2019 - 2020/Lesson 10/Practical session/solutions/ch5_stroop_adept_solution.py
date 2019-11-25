@@ -20,16 +20,24 @@ from sklearn.model_selection import train_test_split
 
 #%%
 
-# define the input patterns
-in_1 = np.array([0, 1, 0, 1, 0, 1]) 
-in_2 = np.array([0, 1, 1, 0, 1, 0]) 
-in_3 = np.array([0, 1, 0, 1, 1, 0])
-in_4 = np.array([0, 1, 1, 0, 0, 1])
+'''
+* coding * 
+    - Unit 1: context (1 = word is relevant dimension)
+    - Unit 2: color   (1 = word is colored in red)
+    - Unit 3: word    (1 = RED is shown on the screen)
+Mind that the coding does not impact your model's performance as long as one
+is using a consistent coding scheme
+'''
 
-in_5 = np.array([1, 0, 0, 1, 0, 1])
-in_6 = np.array([1, 0, 1, 0, 1, 0])
-in_7 = np.array([1, 0, 0, 1, 1, 0])
-in_8 = np.array([1, 0, 1, 0, 0, 1])
+# define the input patterns
+in_1 = np.array([1, 1, 1]) 
+in_2 = np.array([1, 0, 0]) 
+in_3 = np.array([1, 1, 0])
+in_4 = np.array([1, 0, 1])
+in_5 = np.array([0, 1, 1])
+in_6 = np.array([0, 0, 0])
+in_7 = np.array([0, 1, 0])
+in_8 = np.array([0, 0, 1])
 
 # define the targets
 t1 = np.array( [1])
@@ -62,16 +70,6 @@ inputs  = np.tile(input_arr, (50,1))
 targets = np.tile(target_arr, (50,1))
 targets = np.ravel(targets)
 
-# =============================================================================
-# # implement the learning disability
-# mu, sigma = 0, 0.1
-# s         = np.random.normal(0,1,800*6)
-# s         = s.astype('float64')
-# s         = np.reshape(s, (800, 6))
-# inputs    = inputs.astype('float64')
-# inputs   += s
-# =============================================================================
-
 del input_arr, target_arr
 
 #%%
@@ -93,7 +91,6 @@ classification_algorithm = Perceptron(max_iter         = 10000,
                                       verbose          = 0,
                                       n_iter_no_change = 10)
 
-
 # fit ('train') classifier to the training data
 classification_algorithm.fit(X_train, y_train)
 
@@ -102,7 +99,6 @@ y_pred = classification_algorithm.predict(X_test)
 
 # print accuracy using a built-in sklearn function
 print('Perceptron accuracy:\n\t {0:.2f}%'.format(accuracy_score(y_test, y_pred) * 100))
-
 
 #%%
 
@@ -116,6 +112,13 @@ classification_algorithm = MLPClassifier(hidden_layer_sizes = (8, ),
 
 # fit ('train') classifier to the training data
 classification_algorithm.fit(X_train, y_train)
+
+# learning disability (actively altering the weights of the model)
+for indx in range(len(classification_algorithm.coefs_)):
+    shape     = classification_algorithm.coefs_[indx].shape
+    mu, sigma = 0, 5
+    noise     = np.random.normal(mu, sigma, (shape[0], shape[1]))
+    classification_algorithm.coefs_[indx] += noise 
 
 # predict y based on x for the test data
 y_pred = classification_algorithm.predict(X_test)

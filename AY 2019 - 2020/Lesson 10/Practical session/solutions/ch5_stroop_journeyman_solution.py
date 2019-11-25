@@ -20,15 +20,24 @@ from sklearn.model_selection import train_test_split
 
 #%%
 
+'''
+* coding * 
+    - Unit 1: context (1 = word is relevant dimension)
+    - Unit 2: color   (1 = word is colored in red)
+    - Unit 3: word    (1 = RED is shown on the screen)
+Mind that the coding does not impact your model's performance as long as one
+is using a consistent coding scheme
+'''
+
 # define the input patterns
-in_1 = np.array([0, 1, 0, 1, 0, 1]) 
-in_2 = np.array([0, 1, 1, 0, 1, 0]) 
-in_3 = np.array([0, 1, 0, 1, 1, 0])
-in_4 = np.array([0, 1, 1, 0, 0, 1])
-in_5 = np.array([1, 0, 0, 1, 0, 1])
-in_6 = np.array([1, 0, 1, 0, 1, 0])
-in_7 = np.array([1, 0, 0, 1, 1, 0])
-in_8 = np.array([1, 0, 1, 0, 0, 1])
+in_1 = np.array([1, 1, 1]) 
+in_2 = np.array([1, 0, 0]) 
+in_3 = np.array([1, 1, 0])
+in_4 = np.array([1, 0, 1])
+in_5 = np.array([0, 1, 1])
+in_6 = np.array([0, 0, 0])
+in_7 = np.array([0, 1, 0])
+in_8 = np.array([0, 0, 1])
 
 # define the targets
 t1 = np.array( [1])
@@ -51,7 +60,6 @@ inputs  = np.tile(input_arr, (50,1))
 targets = np.tile(target_arr, (50,1))
 targets = np.ravel(targets)
 
-del input_arr, target_arr
 
 #%%
 
@@ -81,7 +89,6 @@ y_pred = classification_algorithm.predict(X_test)
 
 # print accuracy using a built-in sklearn function
 print('Perceptron accuracy:\n\t {0:.2f}%'.format(accuracy_score(y_test, y_pred) * 100))
-
 
 #%%
 
@@ -121,7 +128,6 @@ for hidden_units in range(1, max_hidden + 1):
         
     if unsatisfied:
         print('Using {} hidden units was found not good enough'.format(hidden_units))
-        continue
     else:
         print('We have 100% accuracy when using {} hidden units'.format(hidden_units))
         break
