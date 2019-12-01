@@ -21,7 +21,7 @@ import gym
 import numpy as np
 import matplotlib.pyplot as plt
 
-algo = "rw"
+algo = "ql"
 env = gym.make('Taxi-v2')
 n_episodes, max_per_episode = 500, 200
 lr, gamma, lambd = 0.7, 0.95, 0.4
