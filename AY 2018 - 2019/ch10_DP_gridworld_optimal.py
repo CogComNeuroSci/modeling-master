@@ -10,6 +10,7 @@ note: all p() are deterministic in this case
 """
 import numpy as np
 from ch10_DP_gridworld import plot_value
+import matplotlib.pyplot as plt
 
 np.set_printoptions(precision=4, suppress = True)
 
@@ -70,6 +71,7 @@ while stop == False:
         pass
     
 # show what you did
+fig, axs = plt.subplots(1, 1)
 print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))
 print(value)
-plot_value(0,0,value)
+plot_value(fig, axs, 0, 0, value)

@@ -29,7 +29,7 @@ def succ(state_pass = 1, action_pass = 1): # successor function
         column -= 1
     return row, column    
     
-def plot_value(row, column, value_matrix):
+def plot_value(fig, axs, row, column, value_matrix):
     offset = 0.05
     for xloop in range(5):
         for yloop in range(5):
@@ -49,7 +49,7 @@ halfway = 5 # intermediate-step value matrix to be printed
 fig, axs = plt.subplots(2, 2)
     
 # start to iterate
-plot_value(0, 1, value)
+plot_value(fig, axs, 0, 1, value)
 print(value)
 iteration = 0
 while stop == False:
@@ -85,9 +85,9 @@ while stop == False:
     else:
         pass
     if iteration == halfway:
-        plot_value(1, 0, value)
+        plot_value(fig, axs, 1, 0, value)
     
 # show what you did
 print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))
-plot_value(1, 1, value)
+plot_value(fig, axs, 1, 1, value)
 print(value)

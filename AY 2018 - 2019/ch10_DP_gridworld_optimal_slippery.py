@@ -12,6 +12,8 @@ UNDER CONSTRUCTION
 import numpy as np
 from ch10_DP_gridworld import plot_value
 
+del axs
+
 np.set_printoptions(precision=4, suppress = True)
 
 def state2rc(state_pass = 1):  # state to (row, column)
