@@ -133,7 +133,10 @@ for hidden_units in range(1, MAX_HIDDEN + 1):
             break
         
     if unsatisfied:
-        print('{} hidden units: unsatisfactory'.format(hidden_units))
+        if hidden_units == 1:
+            print('{} hidden unit: unsatisfactory'.format(hidden_units))
+        else:
+            print('{} hidden units: unsatisfactory'.format(hidden_units))
     else:
         print('We have 100% accuracy when using {} hidden units'.format(hidden_units))
         break
