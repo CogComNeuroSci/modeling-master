@@ -20,6 +20,12 @@ from sklearn.model_selection import train_test_split
 
 #%%
 
+SIMULATIONS = 50
+REPETITIONS = 50
+MAX_HIDDEN  = 20
+
+#%%
+
 # make all combinations and assign to an array or list (situation different)
 combinations     = list(itertools.product([0, 1, 2, 3], repeat = 3))
 separate_strings = []
@@ -54,17 +60,14 @@ del combinations, indx, arrs, temp, neural_coding
 #%%
         
 # make an elaborate training -, and test set
-X = np.repeat(separate_strings, 50, axis = 0)
-y = np.repeat(grammar_coding, 50)
+X = np.repeat(separate_strings, REPETITIONS, axis = 0)
+y = np.repeat(grammar_coding, REPETITIONS)
+
+del grammar_coding, separate_strings
 
 #%%
 
-# train test split
-X_train, X_test, y_train, y_test = train_test_split(X, 
-                                                    y,
-                                                    train_size = .75)
-
-del grammar_coding, separate_strings
+print('\n- - - -\nPerceptron\n- - - -\n')
 
 #%%
 
@@ -72,20 +75,34 @@ del grammar_coding, separate_strings
 # PERCEPTRON #
 # ---------- #
 
-# define classifier (Perceptron object from scikit-learn)
-classification_algorithm = Perceptron(max_iter         = 10000,
-                                      tol              = 1e-3,
-                                      verbose          = 0)
+perceptron_acc = np.zeros(SIMULATIONS)
 
+for i in range(SIMULATIONS):
+    
+    # train test split
+    X_train, X_test, y_train, y_test = train_test_split(X, 
+                                                        y,
+                                                        train_size = .75)
 
-# fit ('train') classifier to the training data
-classification_algorithm.fit(X_train, y_train)
+    # define classifier (Perceptron object from scikit-learn)
+    classification_algorithm = Perceptron(max_iter         = 10000,
+                                          tol              = 1e-3,
+                                          verbose          = 0)
+    
+    
+    # fit ('train') classifier to the training data
+    classification_algorithm.fit(X_train, y_train)
+    
+    # predict y based on x for the test data
+    y_pred = classification_algorithm.predict(X_test)
 
-# predict y based on x for the test data
-y_pred = classification_algorithm.predict(X_test)
+    perceptron_acc[i] = accuracy_score(y_test, y_pred) * 100
 
-# print accuracy using a built-in sklearn function
-print('Perceptron accuracy:\n\t {0:.2f}%'.format(accuracy_score(y_test, y_pred) * 100))
+print('Average accuracy of our Perceptron: {0:.2f}%\n'.format(np.mean(perceptron_acc)))
+
+#%%
+
+print('- - - -\nMulti-layered Perceptron\n- - - -\n')
 
 #%%
 
@@ -93,15 +110,30 @@ print('Perceptron accuracy:\n\t {0:.2f}%'.format(accuracy_score(y_test, y_pred) 
 # MLP #
 # --- #
 
-# define classifier (Perceptron object from scikit-learn)
-classification_algorithm = MLPClassifier(hidden_layer_sizes = (3, ),
-                                         max_iter           = 20000)
-
-# fit ('train') classifier to the training data
-classification_algorithm.fit(X_train, y_train)
-
-# predict y based on x for the test data
-y_pred = classification_algorithm.predict(X_test)
-
-# print accuracy using a built-in sklearn function
-print('MLP accuracy:\n\t {0:.2f}%'.format(accuracy_score(y_test, y_pred) * 100))
+for hidden_units in range(1, MAX_HIDDEN + 1):
+    
+    unsatisfied = False
+    
+    for loop_number in range(SIMULATIONS):
+        
+        # define classifier (Perceptron object from scikit-learn)
+        classification_algorithm = MLPClassifier(hidden_layer_sizes = (hidden_units, ),
+                                                 max_iter           = 10000, 
+                                                 n_iter_no_change   = 10)
+        
+        # fit ('train') classifier to the training data
+        classification_algorithm.fit(X_train, y_train)
+        
+        # predict y based on x for the test data
+        y_pred = classification_algorithm.predict(X_test)
+        
+        # print accuracy using a built-in sklearn function
+        if int(accuracy_score(y_test, y_pred)) < 1.0:
+            unsatisfied = True
+            break
+        
+    if unsatisfied:
+        print('{} hidden units: unsatisfactory'.format(hidden_units))
+    else:
+        print('We have 100% accuracy when using {} hidden units'.format(hidden_units))
+        break
