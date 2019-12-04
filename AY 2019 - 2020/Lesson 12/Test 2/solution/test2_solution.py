@@ -27,14 +27,13 @@ MAX_HIDDEN  = 20
 #%%
 
 # make all combinations and assign to an array or list (situation different)
-combinations     = list(itertools.product([0, 1, 2, 3], repeat = 3))
+combinations     = list(itertools.product([0, 1, 2], repeat = 3))
 separate_strings = []
 grammar_coding   = np.zeros(len(combinations))
 
-neural_coding    = {0 : [0, 0, 0, 1],  # A, coded as 0, with pattern [0,0,0,1]
-                    1 : [0, 0, 1, 0],  # B, coded as 1, with pattern [0,0,1,0]
-                    2 : [0, 1, 0, 0],  # C, coded as 2, with pattern [0,1,0,0]
-                    3 : [1, 0, 0, 0]}  # D, coded as 3, with pattern [1,0,0,0]
+neural_coding    = {0 : [0, 0, 1],  # A, coded as 0, with pattern [0,0,0,1]
+                    1 : [0, 1, 0],  # B, coded as 1, with pattern [0,0,1,0]
+                    2 : [1, 0, 0]}  # C, coded as 2, with pattern [0,1,0,0]
 
 # loop over all combinations; join strings and add coding
 for indx in range(len(combinations)):
