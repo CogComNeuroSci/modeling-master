@@ -27,27 +27,45 @@ is using a consistent coding scheme
 '''
 
 # define the input patterns
-input_arr = np.array([[0, 1, 0, 1],      # target: > / prime: >>>>
-                      [1, 0, 1, 0],      # target: < / prime: <<<<
-                      [0, 1, 1, 0],      # target: > / prime: <<<<
-                      [1, 0, 0, 1]])     # target: < / prime: >>>>
+target_in = np.array([[0, 1, 0, 1],      # target: > / flanker: >>>>
+                      [1, 0, 1, 0],      # target: < / flanker: <<<<
+                      [0, 1, 1, 0],      # target: > / flanker: <<<<
+                      [1, 0, 0, 1]])     # target: < / flanker: >>>>
+flanker_in = target_in                   # same targets and flankers
 
 # define the associated outputs
-output_arr = np.array([ [1],             # response: RIGHT
+target_out = np.array([ [1],             # response: RIGHT
                        [-1],             # response: LEFT
                         [1],             # response: RIGHT
                        [-1]])            # response: LEFT
+flanker_out = np.array([[1],             # response: RIGHT
+                       [-1],             # response: LEFT
+                       [-1],             # response: LEFT
+                        [1]])            # response: RIGHT
 
 # repeat the data a bit and fix the dimensions
-X = np.repeat(input_arr,  
-              45, 
-              axis = 0)
-y = np.repeat(output_arr, 
-              45, 
-              axis = 0)
-y = y.reshape((len(y)))
+in1 = np.repeat(target_in,  
+                90, 
+                axis = 0)
+in2 = np.repeat(flanker_in,  
+                10, 
+                axis = 0)
 
-del input_arr, output_arr
+out1 = np.repeat(target_out, 
+                 90, 
+                 axis = 0)
+out2 = np.repeat(flanker_out, 
+                 10, 
+                 axis = 0)
+
+# stack all the data together
+X = np.vstack((in1, in2))
+y = np.vstack((out1, out2))
+
+# reshape y
+y = y.reshape(len(y),)
+
+del target_in, target_out, flanker_in, flanker_out, in1, in2, out1, out2
 
 #%%
 
@@ -63,18 +81,12 @@ X_train, X_test, y_train, y_test = train_test_split(X,
 # ---------- #
 
 # define classifier (Perceptron object from scikit-learn)
-classification_algorithm = Perceptron(max_iter         = 10,
+classification_algorithm = Perceptron(max_iter         = 2000,
                                       tol              = 1e-3,
                                       verbose          = 0)
 
-
 # fit ('train') classifier to the training data
 classification_algorithm.fit(X_train, y_train)
-
-# learning disability (actively altering the weights of the model)
-mu, sigma = 0, 5
-noise     = np.random.normal(mu, sigma, (2, ))
-classification_algorithm.coef_[0][-2:] += noise 
 
 #%%
 
