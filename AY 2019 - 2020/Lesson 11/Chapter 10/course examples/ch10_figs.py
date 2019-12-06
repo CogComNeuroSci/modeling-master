@@ -29,14 +29,16 @@ def succ(state_pass = 1, action_pass = 1): # successor function
         column -= 1
     return row, column    
     
-def plot_value(row, column, value_matrix):
+def plot_value(fig, axs, row, column, value_matrix, title = ""):
     offset = 0.05
+    number = axs.shape[0]*row+column
+    axs.flat[number].set_title(title)
     for xloop in range(5):
         for yloop in range(5):
-            axs[row, column].text(offset + yloop/5, offset + (4 - xloop)/5, "{:.1f}".format(value_matrix[xloop, yloop]))
-    axs[row, column].grid(True)
-    axs[row, column].set_xticklabels(" ")
-    axs[row, column].set_yticklabels(" ")
+            axs.flat[number].text(offset + yloop/5, offset + (4 - xloop)/5, "{:.1f}".format(value_matrix[xloop, yloop]))
+    axs.flat[number].grid(True)
+    axs.flat[number].set_xticklabels(" ")
+    axs.flat[number].set_yticklabels(" ")
     return
 
 nstates = 25
@@ -46,10 +48,11 @@ gamma = 0.9 # temporal discount parameter
 stop, converge, threshold, max_iteration = False, False, 0.01, 20
 halfway = 5 # intermediate-step value matrix to be printed
 
-fig, axs = plt.subplots(2, 2)
+
+fig, axs = plt.subplots(1, 3)
     
 # start to iterate
-plot_value(0, 1, value)
+plot_value(fig, axs, 0, 0, value, title = "initial")
 print(value)
 iteration = 0
 while stop == False:
@@ -85,9 +88,9 @@ while stop == False:
     else:
         pass
     if iteration == halfway:
-        plot_value(1, 0, value)
+        plot_value(fig, axs, 0, 1, value)
     
 # show what you did
 print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))
-plot_value(1, 1, value)
+plot_value(fig, axs, 0, 2, value, title = "final")
 print(value)
