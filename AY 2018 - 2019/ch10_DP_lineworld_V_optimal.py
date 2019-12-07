@@ -10,7 +10,8 @@ some states are slippery with probability slip
 this is for lineworld
 """
 import numpy as np
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
+from ch10_plotting import plot_value
 
 np.set_printoptions(precision=4, suppress = True)
 
@@ -57,8 +58,10 @@ while stop == False:
             elif (state==nstates-1):
                 action_v = r[nstates-2] + gamma*previous_value[nstates-2]
             elif state in (4, 5):
-                action_v =  r[succ(state,action)] + \
-                            gamma*(slip*previous_value[succ(state,1-action)] + (1-slip)*previous_value[succ(state,action)])
+#                action_v =  r[succ(state,action)] + \
+#                            gamma*(slip*previous_value[succ(state,1-action)] + (1-slip)*previous_value[succ(state,action)])
+                action_v = slip*    (r[succ(state,1-action)] + gamma*previous_value[succ(state,1-action)]) + \
+                          (1-slip)* (r[succ(state,action)]   + gamma*previous_value[succ(state,action)])
             else:    
                 action_v = r[succ(state,action)] + gamma*previous_value[succ(state,action)]
             total_v.append(action_v)
@@ -75,5 +78,5 @@ while stop == False:
     
 #%% show what you did
 print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))
-#plot_value(1, 1, value)
+plot_value(1, 1, value)
 print(value)
