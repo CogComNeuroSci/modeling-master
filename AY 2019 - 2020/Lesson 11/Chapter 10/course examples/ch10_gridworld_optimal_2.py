@@ -7,10 +7,11 @@ Created on Tue Jul 24 12:11:57 2018
 estimate the optimal value function using dynamic programming
 in particular, equation (3.19) from S&B
 note: all p() are deterministic in this case
+this is for a slightly different grid where the agent in B is warped to state 24
 """
 import numpy as np
-from ch10_plotting import plot_value
 import matplotlib.pyplot as plt
+from ch10_plotting import plot_value
 
 np.set_printoptions(precision=4, suppress = True)
 
@@ -39,7 +40,7 @@ stop, converge, threshold, max_iteration = False, False, 0.005, 100
 #print(value)
 iteration = 0
 while stop == False:
-    previous_value = value + 0
+    previous_value = np.copy(value)
     iteration += 1
     for state in range(nstates):
         row, column = state2rc(state)
@@ -49,7 +50,7 @@ while stop == False:
             if (row==0) & (column==1):
                 action_v = 10+gamma*previous_value[state2rc(21)]
             elif (row==0) & (column==3):
-                action_v = 5+gamma*previous_value[state2rc(13)]
+                action_v = 5+gamma*previous_value[state2rc(24)]
             elif (column==0) & (action==3):
                 action_v = -1+gamma*previous_value[state2rc(state)]
             elif (column==4) & (action==1):
@@ -71,7 +72,7 @@ while stop == False:
         pass
     
 # show what you did
-fig, axs = plt.subplots(1, 1)
 print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))
 print(value)
-plot_value(fig, axs, 0, 0, value)
+fig, axs = plt.subplots(1, 1)
+plot_value(fig, axs, 0, 0, value, n = 0)

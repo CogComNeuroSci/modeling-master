@@ -21,7 +21,7 @@ from sklearn.metrics        import accuracy_score
 #%%
 
 # load in the data
-os.chdir(r'C:\Users\pieter\Downloads\GitHub\modeling-master\AY 2019 - 2020\Lesson 10\Practical session\solutions\downloads\processed')
+os.chdir(os.getcwd())
 
 objects = []
 with (open("cats_dogs.pkl", "rb")) as openfile:

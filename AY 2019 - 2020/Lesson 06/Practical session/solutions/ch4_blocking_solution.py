@@ -101,10 +101,10 @@ print('\nActivation levels at output after {} trials of delta learning:\n'.forma
 # OPTION 1 #
 # -------- #
 
-tone = np.array([0, 1])
+light = np.array([0, 1])
 
 # show that the light + tone leads to the desired response
-activation_after_learning = delta_learning.internal_input(tone,
+activation_after_learning = delta_learning.internal_input(light,
                                                           weight_matrix)[0]
 print('\nActivation levels at output after {} trials of delta learning:\n'.format(loops), 
       np.round(activation_after_learning, 3))

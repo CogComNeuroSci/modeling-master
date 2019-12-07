@@ -5,7 +5,7 @@ Created on Sun Mar  4 21:03:05 2018
 
 @author: tom verguts
 Taxi!
-This program learns a taxi driver to pick up a client and drop him/her off
+This program teaches a taxi driver to pick up a client and drop him/her off
 Algorithms are Rescorla-Wagner (rw); Sarsa; Sarsa-lambda; and Q-learning
 All work fine except rw; this is because rw cannot "bridge" between current action
 and later reward

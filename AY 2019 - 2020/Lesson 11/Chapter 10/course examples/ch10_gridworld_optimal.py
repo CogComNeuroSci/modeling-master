@@ -8,6 +8,7 @@ estimate the optimal value function using dynamic programming
 in particular, equation (3.19) from S&B
 note: all p() are deterministic in this case
 """
+#%% initialize
 import numpy as np
 from ch10_plotting import plot_value
 import matplotlib.pyplot as plt
@@ -35,11 +36,10 @@ ntrials = 100
 gamma = 0.9
 stop, converge, threshold, max_iteration = False, False, 0.005, 100
 
-# start to iterate
-#print(value)
+#%% start to iterate
 iteration = 0
 while stop == False:
-    previous_value = value + 0
+    previous_value = np.copy(value)
     iteration += 1
     for state in range(nstates):
         row, column = state2rc(state)
@@ -74,4 +74,4 @@ while stop == False:
 fig, axs = plt.subplots(1, 1)
 print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))
 print(value)
-plot_value(fig, axs, 0, 0, value)
+plot_value(fig, axs, 0, 0, value, n = 0)
