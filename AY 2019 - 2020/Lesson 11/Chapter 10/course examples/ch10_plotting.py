@@ -24,7 +24,7 @@ def plot_value(fig, axs, row, column, value_matrix, title = "", n = 3):
     obj.set_title(title)
     for xloop in range(nrow):
         for yloop in range(ncol):
-            obj.text(offset + yloop/ncol, offset + ((nrow-1) - xloop)/nrow, "{:.1f}".format(value_matrix.flat[xloop*nrow + yloop]))
+            obj.text(offset + yloop/ncol, offset + ((nrow-1) - xloop)/nrow, "{:.1f}".format(value_matrix.flat[xloop*ncol + yloop]))
     obj.grid(True)
 #    obj.set_xticklabels(" ")
 #    obj.set_yticklabels(" ")

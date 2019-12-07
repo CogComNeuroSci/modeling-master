@@ -70,7 +70,7 @@ while stop == False:
     else:
         pass
     
-# show what you did
+#%% show what you did
 fig, axs = plt.subplots(1, 1)
 print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))
 print(value)
