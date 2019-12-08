@@ -20,8 +20,8 @@ def succ(state_pass = 1, action_pass = 1): # successor function
     return state + action_pass*2 - 1
     
 nstates, nactions = 7, 2
-r = [0.1, 0, 0, 0, 0, 0, 0.8]
-slip = 0.0
+r = [0.7, 0, 0, 0, 0, 0, 0.8]
+slip = 1
 Q_value = np.random.random((nstates, 2))
 gamma = 0.8 # discount factor
 stop, converge, threshold, max_iteration = False, False, 0.01, 10000

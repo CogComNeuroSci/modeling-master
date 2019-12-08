@@ -6,13 +6,12 @@ Created on Tue Jul 24 12:11:57 2018
 @author: tom verguts
 estimate the optimal value function using dynamic programming
 in particular, equation (3.19) from S&B
-this is a slippery world: in 3 states close to B, the agent can accidentally be warped into state 24
-UNDER CONSTRUCTION
+this is a slippery world: in 2 states close to B, the agent remains at the same place
 """
 #%% initialize
 import numpy as np
 import matplotlib.pyplot as plt
-from ch10_DP_gridworld import plot_value
+from ch10_plotting import plot_value
 
 np.set_printoptions(precision=4, suppress = True)
 
@@ -36,11 +35,10 @@ value = np.random.random((5,5))
 ntrials = 100
 gamma = 0.9
 stop, converge, threshold, max_iteration = False, False, 0.005, 100
-slip = 0.3
+slip = 0.9
 fig, axs = plt.subplots(1,1)
 
 #%% start to iterate
-#print(value)
 iteration = 0
 while stop == False:
     previous_value = np.copy(value)
@@ -76,7 +74,7 @@ while stop == False:
     else:
         pass
     
-# show what you did
+#%% show what you did
 print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))
 print(value)
-#plot_value(fig, axs, 0, 0, value, n = 0)
+plot_value(fig, axs, 0, 0, value, n = 0)
