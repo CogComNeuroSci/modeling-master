@@ -5,6 +5,7 @@ Created on Tue Dec 11 13:50:41 2018
 
 @author: tom verguts
 define and fit the classifiers for Test2
+the extra challenge for training (2019-2020) is added here
 """
 
 import numpy as np
