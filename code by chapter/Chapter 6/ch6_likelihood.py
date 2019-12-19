@@ -39,7 +39,7 @@ def logL_learn(parameter, nstim, file_name):
         logLik = logLik + (
                 np.log( logit(parameter[1],value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]],
                                         value[data.iloc[trial_loop,1-data.iloc[trial_loop,3]+1]]) ) )
-        value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]] =(
+        value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]] = (
                 value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]] +
                 parameter[0]*(data.iloc[trial_loop,4]-value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]]) )
     return -logLik
