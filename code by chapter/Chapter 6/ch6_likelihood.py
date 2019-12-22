@@ -29,7 +29,7 @@ def logL_ab(parameter, nstim, file_name):
     return -logLik    
 
 # likelihood for the learning model
-def logL_learn(parameter, nstim, file_name): 
+def logL_learn(parameter = [0.6, 1], nstim = 5, file_name = ""): 
     data = pd.read_csv(file_name)
     ntrials = data.shape[0]
     # calculate log-likelihood
