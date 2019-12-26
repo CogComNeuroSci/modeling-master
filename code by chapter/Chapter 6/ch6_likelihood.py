@@ -29,7 +29,8 @@ def logL_ab(parameter, nstim, file_name):
     return -logLik    
 
 # likelihood for the learning model
-def logL_learn(parameter = [0.6, 1], nstim = 5, file_name = ""): 
+# prior = (mean, precision)    
+def logL_learn(parameter = [0.6, 1], nstim = 5, file_name = "", prior = (0, 0)): 
     data = pd.read_csv(file_name)
     ntrials = data.shape[0]
     # calculate log-likelihood
@@ -42,4 +43,5 @@ def logL_learn(parameter = [0.6, 1], nstim = 5, file_name = ""):
         value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]] = (
                 value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]] +
                 parameter[0]*(data.iloc[trial_loop,4]-value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]]) )
-    return -logLik
+    logLik = logLik - (prior[1]/np.sqrt(2*np.pi))*( (parameter[0]-prior[0])**2 + (parameter[1]-prior[0])**2 )  
+    return -logLik/100000

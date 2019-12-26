@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Dec 26 09:26:59 2019
+
+@author: tom verguts
+AIC and BIC calculation example
+"""
+
+#%% initialize
+import numpy as np
+from numpy import save
+from ch6_generation import generate_learn
+from ch6_estimation import estimate_learn
+data_filename = "simulation_data_AIC.csv"
+est_par = np.ndarray(2)
+
+#%% start it
+generate_learn(alpha = learning_rate, beta = temperature, ntrials = ntrials[n_loop], \
+                       file_name = data_filename, switch = False)
+res = estimate_learn(nstim = 4, maxiter = 10000, file_name = data_filename, algorithm = algorithm)
+est_par[0] = res.x[0]
+est_par[1] = res.x[1]
+Lik = res.fun
+AIC = -2*Lik + est_par.size
+print(AIC)
