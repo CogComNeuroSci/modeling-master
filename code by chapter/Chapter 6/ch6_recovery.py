@@ -15,10 +15,10 @@ from ch6_estimation import estimate_learn
 
 learning_rate, temperature = 0.6, 1
 
-ntrials = [100, 1000, 3000]
-n_sim = 50
+ntrials = [200]
+n_sim = 10
 algorithm = "Powell"
-extra_label = algorithm + "bayes"
+extra_label = algorithm + "_bayes_small"
 data_filename = "simulation_data.csv"
 results_filename = "simulation_results_" + str(n_sim) + "_" + extra_label
 est_par = np.ndarray((n_sim, len(ntrials), 4)) # slice 0 = learn, slice 1 : temp, slice 2 : func_val, slice 3 : iterations
@@ -30,7 +30,7 @@ for n_loop in range(len(ntrials)):
         print(n_loop, sim_loop)
         generate_learn(alpha = learning_rate, beta = temperature, ntrials = ntrials[n_loop], \
                        file_name = data_filename, switch = False)
-        res = estimate_learn(nstim = 4, maxiter = 10000, file_name = data_filename, algorithm = algorithm)
+        res = estimate_learn(nstim = 4, maxiter = 10000, file_name = data_filename, algorithm = algorithm, prior = (0,10))
         est_par[sim_loop, n_loop, 0] = res.x[0]
         est_par[sim_loop, n_loop, 1] = res.x[1]
         est_par[sim_loop, n_loop, 2] = res.fun
