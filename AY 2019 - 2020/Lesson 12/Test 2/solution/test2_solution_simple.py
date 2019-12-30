@@ -1,10 +1,37 @@
-#!/usr/bin/python3
+    #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 
 """
 @author: Pieter Huycke
 GitHub:  phuycke
+
+Question 3:
+    A two-layer model is not able to distinguish grammatical from
+    ungrammatical sentences (Perceptron performs at around 50% acccuracy).
+    This shows that this grammar rule is not a linearly separable problem.
+    Whether we use a bias unit does not change much: 51.5% accuracy without a
+    bias unit and 47.7% accuracy with a bias unit.
+    The bias unit does not change much in accuracy which confirms that the
+    problem is non-linearly separable since it does not increase accuracy
+    whether the separating plane (line in 3 dimensions) passes through the
+    origin or not.
+    
+Question 5:
+    A multi-layer perceptron (MLP) with 1 hidden layer is able to perform the
+    task with a minimum of 5 hidden units: 98.78% accuracy
+    This model performs better than the perceptron because it is able to
+    classify non-linearly separated data (i.e. classes).
+
+Questino 6:
+    The MLP with 2 hidden layers but the same amount of units overall (5 hidden
+    units: 3 in the first layer, 2 in the second layer) performs worse than the
+    1 hidden layer MLP ((5) hidden units: 98.78% accuracy, (3, 2) hidden units:
+    73.42%). This shows that to classify grammatical versus ungrammatical
+    sentences the model requires a hidden layer with at least 5 units,
+    therefore when we split these units between two layers it is not able to
+    perform as well.
+
 """
 
 #%%
@@ -20,7 +47,7 @@ from sklearn.model_selection import train_test_split
 
 #%%
 
-SIMULATIONS = 50
+SIMULATIONS = 40
 REPETITIONS = 50
 MAX_HIDDEN  = 20
 
@@ -74,34 +101,38 @@ print('\n- - - -\nPerceptron\n- - - -\n')
 # PERCEPTRON #
 # ---------- #
 
-perceptron_acc = np.zeros(SIMULATIONS)
+perceptron_acc = np.zeros(shape = (2, SIMULATIONS))
 
-for i in range(SIMULATIONS):
-    
-    # train test split
-    X_train, X_test, y_train, y_test = train_test_split(X, 
-                                                        y,
-                                                        train_size = .75)
+for with_bias_unit in [False, True]:
 
-    # define classifier (Perceptron object from scikit-learn)
-    classification_algorithm = Perceptron(max_iter         = 10000,
-                                          tol              = 1e-3,
-                                          verbose          = 0)
-    
-    
-    # fit ('train') classifier to the training data
-    classification_algorithm.fit(X_train, y_train)
-    
-    # predict y based on x for the test data
-    y_pred = classification_algorithm.predict(X_test)
+    for i in range(SIMULATIONS):
+        
+        # train test split (automatically randomizes the stimuli)
+        X_train, X_test, y_train, y_test = train_test_split(X, 
+                                                            y,
+                                                            train_size = .6)
+        
+        # define classifier (Perceptron object from scikit-learn)
+        classification_algorithm = Perceptron(max_iter         = 10000,
+                                              tol              = 1e-3,
+                                              verbose          = 0,
+                                              fit_intercept    = with_bias_unit)
+        
+        
+        # fit ('train') classifier to the training data
+        classification_algorithm.fit(X_train, y_train)
+        
+        # predict y based on x for the test data
+        y_pred = classification_algorithm.predict(X_test)
+        
+        perceptron_acc[int(with_bias_unit), i] = accuracy_score(y_test, y_pred) * 100
 
-    perceptron_acc[i] = accuracy_score(y_test, y_pred) * 100
-
-print('Average accuracy of our Perceptron: {0:.2f}%\n'.format(np.mean(perceptron_acc)))
+print('Average accuracy of our Perceptron without bias unit: {0:.2f}%\n'.format(np.mean(perceptron_acc[0, :])))
+print('Average accuracy of our Perceptron with bias unit: {0:.2f}%\n'.format(np.mean(perceptron_acc[1, :])))
 
 #%%
 
-print('- - - -\nMulti-layered Perceptron\n- - - -\n')
+print('- - - -\nMulti-layered Perceptron (1 hidden layer)\n- - - -\n')
 
 #%%
 
@@ -109,11 +140,19 @@ print('- - - -\nMulti-layered Perceptron\n- - - -\n')
 # MLP #
 # --- #
 
+threshold_accuracy = 95
+
+mlp_acc = np.zeros(SIMULATIONS)
+
 for hidden_units in range(1, MAX_HIDDEN + 1):
     
     unsatisfied = False
     
     for loop_number in range(SIMULATIONS):
+        # train test split (automatically randomizes the stimuli)
+        X_train, X_test, y_train, y_test = train_test_split(X, 
+                                                            y,
+                                                            train_size = .6)
         
         # define classifier (Perceptron object from scikit-learn)
         classification_algorithm = MLPClassifier(hidden_layer_sizes = (hidden_units, ),
@@ -125,17 +164,52 @@ for hidden_units in range(1, MAX_HIDDEN + 1):
         
         # predict y based on x for the test data
         y_pred = classification_algorithm.predict(X_test)
-        
-        # print accuracy using a built-in sklearn function
-        if int(accuracy_score(y_test, y_pred)) < 1.0:
-            unsatisfied = True
-            break
-        
+
+        # store accuracy for this simulation
+        mlp_acc[loop_number] = accuracy_score(y_test, y_pred) * 100
+
+    # print accuracy using a built-in sklearn function
+    overall_accuracy = np.mean(mlp_acc)
+    unsatisfied = np.mean(mlp_acc) < threshold_accuracy
+    print('{0:.2f} % accuracy with {1:.0f} hidden unit(s):'.format(overall_accuracy, hidden_units))
     if unsatisfied:
-        if hidden_units == 1:
-            print('{} hidden unit: unsatisfactory'.format(hidden_units))
-        else:
-            print('{} hidden units: unsatisfactory'.format(hidden_units))
+        print('\t-> unsatisfactory\n')
     else:
-        print('We have 100% accuracy when using {} hidden units'.format(hidden_units))
+        print('\t-> satisfactory\n')
         break
+
+
+#%%
+
+print('- - - -\nMulti-layered Perceptron (2 hidden layers)\n- - - -\n')
+
+#%% MLP with 2 hidden layers
+# The previous step indicated that 5 hidden units are enough so for question 6
+# we will use 2 hidden layers with 3 and 2 hidden units, respectively.
+layer1_hidden_units = 3
+layer2_hidden_units = 2
+
+mlp2_acc = np.zeros(SIMULATIONS)
+
+for loop_number in range(SIMULATIONS):
+    # train test split (automatically randomizes the stimuli)
+    X_train, X_test, y_train, y_test = train_test_split(X, 
+                                                        y,
+                                                        train_size = .6)
+    
+    # define classifier (Perceptron object from scikit-learn)
+    classification_algorithm = MLPClassifier(hidden_layer_sizes = (layer1_hidden_units, layer2_hidden_units),
+                                             max_iter           = 10000, 
+                                             n_iter_no_change   = 10)
+    
+    # fit ('train') classifier to the training data
+    classification_algorithm.fit(X_train, y_train)
+    
+    # predict y based on x for the test data
+    y_pred = classification_algorithm.predict(X_test)
+
+    # store accuracy for this simulation
+    mlp2_acc[loop_number] = accuracy_score(y_test, y_pred) * 100
+    
+print('{0:.2f} % accuracy with {1:0f} and {2:0f} hidden units in hidden layer 1 and 2, respectively.'.format(np.mean(mlp2_acc),
+    layer1_hidden_units, layer2_hidden_units))
