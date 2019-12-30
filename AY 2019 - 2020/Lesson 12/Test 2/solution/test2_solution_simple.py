@@ -10,12 +10,11 @@ Question 3:
     A two-layer model is not able to distinguish grammatical from
     ungrammatical sentences (Perceptron performs at around 50% acccuracy).
     This shows that this grammar rule is not a linearly separable problem.
-    Whether we use a bias unit does not change much: 51.5% accuracy without a
-    bias unit and 47.7% accuracy with a bias unit.
-    The bias unit does not change much in accuracy which confirms that the
-    problem is non-linearly separable since it does not increase accuracy
-    whether the separating plane (line in 3 dimensions) passes through the
-    origin or not.
+    The grammar is essentially an XOR problem, which is not linearly separable.
+    Whether we use a bias unit (which can take the separating plane
+    out of the origin), does not change this fact. In the simulation,
+    we observe 51.5% accuracy without a bias unit and 47.7% accuracy with a bias unit.
+   
     
 Question 5:
     A multi-layer perceptron (MLP) with 1 hidden layer is able to perform the
@@ -23,14 +22,13 @@ Question 5:
     This model performs better than the perceptron because it is able to
     classify non-linearly separated data (i.e. classes).
 
-Questino 6:
-    The MLP with 2 hidden layers but the same amount of units overall (5 hidden
+Question 6:
+    The MLP with 2 hidden layers but the same number of units overall (5 hidden
     units: 3 in the first layer, 2 in the second layer) performs worse than the
     1 hidden layer MLP ((5) hidden units: 98.78% accuracy, (3, 2) hidden units:
-    73.42%). This shows that to classify grammatical versus ungrammatical
-    sentences the model requires a hidden layer with at least 5 units,
-    therefore when we split these units between two layers it is not able to
-    perform as well.
+    73.42%). This is normal: "Deeper" models are generally harder to train, because
+    prediction errors from the deeper (earlier) layers are "further away" from the
+    actual feedback, as explained in Chapter 5.
 
 """
 
