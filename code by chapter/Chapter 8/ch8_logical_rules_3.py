@@ -19,7 +19,7 @@ X_and = np.array( [[0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 1]] )
 X_or  = np.array( [[0, 0, 0], [1, 0, 1], [0, 1, 1], [1, 1, 1]] )
 X_101 = np.array( [[0, 0, 0], [1, 0, 1], [0, 1, 0], [1, 1, 0]] )
 X_xor = np.array( [[0, 0, 0], [1, 0, 1], [0, 1, 1], [1, 1, 0]] )
-X = X_and
+X = X_xor
 p = np.zeros((2**X.shape[1],))
 p_tot = np.copy(p)
 n_rep = 5
@@ -27,7 +27,7 @@ n_rep = 5
 #%% fit model n_rep times
 for rep_loop in range(n_rep):
     p = np.zeros((2**X.shape[1],))
-    model = BernoulliRBM(n_components = 5, n_iter = 10000, batch_size = 1, learning_rate = .2)
+    model = BernoulliRBM(n_components = 20, n_iter = 20000, batch_size = 1, learning_rate = .2)
     model.fit(X)
 
     # check equilibrium distribution

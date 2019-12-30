@@ -5,8 +5,9 @@ Created on Thu Dec 27 15:24:48 2018
 
 @author: tom verguts
 boltzmann machine for implementing logical rules
-here, the input patter is clamped in the free phase 
+here, the input pattern is clamped in the free phase 
 (and everything in the fixed phase)
+works more robustly than direct approach in ch8_logical_rules.py
 """
 #%% initialize
 import numpy as np
@@ -75,9 +76,7 @@ print("test phase:")
 test_patterns = [[1, 0, 0], [1, 1, 0], [1, 0, 1], [1, 1, 1]]
 for test_index in range(len(test_patterns)):
     for p_index in range(len(patterns)):
-        prob_free[p_index]  = (patterns[p_index][0]==test_patterns[test_index][0])*\
-                              (patterns[p_index][1]==test_patterns[test_index][1])*\
-                              (patterns[p_index][2]==test_patterns[test_index][2])*\
-                               np.exp( (1/T)*np.matmul(np.matmul(patterns[p_index],w),patterns[p_index]) )
+        prob_free[p_index]  = np.all(patterns[p_index][0:3]==test_patterns[test_index])*\
+                              np.exp( (1/T)*np.matmul(np.matmul(patterns[p_index],w),patterns[p_index]) )
     prob_free = prob_free/np.sum(prob_free)
     print(prob_free)      
