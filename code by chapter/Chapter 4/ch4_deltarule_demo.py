@@ -26,8 +26,8 @@ def error(w):
 timesleep = 0.01
 beta = 0.2
 xmin, xmax, ymin, ymax = -10, 10, -10, 10
-n_trials, n_patterns = 100, 5
-mu1, mu2, s1, s2 = np.array([-2, -1]), np.array([1, 1]), 2, 1
+n_trials, n_patterns = 3, 30
+mu1, mu2, s1, s2 = np.array([-2, -1]), np.array([1, 1]), 3, 3
 xrange = np.linspace(xmin, xmax)
 x1 = s1*np.random.randn(n_patterns, 2) + ml.repmat(mu1,n_patterns,1) # 'cats'
 x1 = np.concatenate((x1, np.ones((n_patterns,1))), axis = 1)
@@ -53,8 +53,8 @@ for trial in np.arange(n_trials):
     prediction_error = target-prediction
     delta = beta*x*prediction_error
     w += delta
-    ax.plot(xrange, -w[0]/w[1]*xrange - w[2]/w[1], color = "black")
+#    ax.plot(xrange, -w[0]/w[1]*xrange - w[2]/w[1], color = "black")
     fig.canvas.draw()
     pl.show()
     fig.waitforbuttonpress(0.1)
-ax.set_title("end of optimization\n final error = {:.3}".format(error(w)))
+#ax.set_title("end of optimization\n final error = {:.3}".format(error(w)))

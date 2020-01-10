@@ -27,7 +27,7 @@ n_rep = 5
 #%% fit model n_rep times
 for rep_loop in range(n_rep):
     p = np.zeros((2**X.shape[1],))
-    model = BernoulliRBM(n_components = 20, n_iter = 20000, batch_size = 1, learning_rate = .2)
+    model = BernoulliRBM(n_components = 10, n_iter = 20000, batch_size = 20, learning_rate = 0.6)
     model.fit(X)
 
     # check equilibrium distribution

@@ -34,7 +34,7 @@ SANITY_CHECK = True
 CAT_COUNT    = 0
 DOG_COUNT    = 0 
 
-ROOT         = r'C:\Users\pieter\Downloads\GitHub\modeling-master\AY 2019 - 2020\Lesson 10\Practical session\solutions\downloads'
+ROOT         = os.getcwd()
 TRAIN_DIR    = os.path.join(ROOT, 'train')
 
 #%%
