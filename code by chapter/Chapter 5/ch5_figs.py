@@ -53,7 +53,7 @@ plt.title("Fig 5.2a \nAn AND of linear functions is a convex set", {"fontsize": 
 plt.subplot(122)
 plotlines()
 Zi_full = np.zeros(Xi.shape)
-checklist = [[0], [2]]
+checklist = [[0], [1], [2]]
 for index in checklist:
     for row in range(len(xi)):
         for column in range(len(yi)):

@@ -3,7 +3,7 @@
 """
 Created on Sat Jul 28 10:03:12 2018
 
-@author: tom
+@author: tom verguts
 chapter 12: basic bayes
 """
 

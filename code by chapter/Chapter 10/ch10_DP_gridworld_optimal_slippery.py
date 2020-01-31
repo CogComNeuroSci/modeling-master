@@ -35,7 +35,7 @@ value = np.random.random((5,5))
 ntrials = 100
 gamma = 0.9
 stop, converge, threshold, max_iteration = False, False, 0.005, 100
-slip = 0.9
+slip = 0.0
 fig, axs = plt.subplots(1,1)
 
 #%% start to iterate

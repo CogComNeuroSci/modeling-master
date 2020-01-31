@@ -26,7 +26,10 @@ for loop in range(1, ntrial):
     w[:,loop] = w[:,loop]/np.linalg.norm(w[:,loop])
 
 # plot stuff
+stretch = 5
 axs.set_xlim(-3, +3)
 axs.set_ylim(-3, +3)
-axs.plot(2*[-w[0, ntrial-1], w[0, ntrial-1]], 2*[-w[1, ntrial-1], w[1, ntrial-1]], c = "red")
+axs.set_xlabel("Dimension 1")
+axs.set_ylabel("Dimension 2")
+axs.plot(stretch*np.array([-w[0, ntrial-1], w[0, ntrial-1]]), stretch*np.array([-w[1, ntrial-1], w[1, ntrial-1]]), c = "red")
 print(np.cov(data, rowvar = False)) # to check if data structure is correct; should be similar to sigma
