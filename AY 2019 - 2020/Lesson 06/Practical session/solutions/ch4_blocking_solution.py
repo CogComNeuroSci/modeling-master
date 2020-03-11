@@ -37,31 +37,31 @@ np.set_printoptions(suppress=True)
 # ----------------------------------------- #
 
 # define inputs
-tone           = np.array([1, 0])
+tone           = np.array([1, 0, 1, 0, 1, 0])
 tone_and_light = np.array([1, 1])
-shock          = np.array([1])
+shock          = np.array([1, 0, 1])
 
 # define a weight matrix exclusively filled with zeros
-weight_matrix = delta_learning.initialise_weights(tone, 
-                                                  shock, 
-                                                  zeros      = True,
-                                                  predefined = False, 
-                                                  verbose    = False)
+weight_matrix = delta_learning.init_weights(tone, 
+                                            shock, 
+                                            all_zero  = True,
+                                            fixed_val = False, 
+                                            verbose   = True)
    
 # actual learning
 loops = 1000
 alpha = 1.5
     
 for loop_var in np.arange(1, loops + 1):
-    weights_after_learning = delta_learning.weight_change(alpha,
-                                                          tone,
+    weights_after_learning = delta_learning.weight_change(tone,
                                                           shock,
-                                                          weight_matrix)
+                                                          weight_matrix,
+                                                          step = alpha)
     weight_matrix = weights_after_learning
     
 # show that the light leads to the desired response
 activation_after_learning = delta_learning.internal_input(tone,
-                                                          weight_matrix)[0]
+                                                          weight_matrix)
 print('\nActivation of output unit after {} trials of delta learning:\n'.format(loops), 
       np.round(activation_after_learning, 3))
 
@@ -79,10 +79,10 @@ loops = 1000
 alpha = 1.5
     
 for loop_var in np.arange(1, loops + 1):
-    weights_after_learning = delta_learning.weight_change(alpha,
-                                                          tone_and_light,
+    weights_after_learning = delta_learning.weight_change(tone,
                                                           shock,
-                                                          weight_matrix)
+                                                          weight_matrix,
+                                                          step = alpha)
     weight_matrix = weights_after_learning
     
 # show that the light + tone leads to the desired response
