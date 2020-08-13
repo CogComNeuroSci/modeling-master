@@ -8,259 +8,189 @@ Contact: Pieter.Huycke@UGent.be
 
 - - - - - - - - - - - - 
 
-This 'module' was made with the intention to create a collection of functions
-that are capable of performing 'Delta learning' (as defined in the Modelling of 
-Cognitive Processes course).
-
-These functions can be used for basic computations where Delta learning is 
-appropriate. For large datasets, we recommend the use of the dedicated 
-machine learning module 'scikit-learn'.
+Reading the documentation of the function:
+    - print(func_name.__doc__)
+Reading the function arguments, and their types:
+    - func_name.__annotations__
 """
 
 
+#%%
+
 import numpy as np
 
+#%%
 
-def activation_function(netinput, 
-                        form = 'logistic'):
 
+def activation_function(netinput : float, 
+                        mode     : str = "log") -> float:
     """
-    :netinput -- int/float:
-    The netinput for a certain input unit
-    This is calculated using the linearity principle (see chapter 4, page 1)
+    Returns the netinput at a unit after transformation through an activation
+    function.
 
-    :form -- str:
-    Determines the type of the activation function that is used
-    This parameter can have two values:
-        'linear' means that a linear activation function is used to 
-        transform the netinput
-        'logistic' means that a logistic activation function is used to 
-        transform the netinput
-    String: default value set to "logistic"
+    Parameters
+    ----------
+    netinput : float
+        The netinput at a input. Can be calculated using the linearity 
+        principle
 
-    :return:
-    This function returns the netinput after first transforming the netinput
-    using an activation function.
-    Two types of transformations are possible: linear or logistic.
-    
-    :example use:
-    activation_function(2.7)                  # 'logistic' form is assumed
-    activation_function(2.7, form='linear')   # 'linear' defined by user
+    Returns
+    -------
+    float
+        The netinput to a unit after transformation.
     """
 
-    if form == 'linear':
+    if mode == "linear":
         return netinput
     else:
         return 1 / (1 + np.exp(-netinput))
 
 
-def initialise_weights(input_pattern, 
-                       output_pattern, 
-                       zeros      = False, 
-                       predefined = False, 
-                       verbose    = False):
 
+def init_weights(input_pattern  : np.ndarray, 
+                 output_pattern : np.ndarray, 
+                 all_zero       : bool = False, 
+                 fixed_val      : bool = False, 
+                 verbose        : bool = True) -> np.ndarray:
     """
-    :param input_pattern:
-    The input pattern which is provided
-    An example: [.99 .01 .99 .01 .99 .01]
-    What this input pattern represents is specified by the user
-    Input patterns should be lists
+    Initializes a fitting weight matrix depending on the input- and output
+    patterns. Can be filled with zeros, or a float of your choice.
 
-    :param output_pattern:
-    The input pattern which is provided
-    An example: [.99 .99 .01 .01]
-    What this output pattern represents is specified by the user
-    Output patterns should be lists
+    Parameters
+    ----------
+    input_pattern : np.array
+        An array representing the input to our model.
+    output_pattern : np.array
+        An array representing the output that a model might give.
+    all_zero : bool, optional
+        Should the start weight matrix consist completely of zeros or not?
+        The default is False.
+    fixed_val : bool, optional
+        Provide a fixed value, and the weight matrix will consist solely of
+        this value. The default is False.
+    verbose : bool, optional
+        Print some messages while processing or not. The default is True.
 
-    :param zeros:
-    Defines how you want to create the initial weight matrix
-    This parameter can have two values:
-        True means that all weights will be set to zero
-        False means that all weights will be determined randomly 
-        by sampling random floats from a univariate "normal" (Gaussian) 
-        distribution of mean 0 and variance 1
-    Boolean: default value set to False
-
-    :param predefined:
-    This parameter defines whether the weight matrix is predefined or not
-    The default value is 'False'
-    When the value is True, this means that the weight matrix 
-    (in the correct form) should be provided by the user.
-    An option is provided to make a weight matrix of the correct format 
-    that contains 1 predefined float value.
-    Boolean: default value set to False
-
-    :return:
-    This function returns a weight matrix
-    The weight matrix is a numpy array will have the following dimensions:
-        weight_matrix.shape = (n, m)
-    This means that the weight matrix is an array that has n 'subarrays'
-    Each 'subarray' contains m elements, note that:
-    n = len(output pattern)
-    m = len(input pattern)
-    This weight matrix signifies the weights from all m input units to the 
-    n output units
-    Consequently, the first 'subarray' represents the weights from all 
-    m input units to the first of the n output units.
-    
-    :example use:
-    initialise_weights(sight_dog, happiness)
-    
-    where 'sight_dog' and 'happiness' are numpy arrays representing these
-    concepts
+    Returns
+    -------
+    A weight matrix that is in line with the dimensions of the input- and
+    output patterns.
     """
 
-    if predefined:
-        answers = str(input('\nPlease input your predefined weight matrix\n'
-                            'Note that the weight matrix should comply to a specific form:\n'
-                            'Example: if you have 4 input units, and 2 output units, then you should have a list with '
-                            '8 weights in total.\n'
-                            'This because 4 * 2 = 8.\n'
-                            'You should have a large list with two (the number of output units) sublists in it.\n'
-                            'Each sublist should contain 4 weights (the number of input units)\n'
-                            'A valid example would be:\n'
-                            '[[.5, .2, .9, .1], [.3, .3, 6, .7]]\n\n'
-                            'Make sure your format is correct...\n'
-                            'Would you like a weight matrix with 1 value, in the correct format?\n'
-                            'If so, you can press "y".\n'
-                            'Otherwise, you can copy-paste your weight matrix in the prompt.\n'
-                            'Answer (y/n): '))
-        if answers.lower() in ['yes', 'y']:
-            predefined_val = float(input('The value in your weight matrix? '))
-            return np.full((len(output_pattern), len(input_pattern)), predefined_val)
+    # make sure that a 1D array is provided
+    assert input_pattern.ndim == output_pattern.ndim == 1
+
+    # get the length of the arrays for convenience
+    len_in, len_out = len(input_pattern), len(output_pattern)
+
+    # decision tree to cope with the needs of the modeller
+    if fixed_val:
+        val   = float(input("What value should be used?\nValue: "))
+        check = str(input("Are you sure about your choice? [y / n]\n")).lower()
+                      
+        while check != "y":
+            val   = float(input("What value should be used?\nValue: "))
+            check = str(input("Are you sure about your choice? [y / n]\n")).lower()
         else:
-            weights = input('The weight matrix: ')
-            return weights
+            return np.full((len_out, len_in), val, dtype=float)
     else:
-        if zeros:
+        if all_zero:
             if verbose:
                 print('Using zeros to fill the array...\n')
             else:
                 pass
-            return np.zeros(shape=(len(output_pattern), len(input_pattern)))
+            return np.zeros((len_out, len_in))
         else:
             if verbose:
                 print('Using random floats drawn from a normal distribution to fill the array...\n')
             else:
                 pass
-            return np.random.randn(len(output_pattern), len(input_pattern))
+            return np.random.randn(len_out, len_in)
 
 
-def internal_input(input_pattern, 
-                   weights, 
-                   act_function = 'logistic'):
 
+def internal_input(input_pattern : np.ndarray, 
+                   w_matrix      : np.ndarray):
     """
-    :param input_pattern:
-    The input pattern which is provided
-    An example: [.99 .01 .99 .01 .99 .01]
-    What this input pattern represents is specified by the user
-    Input patterns should be lists
+    Returns the activation at a unit, where the activation is calculated
+    by inputting the summed activation into an activation function.
 
-    :param weights:
-    The weight matrix representing the weights between our input-, and 
-    output pattern.
-    This matrix can be initialised using the function 'initialise_weights()'.
+    Parameters
+    ----------
+    input_pattern : np.array
+        An array representing an input to the model.
+    w_matrix : np.array
+        An array representing the weight matrix, can be created using 
+        'init_weights( )'.
 
-    :param act_function:
-    Determines the type of the activation function that is used
-    This parameter can have two values:
-        'linear' means that a linear activation function is used to
-        transform the netinput
-        'logistic' means that a logistic activation function is used to 
-        transform the netinput
-    String: default value set to "logistic"
-
-    :return:
-    Returns the netinput after it was transformed using a logistic activation 
-    function
-    The netinput is calculated using the linearity principle 
-    (input * weights for all sending units)
-    Subsequently, this summed input is transformed
-    This function returns a list with all activations for all output units
-    
-    :example use:
-    internal_input(sight_dog, happiness)
-    
-    where 'sight_dog' and 'happiness' are lists representing these
-    concepts
-    Mind that the "logistic" activation function will be used here
+    Returns
+    -------
+    An array containing all the activations at output level. The array has
+    N elements, where N equals the number of rows in w_matrix.
     """
 
-    activations = []
+    # a quick check to avoid errors
+    assert w_matrix.ndim <= 2
+    
+    # alloacte space and compute the activation levels at each output
+    activations = np.zeros(w_matrix.shape[0])
+    for i in range(len(activations)):
+        activations[i] = activation_function(np.dot(input_pattern, w_matrix[i]))
 
-    for i in range(len(weights)):
-        added_activation = np.sum(np.multiply(input_pattern, weights[i]))
-        activations.append(activation_function(added_activation, form=act_function))
-
-    return activations, act_function
+    return activations
 
 
-def weight_change(alpha, 
-                  input_pattern, 
-                  output_pattern, 
-                  weights, 
-                  function_word = 'logistic'):
 
+def weight_change(input_pattern  : np.ndarray,
+                  output_pattern : np.ndarray, 
+                  w_matrix       : np.ndarray,
+                  step           : float = .5,
+                  keep_orig      : bool  = False) -> np.ndarray:
     """
-    :param alpha:
-    The stepsize
-    The larger this parameter is, the more drastic the weight changes in 
-    each trial will be
+    The actual Delta learning algorithm. Running this function once will lead
+    to a single change in the weights. Run multiple times for optimal result.
 
-    :param input_pattern:
-    The input pattern which is provided
-    An example: [.99 .01 .99 .01 .99 .01]
-    What this input pattern represents is specified by the user
-    Input patterns should be lists
+    Parameters
+    ----------
+    input_pattern : np.ndarray
+        The array representing input to your model.
+    output_pattern : np.ndarray
+        The array representing the output of your model.
+    w_matrix : np.ndarray
+        The weight matrix that will be altered when Delta learning.
+    step : float, optional
+        The step size used in Delta learning. A higher value leads to larger
+        weight changes in a single run. The default is .5.
+    keep_orig : bool, optional
+        Boolean indicating whether the original weight matrix should be kept 
+        or not. The default is False.
 
-    :param output_pattern:
-    The input pattern which is provided
-    An example: [.99 .99 .01 .01]
-    What this output pattern represents is specified by the user
-    Output patterns should be lists
-
-    :param weights:
-    The weight matrix representing the weights between our input-, and 
-    output pattern.
-    This matrix can be initialised using the function 'initialise_weights()'.
-
-    :param function_word:
-    Determines the type of the activation function that is used
-    This parameter can have two values:
-        'linear' means that a linear activation function is used to 
-        transform the netinput
-        'logistic' means that a logistic activation function is used to 
-        transform the netinput
-    String: default value set to "logistic"
-
-    :return:
-    Determines the weight change for each trial based on the internal input
-    The difference the desired activation level and the actual activation 
-    level is used to do so
-    
-    :example use:
-    weight_change(1.5, sight_dog, happiness, yielded_weight_matrix, 
-                  function_word='logistic')
-    
-    where the stepsize is set at 1.5, and 'sight_dog' and 'happiness' are 
-    (as usual) lists representing these concepts. 
-    'yielded_weight_matrix' represents a numpy array representing the weights
-    between the input- and the output pattern.
-    This weight matrix can be predefined, or computed by this module.
+    Returns
+    -------
+    w_matrix : np.ndarray
+        A new weight matrix that is altered due to the Delta learning.
     """
 
-    np.set_printoptions(suppress=True)
-    weights = np.array(weights)
-
+    # suppress scientific output when printing arrays (because it's ugly)
+    np.set_printoptions(suppress = True)
+    
+    # get the activation at output with the original weight matrix
+    intern_act = internal_input(input_pattern, 
+                                w_matrix)
+    
+    # keep the original weights for future reference
+    original = np.copy(w_matrix)
+    
+    # actual delta learning
     for i in range(len(output_pattern)):
-        altered_weights = weights[i]
-        for j in range(len(altered_weights)):
-            internal_activation = internal_input(input_pattern, weights, act_function=function_word)[0]
-            delta = np.array(output_pattern[i]) - internal_activation[i]
-            altered_weights[j] = altered_weights[j] + \
-                alpha * input_pattern[j] * delta * internal_activation[i] * (1 - internal_activation[i])
-        weights[i] = altered_weights
-    return weights
+        delta = np.array(output_pattern[i]) - intern_act[i]
+        for j in range(len(w_matrix[i])):
+            w_matrix[i][j] += step * input_pattern[j] * delta \
+                                   * intern_act[i] * (1 - intern_act[i])
+
+    # return the weights after learning, and possibly the original matrix too
+    if keep_orig:
+        original, w_matrix
+    return w_matrix
+
 
