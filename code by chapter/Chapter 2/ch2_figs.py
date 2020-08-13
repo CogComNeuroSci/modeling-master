@@ -53,10 +53,10 @@ for loop in range(n_trials):
 
 # plot final trajectory
 f, axarr = plt.subplots(nrows = 2, ncols = 1)
-axarr[0].plot(range(len(x)),x,"bo-", range(len(y)),y,"ro-")
+axarr[0].plot(range(len(x)),x,"ko-", range(len(y)),y,"k--")
 axarr[0].set_title("random trajectory")
 # plot histogram
-axarr[1].hist(rt)
+axarr[1].hist(rt, color = "black")
 axarr[1].set_title("RT distribution")
 print("accuracy: {:2.0%}".format(accuracy/n_trials))
 print("too late: {:2.0%}".format(too_late/n_trials))
@@ -67,5 +67,5 @@ fig = plt.subplots()
 x = np.linspace(start = -4, stop = 3, num = 100)
 y = (x**4)/4 +(2./3)*(x**3)-(5./2)*(x**2)-6*x
 #y = x**3 + 2*(x**2) - 5*x - 6
-plt.plot(x,y)
+plt.plot(x,y, color = "black")
 plt.ylabel("y = f(x)")

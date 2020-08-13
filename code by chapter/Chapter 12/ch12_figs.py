@@ -41,10 +41,10 @@ for index in range(4):
     axes[r, c].axis([low, high, 0, 25])
     axes[r, c].plot(v, dens, color = "black")
     axes[r, c].plot(
-      v[left_point:right_point],np.zeros(right_point-left_point)+0.15, color = "red", linewidth = 7)
+      v[left_point:right_point],np.zeros(right_point-left_point)+0.15, color = "black", linewidth = 7)
     axes[r, c].set_title("sample size = {}".format(sample_size[index]))
-    axes[r, c].plot(mean_theta, 2, marker = "o")
-    axes[r, c].plot(max_theta, 2,  marker = "x")
+    axes[r, c].plot(mean_theta, 2, marker = "o", color = "black")
+    axes[r, c].plot(max_theta, 2,  marker = "x", color = "black")
 
 #%%figure 12.2
 fig, axes = plt.subplots(nrows = 2, ncols = 2)

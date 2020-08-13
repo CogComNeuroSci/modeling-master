@@ -53,7 +53,7 @@ for n_loop in np.arange(len(ntrials)):
     f1 = axs[n_loop].contourf(X, Y, v[:,:,n_loop], levels = levels[n_loop], cmap="RdBu_r")
     axs[n_loop].clabel(f0, fontsize = 8)
     axs[n_loop].scatter(learning_rate, temperature, color = "k")
-    axs[n_loop].scatter(x[loc[0]], y[loc[1]], marker = "X", color = "r") # plot maximumum likelihood
+    axs[n_loop].scatter(x[loc[0]], y[loc[1]], marker = "^", color = "k") # plot maximumum likelihood
     axs[n_loop].set_title("n = {} trials".format(ntrials[n_loop]))
     if n_loop == 0:
         axs[n_loop].set_xlabel("learning rate")

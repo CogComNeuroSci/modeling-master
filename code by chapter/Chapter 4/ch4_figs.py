@@ -14,7 +14,7 @@ def logistic(x,y,slope,intercept):
 
 low = -2
 high = 4
-font_size = 5
+font_size = 8
 x = np.linspace(low,high,20)
 
 #%% fig 4.2
@@ -46,35 +46,36 @@ plt.title("Gaussian", {"fontsize": font_size})
 plt.figure(1)
 # geometric intuition for threshold function
 plt.subplot(121)
-plt.title("fig 4.3a: \nthreshold activation function in 2D", {"fontsize": font_size})
+#plt.title("fig 4.3a: \nthreshold activation function in 2D", {"fontsize": font_size})
 slope = 2
 intercept = 1
 y = slope*x + intercept
 plt.plot(x,y,color="black")
 ndots = 15 # ndots randomly chosen points in space
+color = "k"
 for i in range(ndots):
     dot = ([np.random.uniform(low,high), 
             np.random.uniform(slope*low+intercept,slope*high+intercept)])
     if slope*dot[0] + intercept > dot[1]:
-        color = "b"
+        dot_type = "o"
     else:
-        color = "y"
-    plt.plot(dot[0],dot[1],color+"o")
+        dot_type = "+"
+    plt.plot(dot[0],dot[1],color+dot_type)
     
 #%% geometric intuition for sigmoid function
 plt.subplot(122)
-plt.title("fig 4.3b: \nlogistic activation function in 2D", {"fontsize": font_size})
+#plt.title("fig 4.3b: \nlogistic activation function in 2D", {"fontsize": font_size})
 ngrid = 100
 xi = np.linspace(low, high, ngrid)
 yi = np.linspace(slope*low + intercept, slope*high + intercept, ngrid)
 Xi, Yi = np.meshgrid(xi, yi)
 zi = logistic(Xi,Yi,slope,intercept)
-plt.contourf(xi, yi, zi, 14)
+plt.contourf(xi, yi, zi, 14, cmap = "gray")
 
 #%% representing the threshold function (fig 4.4)
 plt.figure(3)
 plt.subplot(131)
-plt.title("fig 4.4a: \nthreshold in a 1-dimensional function", fontsize = 9)
+#plt.title("fig 4.4a: \nthreshold in a 1-dimensional function", fontsize = 9)
 plt.xlabel("x")
 plt.ylabel("y")
 plt.text(0.1, 0.2, "}", fontsize = 20)
@@ -86,12 +87,12 @@ plt.plot(xi,[0]*len(xi),  color = "black")
 plt.plot([0]*len(xi), yi, color = "black")
 w1, w2, threshold = -1, 2, 1
 plt.subplot(133)
-plt.title("fig 4.4b: \nthreshold in a 2-dimensional function", fontsize = 9)
+#plt.title("fig 4.4b: \nthreshold in a 2-dimensional function", fontsize = 9)
 plt.xlabel(r"$x_1$")
 plt.ylabel(r"$x_2$")
 plt.text(1.1, -0.6, "}", fontsize = 12)
 plt.text(1.8, -0.6, r"$|\theta/w_2|$")
-plt.text(-0.2, -2, "}", fontsize = 20, rotation = -90)
+plt.text(-0.2, -1.5, "}", fontsize = 20, rotation = -90)
 plt.text(0.2, -2.2, r"$|\theta/w_1|$")
 plt.plot(xi,[0]*len(xi),  color = "black")
 plt.plot([0]*len(xi), yi, color = "black")

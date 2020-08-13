@@ -18,9 +18,9 @@ y2 = np.log(y1)
 fig, axs = plt.subplots(nrows = 1, ncols = 2)
 
 axs[0].plot(x, y1, color = "black")
-axs[0].set_title("y = x**2")
+axs[0].set_title("$y = x^2$")
 axs[1].plot(x, y2, color = "black")
-axs[1].set_title("y = log(x**2)")
+axs[1].set_title("$y = log(x^2)$")
 
 #%% fig 6.3 log likelihood: dependence on data size
 logL_range = 100

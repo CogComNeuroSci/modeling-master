@@ -25,7 +25,7 @@ gamma = [0.01, .8, 5, 10]
 window = 30
 window_conv = 20
 threshold = 0.8
-color_list = ["black", "red", "blue", "green"]
+color_list = ["black", "black", "black", "black"]
 fig, axs = plt.subplots(nrows=2, ncols=2)
 r_tot = np.zeros((len(gamma),ntrial))
 

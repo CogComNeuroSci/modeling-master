@@ -1,88 +1,104 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jul 24 12:11:57 2018
+Created on Fri Jul  6 10:37:20 2018
 
 @author: tom verguts
-estimate a value function using dynamic programming
-currently implemented for random policy only
-in particular, equation (3.14) from Sutton & Barto book
-note: all transition probs p() are deterministic in this case
+code for pics in chapter 11
 """
-#%% initialize
 import numpy as np
 import matplotlib.pyplot as plt
-from ch10_plotting import plot_value
+import matplotlib.patches as ptch
 
-np.set_printoptions(precision=4, suppress = True)
+#%% embedded in a cell so it can run on its own
+# fig 11.2b
+n_cats = 50
+mean_cats = [-1, -1]
+cov_cats  = np.eye(2)*.2
+n_dogs = 50
+mean_dogs = [1, 1]
+cov_dogs  = np.eye(2)*.2
+n_dogs_special = 10
+mean_dogs_special = [0, 3]
+cov_dogs_special  = np.eye(2)*.05
+#output1 = [-1.1, -0.9] # final state
+#output2 = [0.9, 1.05]  # final state
+output1 = [-2, 2] # output units in a random initial state
+output2 = [-1.8, 2.1] # output units in a random initial state
+cat_color = "black"
+cat_marker = "o"
+cat_size = 50
+dog_color = "red"
+dog_marker = "o"
+dog_size = 50
+cluster_color = "green"
+cluster_marker = "X"
+cluster_size= 200
+cats = np.transpose(np.random.multivariate_normal(mean_cats,cov_cats,size = [n_cats]))
+dogs = np.transpose(np.random.multivariate_normal(mean_dogs,cov_dogs,size = [n_dogs]))
+dogs_special = np.transpose(np.random.multivariate_normal(mean_dogs_special,cov_dogs_special,size = [n_dogs_special]))
+plt.scatter(cats[0],cats[1], n_cats, c = cat_color, marker = cat_marker)
+plt.scatter(dogs[0],dogs[1], n_dogs, c = dog_color, marker = dog_marker)
+plt.scatter(dogs_special[0], dogs_special[1], n_dogs, c = "orange")
+plt.scatter(output1[0], output1[1], s = 200, c = cluster_color, marker = cluster_marker)
+plt.scatter(output2[0], output2[1], s = 200, c = cluster_color, marker = cluster_marker)
+plt.title("Competitive learning")
 
-def state2rc(state_pass = 1):  # state to (row, column)
-    return state_pass // 5, state_pass % 5
-
-def succ(state_pass = 1, action_pass = 1): # successor function
-    row, column = state2rc(state_pass)
-    if action_pass == 0:
-        row -= 1
-    elif action_pass == 1:
-        column += 1
-    elif action_pass == 2:
-        row += 1
+#%%
+# fig 11.2c/d
+radius = 0.3
+origin = [0.5, 0.5]
+std = 0.2
+n_dogs = 10
+mean_angle_dogs = np.pi*(1/4)
+n_cats = 10
+mean_angle_cats = np.pi*(3/4)
+fig, axes = plt.subplots(nrows = 1, ncols = 2)
+circle = plt.Circle(origin, radius, edgecolor = "black", facecolor = "none")
+angle_dogs    = np.random.normal(mean_angle_dogs, std,n_dogs)
+angle_cats    = np.random.normal(mean_angle_cats, std,n_cats)
+for index in range(2):
+    circ = ptch.Circle(origin, radius, color = "black", fill = False)
+    if index == 0:
+        cluster_mean = np.random.uniform(0,2*np.pi,2)
     else:
-        column -= 1
-    return row, column    
-    
+        cluster_mean = [np.random.normal(mean_angle_dogs,std), np.random.normal(mean_angle_cats,std)]
+    angle_cluster = cluster_mean
+    for angle in [[angle_dogs, dog_color, dog_marker, dog_size], [angle_cats, cat_color, cat_marker, cat_size], [angle_cluster, cluster_color, cluster_marker, cluster_size]]:
+        x = radius*np.cos(angle[0]) + origin[0]
+        y = radius*np.sin(angle[0]) + origin[1]
+        axes[index].scatter(x, y, c = angle[1], marker = angle[2], s = angle[3])
+    axes[index].add_patch(circ)    
+    axes[index].axis([0, 1, 0, 1])
 
-nstates = 25
-value = np.random.random((5,5))
-ntrials = 100
-gamma = 0.9 # temporal discount parameter
-stop, converge, threshold, max_iteration = False, False, 0.01, 20
-halfway = 5 # intermediate-step value matrix to be printed
+#%%
+# fig 11.3: Kohonen maps
 
+alpha0 = 1 # initial learning rate
+beta = 1   # competition toughness 
+n_in = 3
+n_d1 = 5
+n_d2 = 5
+speed = 0.01 # to make sure the lr doesn't decrease too quickly
+n_trials = 500
+w = np.random.uniform(0,1,(n_d1,n_d2,n_in))
+distr = [0.8, 0.1, 0.1]
 
-fig, axs = plt.subplots(1, 3)
-    
-# %% figure 10.2
-# start to iterate
-plot_value(fig, axs, 0, 0, value, title = "initial")
-print(value)
-iteration = 0
-while stop == False:
-    previous_value = np.copy(value)
-    iteration += 1
-    for state in range(nstates):
-        row, column = state2rc(state)
-        total_v = 0
-        for action in range(4):
-            action_prob = 1/4 # random policy
-            if (row==0) & (column==1):
-                action_v = 10+gamma*previous_value[state2rc(21)]
-            elif (row==0) & (column==3):
-                action_v = 5+gamma*previous_value[state2rc(13)]
-            elif (column==0) & (action==3):
-                action_v = -1+gamma*previous_value[state2rc(state)]
-            elif (column==4) & (action==1):
-                action_v = -1+gamma*previous_value[state2rc(state)]
-            elif (row==0) & (action==0):
-                action_v = -1+gamma*previous_value[state2rc(state)]
-            elif (row==4) & (action==2):
-                action_v = -1+gamma*previous_value[state2rc(state)]
-            else:
-                action_v = 0+gamma*previous_value[succ(state,action)]
-            action_v *= action_prob
-            total_v += action_v
-        value[row,column] = total_v
-    if np.mean(np.abs(value-previous_value))<threshold:
-        converge = True
-        stop = True
-    elif iteration>max_iteration:
-        stop = True
-    else:
-        pass
-    if iteration == halfway:
-        plot_value(fig, axs, 0, 1, value, title = "halfway")
-    
-#%% show what you did
-print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))
-plot_value(fig, axs, 0, 2, value, title = "final")
-print(value)
+def distance(winner,x,y):
+    y_win = winner // n_d2
+    x_win = winner % n_d2
+    return np.sqrt((x_win-x)**2 + (y_win-y)**2)
+
+for loop in range(n_trials):
+    lrate = alpha0/(loop*speed+1)
+    x = np.zeros(n_in)
+#    x[np.random.randint(0,n_in)] = 1 # from uniform distribution
+    x[np.random.choice(range(n_in), p=distr)] = 1
+    print(x)
+    y = x.dot(np.reshape(w.swapaxes(0,2).swapaxes(1,2),(n_in,n_d1*n_d2)))
+    y_max = np.argmax(y)
+    for d1loop in range(n_d1):
+        for d2loop in range(n_d2):
+            w[d1loop,d2loop,:] = (w[d1loop,d2loop,:] + 
+               lrate*np.exp(-beta*distance(y_max,d1loop,d2loop))*(x-w[d1loop,d2loop,:])) 
+plt.imshow(w) 
