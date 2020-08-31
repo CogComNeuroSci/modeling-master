@@ -8,59 +8,14 @@
 ## Overview
 
 This is the GitHub repository used for organizing the code used in the 'Modeling of Cognitive processes' (MCP) course, supervised by Tom.
-The code is organized by academic year (AY).
+As of 2020, the code is organized by chapter. Code organized by academic year (AY) is not maintained.
 
-Other relevant information can be found:
+Students can find other relevant information on [Ufora](ufora) and on the UGent [course specification](vakfiche) site.
 
-- on the [MCP google site][google_sites].
-- in the [course specification (vakfiche)][vakfiche].
+[ufora]: ufora.ugent.be
+[vakfiche]: https://studiegids.ugent.be/2020/EN/studiefiches/H002000.pdf
 
-[google_sites]: https://sites.google.com/view/ugent-mcp-course/home
-[vakfiche]: https://studiegids.ugent.be/2019/EN/studiefiches/H002000.pdf
 
-## Used folder structure   
-
-In this paragraph, we will quickly explain the folder structure that is used in this repository.
-This folder organisation can be explored by going through the [AY 2019 - 2020 folder][AC2019_2020].
-
-[AC2019_2020]: https://github.com/CogComNeuroSci/modeling-master/tree/master/AY%202019%20-%202020
-
----
-
-The folder is organized according to our current teaching schedule:
-
-- Lesson 01
-- Lesson 02
-- ...
-- Lesson 13
-
-Within each _lesson xx_ folder, one can find another folder.   
-Possible folder names are:
-
-- Chapter xx
-    - Which refers to the chapter in the _Modeling book_ the teacher will be talking about
-- Practical session
-    - Which indicates that this lesson will be used to let the students gain _practical experience_
-- Test x
-    - Which indicates that this folder contains scripts used for _testing_ our modeling students
-
-Finally, within each folder, another specific structure is enforced:
-
-- Chapter xx
-    - course examples:
-        - Contains code that is used during teaching, e.g. to show examples of certain modeling concepts
-- Practical session:
-    - course examples:
-        - Contains code that is used during teaching, e.g. to show examples of certain modeling concepts
-    - exercises
-        - Contains the scripts that the students will start with during the practical session
-    - solutions
-        - Contains the solutions to the aforementioned exercises
-- Test x:
-    - assignment
-        - Contains the code the students start with during the test
-    - solution
-        - Contains the solution to that specific test
 
 ## Programming environment   
 
@@ -108,4 +63,4 @@ Responsible for this course:
 Henri Dunantlaan 2  
 B-9000 Gent
 
-**Last edit: 01-08-2019**
+**Last edit: 31-08-2020**
