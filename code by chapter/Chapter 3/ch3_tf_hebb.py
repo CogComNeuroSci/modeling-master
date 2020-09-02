@@ -4,6 +4,7 @@
 Created on Wed Sep  2 13:19:23 2020
 
 @author: tom verguts
+Hebbian learning by cost minimization
 """
 import tensorflow as tf
 import numpy as np
