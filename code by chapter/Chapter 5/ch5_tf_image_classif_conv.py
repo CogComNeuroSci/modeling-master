@@ -25,22 +25,24 @@ x_train, x_test = x_train[:,:,:,0], x_test[:,:,:,0]  # use first color channel o
 #plt.show()
 
 # for piloting
-x_train, y_train, x_test, y_test = x_train[:500,:], y_train[:500], x_test[:500,:], y_test[:500]
+# use x_train for x_test to check within-data fitting
+x_train, y_train, x_test, y_test = x_train[:1000,:], y_train[:1000], x_train[:100,:], y_train[:100]
 
 
 image_size = x_train.shape[1:]
-learning_rate = 0.01
+learning_rate = 0.05
 epochs = 100
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 n_labels = 10
 filter_size = 5
+k = 1       # size reduction in max pool layer
 
 def conv2d(x, W):
     return tf.nn.conv2d(x, W, strides = [1, 1, 1, 1], padding = "SAME")
 
 def maxpool2d(x):
-    return tf.nn.max_pool(x, ksize = [1, 2, 2, 1], strides = [1, 2, 2, 1], padding = "SAME")
+    return tf.nn.max_pool(x, ksize = [1, k, k, 1], strides = [1, k, k, 1], padding = "SAME")
 
 def reshape_x_batch(M):
     return M.reshape( (M.shape[0], M.shape[1]*M.shape[2]) )
@@ -66,8 +68,8 @@ conv1 = maxpool2d(conv1)
 conv2 = tf.nn.relu(conv2d(conv1, w_c2) + b_c2)
 conv2 = maxpool2d(conv2)
 
-x_flattened = tf.reshape(conv2, [-1, int(image_size[0]*image_size[1]/16)*64])
-w_fc = tf.Variable(tf.random_normal([int(image_size[0]*image_size[1]/16)*64, 1024]))
+x_flattened = tf.reshape(conv2, [-1, int(image_size[0]*image_size[1]/(k**4))*64])
+w_fc = tf.Variable(tf.random_normal([int(image_size[0]*image_size[1]/(k**4)*64), 1024]))
 b_fc = tf.Variable(tf.random_normal([1024]))
 fc   = tf.nn.relu(tf.matmul(x_flattened, w_fc) + b_fc)
 
@@ -97,6 +99,5 @@ with tf.Session() as sess:
             y_test_reshape = reshape_y_batch(y_test)
             c = sess.run(cross_entropy, feed_dict={x: x_test_reshape, y: y_test_reshape})
             accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-            yhat_ = yhat.eval({x: x_test_reshape})
             acc = accuracy.eval({x: x_test_reshape, y: y_test_reshape})
             print("cost= {:.2f}, accuracy= {:.2f}".format(c, acc))        
