@@ -3,40 +3,62 @@
 """
 Created on Wed Sep  2 14:49:49 2020
 
-@author: tom verguts (code adapted from Sudharsan Ravichandiran)
+@author: tom verguts
+(conv model code adapted from Sudharsan Ravichandiran; cats/dogs code from Pieter Huycke)
 image classification; could a convolutional network solve this task...?
 """
 
 import tensorflow as tf
 import numpy as np
-#import matplotlib.pyplot as plt
+import pickle
+import matplotlib.pyplot as plt
 
-(x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
+# load cifar objects data
+#(x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
 
-# pre-processing
-x_train, x_test = x_train[:,:,:,0], x_test[:,:,:,0]  # use first color channel only
+# load MNIST numbers data
+#(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
+# load cats and dogs data
+objects = []
+with (open("cats_dogs.pkl", "rb")) as openfile:
+    while True:
+        try:
+            objects.append(pickle.load(openfile))
+        except EOFError:
+            break
+dataset = objects[0]
+x_train, y_train = dataset.images, dataset.target
 
-#fig, axes = plt.subplots(1, 4, figsize=(7,3))
-#for img, label, ax in zip(x_train[:4], y_train[:4], axes):
-#    ax.set_title(label)
-#    ax.imshow(img, cmap = "gray")
-#    ax.axis("off")
-#plt.show()
 
 # for piloting
 # use x_train for x_test to check within-data fitting
-x_train, y_train, x_test, y_test = x_train[:1000,:], y_train[:1000], x_train[:100,:], y_train[:100]
+x_train, y_train, x_test, y_test = x_train[:30,:], y_train[:30], x_train[:30,:], y_train[:30]
 
+# pre-processing
+if len(x_train.shape)>3:
+    x_train, x_test = x_train[:,:,:,0], x_test[:,:,:,0]  # use first color channel only
+y_train = y_train.astype(int)
+y_test  = y_test.astype(int)
+    
 
+# for plotting
+fig, axes = plt.subplots(1, 4, figsize=(7,3))
+for img, label, ax in zip(x_train[:4], y_train[:4], axes):
+    ax.set_title(label)
+    ax.imshow(img, cmap = "gray")
+    ax.axis("off")
+plt.show()
+
+# initialize model
 image_size = x_train.shape[1:]
-learning_rate = 0.05
+learning_rate = 0.01
 epochs = 100
-batch_size = 100
+batch_size = 10
 batches = int(x_train.shape[0] / batch_size)
-n_labels = 10
+n_labels = 2
 filter_size = 5
-k = 1       # size reduction in max pool layer
+k = 2       # size reduction in max pool layer
 
 def conv2d(x, W):
     return tf.nn.conv2d(x, W, strides = [1, 1, 1, 1], padding = "SAME")
@@ -48,7 +70,8 @@ def reshape_x_batch(M):
     return M.reshape( (M.shape[0], M.shape[1]*M.shape[2]) )
 
 def reshape_y_batch(M): # one-hot encoding
-    M = M[:, 0]         # remove a dimension
+    if len(M.shape)>1:
+        M = M[:, 0]         # remove a dimension
     b = np.zeros((M.size, n_labels))
     b[np.arange(M.size), M] = 1
     return b
@@ -86,6 +109,7 @@ init = tf.global_variables_initializer()
 correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(yhat, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
+# run model
 with tf.Session() as sess:
     sess.run(init)
     for epoch in range(epochs):
