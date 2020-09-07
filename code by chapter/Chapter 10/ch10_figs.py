@@ -12,37 +12,37 @@ import matplotlib.patches as ptch
 
 #%% embedded in a cell so it can run on its own
 # fig 11.2b
-n_cats = 50
+n_cats = 20
 mean_cats = [-1, -1]
 cov_cats  = np.eye(2)*.2
-n_dogs = 50
+n_dogs = 20
 mean_dogs = [1, 1]
 cov_dogs  = np.eye(2)*.2
-n_dogs_special = 10
+n_dogs_special = 5
 mean_dogs_special = [0, 3]
 cov_dogs_special  = np.eye(2)*.05
-#output1 = [-1.1, -0.9] # final state
-#output2 = [0.9, 1.05]  # final state
-output1 = [-2, 2] # output units in a random initial state
-output2 = [-1.8, 2.1] # output units in a random initial state
+output1 = [-1.1, -0.9] # final state
+output2 = [0.9, 1.05]  # final state
+#output1 = [-2, 2] # output units in a random initial state
+#output2 = [-1.8, 2.1] # output units in a random initial state
 cat_color = "black"
 cat_marker = "o"
-cat_size = 50
-dog_color = "red"
+cat_size = 10
+dog_color = "black"
 dog_marker = "o"
-dog_size = 50
-cluster_color = "green"
+dog_size = 10
+cluster_color = "black"
 cluster_marker = "X"
-cluster_size= 200
+cluster_size= 300
 cats = np.transpose(np.random.multivariate_normal(mean_cats,cov_cats,size = [n_cats]))
 dogs = np.transpose(np.random.multivariate_normal(mean_dogs,cov_dogs,size = [n_dogs]))
 dogs_special = np.transpose(np.random.multivariate_normal(mean_dogs_special,cov_dogs_special,size = [n_dogs_special]))
 plt.scatter(cats[0],cats[1], n_cats, c = cat_color, marker = cat_marker)
 plt.scatter(dogs[0],dogs[1], n_dogs, c = dog_color, marker = dog_marker)
-plt.scatter(dogs_special[0], dogs_special[1], n_dogs, c = "orange")
+plt.scatter(dogs_special[0], dogs_special[1], n_dogs, c = "black")
 plt.scatter(output1[0], output1[1], s = 200, c = cluster_color, marker = cluster_marker)
 plt.scatter(output2[0], output2[1], s = 200, c = cluster_color, marker = cluster_marker)
-plt.title("Competitive learning")
+#plt.title("Competitive learning")
 
 #%%
 # fig 11.2c/d

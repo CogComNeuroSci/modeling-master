@@ -9,20 +9,23 @@ Hebbian learning by cost minimization
 import tensorflow as tf
 import numpy as np
 
+# initialize  variables
 train_x = np.array([[1, 0, 0], [0, 0, 1]])
 train_y = np.array([[1, 0], [0, 1]])
 epochs = 100
 learning_rate = 0.1
 
+# define TensorFlow components
 X = tf.compat.v1.placeholder(tf.float32, [None, 3])
 Y = tf.compat.v1.placeholder(tf.float32, [None, 2])
 W = tf.Variable(np.random.randn(3, 2).astype(np.float32), name = "weights")
 
 Y_pred = tf.matmul(X, W)
-cost = tf.reduce_sum(-tf.matmul(Y_pred, tf.transpose(Y)))
+cost = tf.reduce_sum(-tf.matmul(Y_pred, tf.transpose(Y))) # this cost function will be optimized
 opt  = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
 init = tf.global_variables_initializer()
 
+# run the graph
 with tf.Session() as sess:
     sess.run(init)
     for epoch in range(epochs):
