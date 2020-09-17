@@ -6,7 +6,7 @@ Created on Thu Dec 27 15:24:48 2018
 @author: tom verguts
 boltzmann machine for implementing logical rules
 now it's a RESTRICTED boltzmann machine
-doesn't work for nonlinear mappings; I have no idea why
+under construction...
 """
 
 #%% initialize
@@ -19,25 +19,26 @@ X_and = np.array( [[0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 1]] )
 X_or  = np.array( [[0, 0, 0], [1, 0, 1], [0, 1, 1], [1, 1, 1]] )
 X_101 = np.array( [[0, 0, 0], [1, 0, 1], [0, 1, 0], [1, 1, 0]] )
 X_xor = np.array( [[0, 0, 0], [1, 0, 1], [0, 1, 1], [1, 1, 0]] )
-X = X_xor
+X = X_or
 p = np.zeros((2**X.shape[1],))
 p_tot = np.copy(p)
+n_samples = 10
 n_rep = 5
 
 #%% fit model n_rep times
 for rep_loop in range(n_rep):
     p = np.zeros((2**X.shape[1],))
-    model = BernoulliRBM(n_components = 10, n_iter = 20000, batch_size = 20, learning_rate = 0.6)
+    model = BernoulliRBM(n_components = 1, n_iter = 200, batch_size = 20, learning_rate = 0.05)
     model.fit(X)
 
     # check equilibrium distribution
-    v_old = np.random.choice([0, 1], size = X.shape[1])
     for loop in range(n_test_trials):
-        v_new = model.gibbs(v_old)
-        v_old = v_new
-        if loop>n_burnin:
-            row = np.dot(v_new, 2**np.array([0, 1, 2]))
-            p[row] += 1
+        v_old = np.random.choice([0, 1], size = X.shape[1])
+        for sample_loop in range(n_samples):
+            v_new = model.gibbs(v_old)
+            v_old = v_new
+        row = np.dot(v_new, 2**np.array([0, 1, 2]))
+        p[row] += 1
     p = p/np.sum(p)
     p_tot += p     
 # end of simulation    
