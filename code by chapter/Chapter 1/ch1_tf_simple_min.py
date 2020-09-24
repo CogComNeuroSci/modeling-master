@@ -7,8 +7,10 @@ Created on Mon Aug 31 09:25:08 2020
 simple function minimization with TensorFlow
 """
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import numpy as np
+
+tf.disable_v2_behavior()
 
 # initialize variables
 epochs = 10
@@ -21,7 +23,7 @@ X = tf.Variable(np.random.randn(1, 1).astype(np.float32), name="X")
 cost       = tf.reduce_sum((X-3)**2)
 optimizer  = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
 init       = tf.global_variables_initializer()
-init_val   = tf.compat.v1.assign(X, [[initial_value]]) # choose initial value
+init_val   = tf.assign(X, [[initial_value]]) # choose initial value
 
 # run the TensorFlow graph
 with tf.Session() as sess:
