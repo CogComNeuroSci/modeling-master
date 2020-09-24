@@ -5,6 +5,7 @@ Created on Mon Aug 31 09:25:08 2020
 
 @author: tom verguts
 simple function minimization with TensorFlow
+compatible with both TF1 and TF2
 """
 
 import tensorflow.compat.v1 as tf
