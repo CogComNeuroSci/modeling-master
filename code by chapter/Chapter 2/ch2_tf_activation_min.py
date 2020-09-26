@@ -36,6 +36,7 @@ with tf.Session() as sess:
     for epoch in range(epochs):
         sess.run(optimizer, feed_dict = {})
         if not epoch%2: # how often to show intermediate results?
+            # equivalently, do c = cost.eval()
             c = sess.run(cost, feed_dict = {})
             y = sess.run(Y, feed_dict = {})
             print("cost = {:.2f}, Y1 = {:.2f}, Y2 = {}".format(c, y[0][0], y[0][1]))
