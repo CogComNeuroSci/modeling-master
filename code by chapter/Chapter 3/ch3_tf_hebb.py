@@ -6,7 +6,7 @@ Created on Wed Sep  2 13:19:23 2020
 @author: tom verguts
 Hebbian learning by cost minimization
 """
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import numpy as np
 
 # initialize  variables
@@ -16,12 +16,13 @@ epochs = 100
 learning_rate = 0.1
 
 # define TensorFlow components
-X = tf.compat.v1.placeholder(tf.float32, [None, 3])
-Y = tf.compat.v1.placeholder(tf.float32, [None, 2])
+X = tf.placeholder(tf.float32, [None, 3])
+Y = tf.placeholder(tf.float32, [None, 2])
 W = tf.Variable(np.random.randn(3, 2).astype(np.float32), name = "weights")
 
 Y_pred = tf.matmul(X, W)
-cost = tf.reduce_sum(-tf.matmul(Y_pred, tf.transpose(Y))) # this cost function will be optimized
+#cost = tf.reduce_sum(-tf.matmul(Y_pred, tf.transpose(Y))) # this cost function will be optimized
+cost = tf.matmul(-Y_pred, tf.transpose(Y)) # this cost function will be optimized
 opt  = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
 init = tf.global_variables_initializer()
 
