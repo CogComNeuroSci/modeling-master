@@ -24,7 +24,7 @@ epochs = 10
 Y  = tf.Variable(np.random.randn(1, 2).astype(np.float32), name="Y") # this will be optimized to minimize cost
 
 # next line defines the energy function that will be minimized
-# the reduce_sum is only to turn an array into a float; also tf.add could be used (as in the commented code, but then it remainns an array)
+# the reduce_sum is only to turn an array into a float; also tf.add could be used (as in the commented code), but then it remainns an array
 cost       = tf.reduce_sum( -tf.matmul(Y,net) - tf.matmul(tf.matmul(Y,W_inh), tf.transpose(Y)) )
 #cost       = tf.add( -tf.matmul(Y,net), - tf.matmul( tf.matmul(Y,W_inh), tf.transpose(Y)) )
 optimizer  = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
