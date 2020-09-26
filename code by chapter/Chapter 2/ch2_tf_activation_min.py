@@ -7,7 +7,7 @@ Created on Mon Aug 31 09:51:11 2020
 Does activation updating via minimization of activation function (2.3)
 """
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import numpy as np
 
 # initialize variables
@@ -24,12 +24,14 @@ epochs = 10
 Y  = tf.Variable(np.random.randn(1, 2).astype(np.float32), name="Y") # this will be optimized to minimize cost
 
 # next line defines the energy function that will be minimized
-cost       = tf.reduce_sum( -tf.matmul(Y,net) - tf.matmul(tf.matmul(Y,W_inh), tf.compat.v1.transpose(Y)) )
-optimizer  = tf.compat.v1.train.GradientDescentOptimizer(learning_rate).minimize(cost)
+# the reduce_sum is only to turn an array into a float; also tf.add could be used (as in the commented code, but then it remainns an array)
+cost       = tf.reduce_sum( -tf.matmul(Y,net) - tf.matmul(tf.matmul(Y,W_inh), tf.transpose(Y)) )
+#cost       = tf.add( -tf.matmul(Y,net), - tf.matmul( tf.matmul(Y,W_inh), tf.transpose(Y)) )
+optimizer  = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
 init       = tf.global_variables_initializer()
 
 # run the graph
-with tf.compat.v1.Session() as sess:
+with tf.Session() as sess:
     sess.run(init)
     for epoch in range(epochs):
         sess.run(optimizer, feed_dict = {})
