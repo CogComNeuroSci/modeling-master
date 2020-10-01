@@ -7,7 +7,7 @@ Created on Mon Aug 31 09:51:11 2020
 Does cats-dogs network updating via minimization of activation function (2.3)
 """
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -40,18 +40,18 @@ y = np.zeros((epochs, 2))
 # define a tf variable "Y" that represents the two output unit
 Y  = tf.Variable(np.random.randn(1, 2).astype(np.float32), name='Y')
 # add noise at every time step to the Y values
-add_noise = tf.compat.v1.assign(Y, Y + tf.random_normal((1, 2), mean = 0, stddev = 0.5))
+add_noise = tf.assign(Y, Y + tf.random_normal((1, 2), mean = 0, stddev = 0.5))
 # building the cost function, i.e. the energy function of our model that we 
 # want to optimize
-cost = tf.reduce_sum(-tf.matmul(Y, in_all) - tf.matmul(tf.matmul(Y,W_inh), tf.compat.v1.transpose(Y)))
+cost = tf.reduce_sum(-tf.matmul(Y, in_all) - tf.matmul(tf.matmul(Y,W_inh), tf.transpose(Y)))
 # create an optimizer (that we will use to optimize the energy function)
-opt  = tf.compat.v1.train.GradientDescentOptimizer(update_rate).minimize(cost)
+opt  = tf.train.GradientDescentOptimizer(update_rate).minimize(cost)
 # create an "initializer" that we will run to put actual values (numbers) in
 # the TF variables
 init = tf.global_variables_initializer()
 
 # run the graph
-with tf.compat.v1.Session() as sess:
+with tf.Session() as sess:
     # initialize the network values
     sess.run(init)
     # loop over all time steps

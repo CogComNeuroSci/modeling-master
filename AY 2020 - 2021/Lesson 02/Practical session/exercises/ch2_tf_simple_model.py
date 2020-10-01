@@ -6,7 +6,7 @@
 Makes a simple model composed of 2 input units and one output unit
 """
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import numpy as np
 
 # create TensorFlow constants of inputs (x1 and x2)
