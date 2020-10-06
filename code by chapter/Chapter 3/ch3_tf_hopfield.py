@@ -24,11 +24,11 @@ def define_length(pattern):
 # start_pattern = np.array([-1, 1,  1, -1, 1, -1])
 # length = define_length(train_pattern)
 
-# define data: numbers
+# define data: numbers from MNIST data set
 dim = 2
 all_data = tf.keras.datasets.mnist.load_data()
 n_numbers = 10
-train_pattern = all_data[0][0][:n_numbers] # first numbers
+train_pattern = all_data[0][0][:n_numbers] # first n_numbers numbers
 length = define_length(train_pattern)
 start_pattern = np.array(np.random.choice([-1, 1], size = length))
 x_pattern = np.ndarray((9, length))
