@@ -12,16 +12,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # define data
-train_pattern = np.array([1, -1, 1, -1, -1, -1])
+train_pattern = np.array([[1, 1, 1, -1, -1, -1], [-1, -1, -1, +1, +1, +1]])
 start_pattern = np.array([-1, 1,  1, -1, 1, -1])
-size = train_pattern.size
+dim = 1
+length = 1
+for loop in range(length):
+	length *= train_pattern.shape[loop+1]
 
 # define variables
 n_train   = 20 # how many training steps to take
 n_samples = 5 # how often to step in activation space
-w    = tf.Variable(np.random.randn(size, size).astype(np.float32)/1)
-b    = tf.Variable(np.random.randn(1, size).astype(np.float32)/1)
-weights = np.ndarray((n_train//5, size, size))
+w    = tf.Variable(np.random.randn(length, length).astype(np.float32)/1)
+b    = tf.Variable(np.random.randn(1, length).astype(np.float32)/1)
+weights = np.ndarray((n_train//5, length, length))
 
 # a function to sample the network iteratively
 def hopfield_sampl(start_pattern = None, n_sample = 10):
@@ -38,28 +41,29 @@ def hopfield_train(pattern = None):
 	return [update_w, update_b]
 
 # computation graph definition
-x             = tf.placeholder(tf.float32, shape=[1, size])
+x             = tf.placeholder(tf.float32, shape=[1, length])
 hopfield_sa   = hopfield_sampl(start_pattern = x, n_sample = n_samples)
 hopfield_tr   = hopfield_train(pattern = x)
 init          = tf.global_variables_initializer()
 
 # preprocess
-if len(train_pattern.shape)>1:
-	train_pattern =  train_pattern.reshape(size)
-	start_pattern  = start_pattern.reshape(size)
+if dim > 1:# dimension of input pattern
+	train_pattern =  train_pattern.reshape(train_pattern.size[0], length)
+	start_pattern  = start_pattern.reshape(train_pattern.size[0], length)
 	
 # main routine	
 with tf.Session() as sess:
 	sess.run(init)
 	for loop in range(n_train):
-		res = sess.run(hopfield_sa, feed_dict = {x: [start_pattern]})
-		print(res)
-		sess.run(hopfield_tr, feed_dict = {x: [train_pattern]})
-		if not loop%5:
+		nr = np.random.randint(train_pattern.shape[0]) # a random training pattern
+		sess.run(hopfield_tr, feed_dict = {x: [train_pattern[nr]]})
+		if not loop%5: # check out the weight matrix
+			res = sess.run(hopfield_sa, feed_dict = {x: [start_pattern]})
+			print(res)
 			indx = loop//5
 			weights[indx] = w.eval()
 		
-# plot result
+# plot intermediate weight matrices
 fig, ax = plt.subplots(nrows = 2, ncols = 2)
 for loop in range(n_train//5):
 	row = loop//2
