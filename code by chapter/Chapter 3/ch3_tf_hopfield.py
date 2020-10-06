@@ -12,14 +12,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # define data
-train_pattern = np.array([-1, -1, 1, -1, -1, -1])
+train_pattern = np.array([1, -1, 1, -1, -1, -1])
 start_pattern = np.array([-1, 1,  1, -1, 1, -1])
 size = train_pattern.size
 
 # define variables
-n_samples = 10 # how often to step in activation space
-w    = tf.Variable(np.random.randn(size, size).astype(np.float32)/1000)
-b    = tf.Variable(np.random.randn(1, size).astype(np.float32)/1000)
+n_train   = 20 # how many training steps to take
+n_samples = 5 # how often to step in activation space
+w    = tf.Variable(np.random.randn(size, size).astype(np.float32)/1)
+b    = tf.Variable(np.random.randn(1, size).astype(np.float32)/1)
+weights = np.ndarray((n_train//5, size, size))
 
 # a function to sample the network iteratively
 def hopfield_sampl(start_pattern = None, n_sample = 10):
@@ -49,14 +51,19 @@ if len(train_pattern.shape)>1:
 # main routine	
 with tf.Session() as sess:
 	sess.run(init)
-	for loop in range(20):
+	for loop in range(n_train):
 		res = sess.run(hopfield_sa, feed_dict = {x: [start_pattern]})
 		print(res)
 		sess.run(hopfield_tr, feed_dict = {x: [train_pattern]})
-	weights = w.eval()
+		if not loop%5:
+			indx = loop//5
+			weights[indx] = w.eval()
 		
 # plot result
-fig, ax = plt.subplots()
-ax.imshow(weights)
+fig, ax = plt.subplots(nrows = 2, ncols = 2)
+for loop in range(n_train//5):
+	row = loop//2
+	col = loop%2
+	ax[row, col].imshow(weights[loop])
 
 		
