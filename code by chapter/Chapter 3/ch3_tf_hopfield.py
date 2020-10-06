@@ -11,17 +11,31 @@ import tensorflow.compat.v1 as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
-# define data
-train_pattern = np.array([[1, 1, 1, -1, -1, -1], [-1, -1, -1, +1, +1, +1]])
-start_pattern = np.array([-1, 1,  1, -1, 1, -1])
-dim = 1
-length = 1
-for loop in range(length):
-	length *= train_pattern.shape[loop+1]
+
+def define_length(pattern):
+	length = 1
+	for loop in pattern.shape[1:]:
+		length *= loop
+	return length	
+
+# define data: simple 1D pattern
+# dim = 1
+# train_pattern = np.array([[1, 1, 1, -1, -1, -1], [-1, -1, -1, +1, +1, +1]])
+# start_pattern = np.array([-1, 1,  1, -1, 1, -1])
+# length = define_length(train_pattern)
+
+# define data: numbers
+dim = 2
+all_data = tf.keras.datasets.mnist.load_data()
+n_numbers = 10
+train_pattern = all_data[0][0][:n_numbers] # first numbers
+length = define_length(train_pattern)
+start_pattern = np.array(np.random.choice([-1, 1], size = length))
+x_pattern = np.ndarray((9, length))
 
 # define variables
-n_train   = 20 # how many training steps to take
-n_samples = 5 # how often to step in activation space
+n_train   = 100 # how many training steps to take
+n_samples = 1 # how often to step in activation space
 w    = tf.Variable(np.random.randn(length, length).astype(np.float32)/1)
 b    = tf.Variable(np.random.randn(1, length).astype(np.float32)/1)
 weights = np.ndarray((n_train//5, length, length))
@@ -33,7 +47,7 @@ def hopfield_sampl(start_pattern = None, n_sample = 10):
 		net_input = tf.matmul(w, pattern, transpose_b=True) + tf.transpose(tf.multiply(pattern, b))
 		clipped   = tf.multiply(2.,tf.cast(tf.math.greater(net_input, 0), tf.float32))-1
 		pattern = tf.transpose(clipped)
-	return pattern
+	return tf.squeeze(pattern)
 
 def hopfield_train(pattern = None):
 	update_w  = tf.assign(w, w + tf.matmul(tf.transpose(pattern), pattern))
@@ -48,8 +62,8 @@ init          = tf.global_variables_initializer()
 
 # preprocess
 if dim > 1:# dimension of input pattern
-	train_pattern =  train_pattern.reshape(train_pattern.size[0], length)
-	start_pattern  = start_pattern.reshape(train_pattern.size[0], length)
+	train_pattern =  train_pattern.reshape(train_pattern.shape[0], length)
+	start_pattern  = start_pattern.reshape(length)
 	
 # main routine	
 with tf.Session() as sess:
@@ -57,17 +71,29 @@ with tf.Session() as sess:
 	for loop in range(n_train):
 		nr = np.random.randint(train_pattern.shape[0]) # a random training pattern
 		sess.run(hopfield_tr, feed_dict = {x: [train_pattern[nr]]})
-		if not loop%5: # check out the weight matrix
-			res = sess.run(hopfield_sa, feed_dict = {x: [start_pattern]})
-			print(res)
-			indx = loop//5
+		if not loop%(n_train//4): # check out the weight matrix
+			indx = loop//(n_train//4)
 			weights[indx] = w.eval()
+	# training is over		
+	novel_x = start_pattern	
+	for loop in range(9):
+		x_pattern[loop] = novel_x
+		novel_x = sess.run(hopfield_sa, feed_dict = {x: [novel_x]})
+
 		
 # plot intermediate weight matrices
 fig, ax = plt.subplots(nrows = 2, ncols = 2)
-for loop in range(n_train//5):
+for loop in range(n_train//(n_train//4)):
 	row = loop//2
 	col = loop%2
 	ax[row, col].imshow(weights[loop])
 
+# plot intermediate patterns, for the final weight matrix
+fig, ax = plt.subplots(nrows = 3, ncols = 3)
+fig.suptitle("try to store {} digits with hopfield".format(n_numbers))
+for loop in range(9):
+	row = loop//3
+	col = loop%3
+	x_image = x_pattern[loop].reshape(28, 28)
+	ax[row, col].imshow(x_image)
 		
