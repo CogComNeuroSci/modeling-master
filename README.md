@@ -8,7 +8,7 @@
 ## Overview
 
 This is the GitHub repository used for organizing the code used in the 'Modeling of Cognitive processes' (MCP) course, supervised by Tom.
-As of 2020, the code is organized by chapter. Code organized by academic year (AY) is not maintained.
+As of 2020, the code is organized by chapter. Students should access the folder "code by chapter". Code organized by academic year (AY) is not maintained.
 
 Students can find other relevant information on [Ufora](ufora) and on the UGent [course specification](vakfiche) site.
 
