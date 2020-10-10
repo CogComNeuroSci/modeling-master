@@ -11,7 +11,7 @@ import tensorflow.compat.v1 as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+#plt.axis("off")
 def define_length(pattern):
 	length = 1
 	for loop in pattern.shape[1:]:
@@ -27,8 +27,8 @@ def define_length(pattern):
 # define data: numbers from MNIST data set
 dim = 2
 all_data = tf.keras.datasets.mnist.load_data()
-start_number = 11
-stop_number  = 14
+start_number = 14
+stop_number  = 19
 n_numbers    = stop_number - start_number
 train_pattern = all_data[0][0][start_number:stop_number] # first n_numbers numbers
 train_pattern = 2*(train_pattern>5) - 1
@@ -39,6 +39,7 @@ x_pattern = np.ndarray((9, length))
 # define variables
 n_train   = 50 # how many training steps to take
 n_samples = 1 # how often to step in activation space
+n_samples_test = 4
 w    = tf.Variable(np.random.randn(length, length).astype(np.float32)/10)
 b    = tf.Variable(np.random.randn(1, length).astype(np.float32)/10)
 weights = np.ndarray((n_train//5, length, length))
@@ -81,26 +82,28 @@ with tf.Session() as sess:
 			bias[indx]   = b.eval()
 	# training is over		
 	novel_x = start_pattern	
-	for loop in range(9):
+	for loop in range(n_samples_test):
 		x_pattern[loop] = novel_x
 		novel_x = sess.run(hopfield_sa, feed_dict = {x: [novel_x]})
 
 		
 # plot intermediate weight matrices
-fig, ax = plt.subplots(nrows = 2, ncols = 2)
-for loop in range(n_train//(n_train//4)):
-	row = loop//2
-	col = loop%2
-	ax[row, col].imshow(weights[loop])
+# fig, ax = plt.subplots(nrows = 2, ncols = 2)
+# for loop in range(n_train//(n_train//4)):
+# 	row = loop//2
+# 	col = loop%2
+# 	ax[row, col].imshow(weights[loop])
 
 # plot intermediate patterns, for the final weight matrix
-fig, ax = plt.subplots(nrows = 3, ncols = 3)
-fig.suptitle("try to store {} digits with hopfield".format(n_numbers))
-for loop in range(9):
-	row = loop//3
-	col = loop%3
+fig, ax = plt.subplots(nrows = 1, ncols = 4)
+row = 0
+for loop in range(n_samples_test):
+	col = loop
 	x_image = x_pattern[loop].reshape(28, 28)
-	ax[row, col].imshow(x_image)
+	ax[row, col].set_xticks([])
+	ax[row, col].set_yticks([])
+	ax[row, col].set_title("sample {}".format(loop))
+	ax[row, col].imshow(x_image, cmap = "gray")
 
 # plot training pattern	
 # fig, ax = plt.subplots(nrows = 3, ncols = 3)
