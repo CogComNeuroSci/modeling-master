@@ -28,19 +28,21 @@ def define_length(pattern):
 dim = 2
 all_data = tf.keras.datasets.mnist.load_data()
 start_number = 11
-stop_number  = 12
+stop_number  = 14
 n_numbers    = stop_number - start_number
 train_pattern = all_data[0][0][start_number:stop_number] # first n_numbers numbers
+train_pattern = 2*(train_pattern>5) - 1
 length = define_length(train_pattern)
 start_pattern = np.array(np.random.choice([-1, 1], size = length))
 x_pattern = np.ndarray((9, length))
 
 # define variables
-n_train   = 100 # how many training steps to take
+n_train   = 50 # how many training steps to take
 n_samples = 1 # how often to step in activation space
-w    = tf.Variable(np.random.randn(length, length).astype(np.float32)/1)
-b    = tf.Variable(np.random.randn(1, length).astype(np.float32)/1)
+w    = tf.Variable(np.random.randn(length, length).astype(np.float32)/10)
+b    = tf.Variable(np.random.randn(1, length).astype(np.float32)/10)
 weights = np.ndarray((n_train//5, length, length))
+bias    = np.ndarray((n_train//5, length))
 
 # a function to sample the network iteratively
 def hopfield_sampl(start_pattern = None, n_sample = 10):
@@ -76,6 +78,7 @@ with tf.Session() as sess:
 		if not loop%(n_train//4): # check out the weight matrix
 			indx = loop//(n_train//4)
 			weights[indx] = w.eval()
+			bias[indx]   = b.eval()
 	# training is over		
 	novel_x = start_pattern	
 	for loop in range(9):
@@ -98,4 +101,13 @@ for loop in range(9):
 	col = loop%3
 	x_image = x_pattern[loop].reshape(28, 28)
 	ax[row, col].imshow(x_image)
-		
+
+# plot training pattern	
+# fig, ax = plt.subplots(nrows = 3, ncols = 3)
+# fig.suptitle("training pattern")
+# for loop in range(n_numbers):
+# 	row = loop//3
+# 	col = loop%3
+# 	x_image = train_pattern[loop].reshape(28, 28)
+# 	ax[row, col].imshow(x_image)
+# 		
