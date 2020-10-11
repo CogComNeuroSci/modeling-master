@@ -11,10 +11,6 @@ import numpy as np
 import tensorflow as tf
 import os
 
-def one_hot(y, n_labels):
-    b = np.zeros(y.size, n_labels)
-    b[np.arange(y.size), y] = 1
-    return b
 
 def weight(shape, name='weights'):
 	return tf.Variable(tf.truncated_normal(shape, stddev=0.1), name=name)
@@ -33,6 +29,7 @@ class RBM:
         self.lr = tf.placeholder(tf.float32)
         if momentum:
             self.momentum = tf.placeholder(tf.float32)
+        else:
             self.momentum = 0.0
 		
 		# weights and biases
@@ -153,7 +150,7 @@ def train(train_data, epochs):
 		epoch = 1
 		init = tf.global_variables_initializer()
 		sess.run(init)
-		for i in range(epoches * train_data.batch_num):
+		for i in range(epochs * train_data.batch_num):
 			# draw samples
 			if i % 500 == 0:
 				samples = sess.run(sampler, feed_dict = {x: noise_x})
@@ -165,12 +162,12 @@ def train(train_data, epochs):
 			cost = sess.run(pl, feed_dict = {x: batch_x})
 			mean_cost.append(cost)
 			# save model
-			if i is not 0 and train_data.batch_index is 0:
+			if i != 0 and train_data.batch_index == 0:
 				checkpoint_path = os.path.join(logs_dir, 'model.ckpt')
 				saver.save(sess, checkpoint_path, global_step = epoch + 1)
 				print('Saved Model.')
 			# print pseudo likelihood
-			if i is not 0 and train_data.batch_index is 0:
+			if i != 0 and train_data.batch_index == 0:
 				print('Epoch %d Cost %g' % (epoch, np.mean(mean_cost)))
 				mean_cost = []
 				epoch += 1
@@ -182,6 +179,54 @@ def train(train_data, epochs):
 		save_images(samples, [8, 8], os.path.join(samples_dir, 'test.png'))
 		print('Saved samples.') 
     
-(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+class DataSet:
+	batch_index = 0
 
-y_train1 = one_hot(y_train)
+	def __init__(self, x, y, batch_size = None, one_hot = False, seed = 0):
+		X, Y = x, y
+		shape = X.shape
+		X = X.reshape([shape[0], shape[1] * shape[2]])
+		self.X = X.astype(np.float)/255
+		self.size = self.X.shape[0]
+		if batch_size == None:
+			self.batch_size = self.size
+		else:
+			self.batch_size = batch_size
+		# abandom last few samples
+		self.batch_num = int(self.size / self.batch_size)
+		# shuffle samples
+		np.random.seed(seed)
+		np.random.shuffle(self.X)
+		np.random.seed(seed)
+		np.random.shuffle(Y)
+		self.one_hot = one_hot
+		if one_hot:
+			y_vec = np.zeros((len(Y), 10), dtype=np.float)
+			for i, label in enumerate(Y):
+				y_vec[i, Y[i]] = 1.0
+			self.Y = y_vec
+		else:
+			self.Y = Y	
+	def next_batch(self):
+		start = self.batch_index * self.batch_size
+		end = (self.batch_index + 1) * self.batch_size
+		self.batch_index = (self.batch_index + 1) % self.batch_num
+		if self.one_hot:
+			return self.X[start:end, :], self.Y[start:end, :]
+		else:
+			return self.X[start:end, :], self.Y[start:end]
+	def sample_batch(self):
+		index = np.random.randint(self.batch_num)
+		start = index * self.batch_size
+		end = (index + 1) * self.batch_size
+		if self.one_hot:
+			return self.X[start:end, :], self.Y[start:end, :]
+		else:
+			return self.X[start:end, :], self.Y[start:end]	
+
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+train_data = DataSet(x_train, y_train, batch_size = 10)
+
+train(train_data, 50)
+
+
