@@ -63,7 +63,8 @@ weight[2,:2] = [w_p, w_p]
 weight[3,:3] = [w_m, w_m, w_m]
 weight[4,:4] = [w_m, w_m, w_m, w_p]
 weight[5,:5] = [w_m, w_m, w_m, w_p, w_p]
-
+# here, I make the matrix symmetric
+weight = weight + weight.transpose() - np.diagflat(np.diag(weight))
 # The two memories stored in this network are therefore:
 #   {Mary, Rich, Female}:   [1, 1, 1, 0, 0, 0]
 #   {John, Poor, Male}:     [0, 0, 0, 1, 1, 1]
@@ -91,35 +92,37 @@ x_test = np.vstack([np.array([0, 0, 0, 1, 0, 1]), # [John, Male]
                    
 for loop in range(n_trials):
     # start
-    x = x_test[loop, :]
-    print("\nstart:{}".format(x))
+	# here, I sample a random testing pattern
+	nr = np.random.randint(x_test.shape[0])
+	x = x_test[nr, :]
+	print("\nstart:{}".format(x))
     # initialize the counter to do not do more than max_n_steps
-    counter = 0
+	counter = 0
     # initialize stop_crit to False
-    stop_crit = False
+	stop_crit = False
     # while we haven't reached a stop_criterion and we're still below max_n_steps of optimization
-    while not stop_crit and counter<max_n_step:
+	while not stop_crit and counter<max_n_step:
         # compute the new activation using the weights and a dot product
         # since our units can only be active (1) or inactive (0) we use the 
         # threshold to convert unit activations to 0s and 1s
-        x_new = np.array(np.dot(weight, x) > threshold, dtype=int)
+		x_new = np.array(np.dot(weight, x) > threshold, dtype=int)
         # compute the deviance (how much the network changed after this
         # optimization step)
-        deviance = np.sum(np.abs(x-x_new))
+		deviance = np.sum(np.abs(x-x_new))
         # check that the deviance is not below the strop_threshold
-        if deviance<stop_threshold:
-            stop_crit = True
+		if deviance<stop_threshold:
+			stop_crit = True
         # increment the counter of steps
-        counter += 1
-        x = x_new
-        print(x)
+		counter += 1
+		x = x_new
+		print(x)
         
     # if we reached the stop criterion for that trial
-    if stop_crit: 
-        crit_string = ""
+	if stop_crit: 
+		crit_string = ""
     # if we have not reached the stop criterion for that trial, meaning that
-    # the network did not converge toward a stable memory in max_n_steps steps.
-    else: 
-        crit_String = "not "
-    print("\t->stop criterion " + crit_string + "reached")
+	    # the network did not converge toward a stable memory in max_n_steps steps.
+	else: 
+		crit_String = "not "
+	print("\t->stop criterion " + crit_string + "reached")
     
