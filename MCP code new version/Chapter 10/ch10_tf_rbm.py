@@ -3,12 +3,11 @@
 """
 Created on Sun Oct  4 10:05:24 2020
 
-@author: tom verguts
-code is adapted from http://lyy1994.github.io/
+@author: code is adapted from http://lyy1994.github.io/
 """
 #import matplotlib.pyplot as plt
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import os
 
 
@@ -112,7 +111,7 @@ class RBM:
         xi_fe = self.free_energy(xi)
         return tf.reduce_mean(self.n_visible * tf.log(tf.nn.sigmoid(xi_fe - x_fe)), axis=0)
 
-import scipy.misc
+import imageio
 
 def save_images(images, size, path):
 	img = (images + 1.0) / 2.0
@@ -124,8 +123,9 @@ def save_images(images, size, path):
 		i = idx % size[1]
 		j = idx // size[1]
 		merge_img[j*h:j*h+h, i*w:i*w+w] = image
+		print(image)
 	
-	return scipy.misc.imsave(path, merge_img)
+	return imageio.imsave(path, merge_img)
 
 def train(train_data, epochs):
 	# directories to save samples and logs
@@ -182,8 +182,7 @@ def train(train_data, epochs):
 class DataSet:
 	batch_index = 0
 
-	def __init__(self, x, y, batch_size = None, one_hot = False, seed = 0):
-		X, Y = x, y
+	def __init__(self, X, Y, batch_size = None, one_hot = False, seed = 0):
 		shape = X.shape
 		X = X.reshape([shape[0], shape[1] * shape[2]])
 		self.X = X.astype(np.float)/255
@@ -227,6 +226,6 @@ class DataSet:
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 train_data = DataSet(x_train, y_train, batch_size = 10)
 
-train(train_data, 50)
+train(train_data, 5)
 
 
