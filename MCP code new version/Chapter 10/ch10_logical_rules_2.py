@@ -7,7 +7,7 @@ Created on Thu Dec 27 15:24:48 2018
 boltzmann machine for implementing logical rules
 here, the input pattern is clamped in the free phase 
 (and everything in the fixed phase)
-works more robustly than direct approach in ch11_logical_rules.py
+works more robustly than direct approach in ch10_logical_rules.py
 """
 #%% initialize
 import numpy as np
