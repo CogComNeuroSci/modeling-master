@@ -37,7 +37,7 @@ surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
 
 ax.zaxis.set_major_formatter(ticker.FormatStrFormatter('%.02f'))
 
-ax.set_xlabel('$x_{cat}$')
+ax.set_xlabel('$y_{cat}$')
 ax.set_ylabel('$y_{dog}$')
 ax.set_zlabel('$Energy$')
 

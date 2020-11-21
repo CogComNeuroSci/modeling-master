@@ -10,25 +10,25 @@ image classification; could a convolutional network solve this task...?
 
 import tensorflow as tf
 import numpy as np
-import pickle
+#import pickle
 import matplotlib.pyplot as plt
 
-# load cifar objects data
-#(x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
+#%% load cifar objects data
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
 
 # load MNIST numbers data
 #(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
 # load cats and dogs data
-objects = []
-with (open("cats_dogs.pkl", "rb")) as openfile:
-    while True:
-        try:
-            objects.append(pickle.load(openfile))
-        except EOFError:
-            break
-dataset = objects[0]
-x_train, y_train = dataset.images, dataset.target
+# objects = []
+# with (open("cats_dogs.pkl", "rb")) as openfile:
+#     while True:
+#         try:
+#             objects.append(pickle.load(openfile))
+#         except EOFError:
+#             break
+# dataset = objects[0]
+# x_train, y_train = dataset.images, dataset.target
 
 
 # for piloting
@@ -42,7 +42,7 @@ y_train = y_train.astype(int)
 y_test  = y_test.astype(int)
     
 
-# for plotting
+#%% for plotting
 fig, axes = plt.subplots(1, 4, figsize=(7,3))
 for img, label, ax in zip(x_train[:4], y_train[:4], axes):
     ax.set_title(label)
@@ -50,13 +50,14 @@ for img, label, ax in zip(x_train[:4], y_train[:4], axes):
     ax.axis("off")
 plt.show()
 
-# initialize model
+#%% initialize model
 image_size = x_train.shape[1:]
 learning_rate = 0.01
 epochs = 100
 batch_size = 10
 batches = int(x_train.shape[0] / batch_size)
-n_labels = 2
+#n_labels = 2
+n_labels = np.max(y_train).astype(np.int32)+1
 filter_size = 5
 k = 2       # size reduction in max pool layer
 
@@ -109,7 +110,7 @@ init = tf.global_variables_initializer()
 correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(yhat, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-# run model
+#%% run model
 with tf.Session() as sess:
     sess.run(init)
     for epoch in range(epochs):
@@ -119,9 +120,15 @@ with tf.Session() as sess:
             y_batch = reshape_y_batch(y_train[offset:(offset+batch_size)])
             sess.run(opt, feed_dict= {x: x_batch, y: y_batch})
         if not epoch % 1:
-            x_test_reshape = reshape_x_batch(x_test)
-            y_test_reshape = reshape_y_batch(y_test)
-            c = sess.run(cross_entropy, feed_dict={x: x_test_reshape, y: y_test_reshape})
-            accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-            acc = accuracy.eval({x: x_test_reshape, y: y_test_reshape})
-            print("cost= {:.2f}, accuracy= {:.2f}".format(c, acc))        
+            for loop in range(2):
+                if loop == 0:
+                    data_x, data_y = x_train, y_train
+                else:
+                    data_x, data_y = x_test, y_test
+                data_x = reshape_x_batch(data_x)
+                data_y = reshape_y_batch(data_y)
+                c = sess.run(cross_entropy, feed_dict={x: data_x, y: data_y})
+                accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+                acc = accuracy.eval({x: data_x, y: data_y})
+                print("{} cost= {:.2f}, accuracy= {:.2f}".format(["train", "test"][loop], c, acc))        
+            print("\n")

@@ -3,11 +3,13 @@ Code by Pieter Huycke
 """
 from numpy import exp, arange
 from pylab import meshgrid, cm, imshow, contour, clabel, colorbar, axis, title, show
-
+import numpy as np
 
 # the function that I'm going to plot
 def z_func(x, y):
-    return (1 - (x ** 2 + y ** 3)) * exp(-(x ** 2 + y ** 2) / 2)
+    #return (1 - (x ** 2 + y ** 3)) * exp(-(x ** 2 + y ** 2) / 2)
+	#return x**2 + y**2
+	return (x-y)**2
 
 
 x = arange(-3.0, 3.0, 0.1)
@@ -30,7 +32,7 @@ clabel(cset, inline=True, fmt='%1.1f', fontsize=10)
 colorbar(im)
 
 # latex fashion title
-title('$z=(1-x^2+y^3) e^{-(x^2+y^2)/2}$')
+#title('$z=(1-x^2+y^3) e^{-(x^2+y^2)/2}$')
 
 # show()
 

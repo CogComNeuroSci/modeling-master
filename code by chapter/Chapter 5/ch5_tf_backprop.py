@@ -41,7 +41,19 @@ with tf.Session() as sess:
             y = y.reshape(1, 1)
             sess.run(opt, feed_dict = {X: x, Y: y})
         if not epoch%100:
-            w1 = sess.run(W1)
-            c = sess.run(cost, feed_dict = {X: train_x, Y: train_y})
-            print("cost = {}".format(c))
+            for loop in range(2):
+                if loop == 0:
+                    data_x = train_x
+                    data_y = train_y
+                else:
+                    data_x = test_x
+                    data_y = test_y
+					
+                x_reshape = reshape_x_batch(data_x)
+                y_reshape = reshape_y_batch(data_y)
+                c = sess.run(cross_entropy, feed_dict={x: x_reshape, y: y_reshape})
+                accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+                acc = accuracy.eval({x: x_reshape, y: y_reshape})
+                print("cost {} = {:.2f}, accuracy= {:.2f}".format(["train", "test"][loop], c,  acc))        
+
             

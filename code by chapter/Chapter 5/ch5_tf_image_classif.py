@@ -68,9 +68,14 @@ with tf.Session() as sess:
                 y_s = y_s.reshape(1,n_labels)
                 sess.run(opt, feed_dict= {X: x_s, Y: y_s})
         if not epoch % 5:
-            c = sess.run(cost, feed_dict={X: x_test, Y: y_test})
-            correct_pred = tf.equal(tf.math.argmax(pred, 1), tf.math.argmax(Y, 1))
-            accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
-            acc = accuracy.eval({X: x_test, Y: y_test})
-            print("cost= {:.2f}, accuracy= {:.2f}".format(c, acc))        
-   
+            for loop in range(2):
+                if loop == 0:
+                    data_x, data_y = x_train, y_train
+                else:
+                    data_x, data_y = x_test, y_test
+                c = sess.run(cost, feed_dict={X: data_x, Y: data_y})
+                correct_pred = tf.equal(tf.math.argmax(pred, 1), tf.math.argmax(Y, 1))
+                accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
+                acc = accuracy.eval({X: data_x, Y: data_y})
+                print("{} cost= {:.2f}, accuracy= {:.2f}".format(["train", "test"][loop], c, acc))        
+            print("\n")   

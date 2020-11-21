@@ -19,4 +19,5 @@ for loop in range(4):
 	col = loop%2
 	y = w[loop, 0]*x + w[loop, 1]
 	axs[row, col].plot(x, y, color = "black")
+	axs[row, col].set_xlim(left = -1, right = 1)
 	axs[row, col].set_ylim(bottom = -1, top = 1)
