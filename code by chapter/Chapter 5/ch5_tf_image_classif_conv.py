@@ -19,21 +19,10 @@ import matplotlib.pyplot as plt
 # load MNIST numbers data
 #(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
-# load cats and dogs data
-# objects = []
-# with (open("cats_dogs.pkl", "rb")) as openfile:
-#     while True:
-#         try:
-#             objects.append(pickle.load(openfile))
-#         except EOFError:
-#             break
-# dataset = objects[0]
-# x_train, y_train = dataset.images, dataset.target
-
 
 # for piloting
 # use x_train for x_test to check within-data fitting
-x_train, y_train, x_test, y_test = x_train[:500,:], y_train[:500], x_test[:30,:], y_test[:30]
+x_train, y_train, x_test, y_test = x_train[:10000,:], y_train[:10000], x_test[:100,:], y_test[:100]
 
 # pre-processing
 if len(x_train.shape)>3:
@@ -52,9 +41,9 @@ plt.show()
 
 #%% initialize model
 image_size = x_train.shape[1:]
-learning_rate = 0.01
+learning_rate = 0.001
 epochs = 100
-batch_size = 10
+batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 #n_labels = 2
 n_labels = np.max(y_train).astype(np.int32)+1

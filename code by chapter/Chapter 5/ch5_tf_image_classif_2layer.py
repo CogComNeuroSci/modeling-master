@@ -4,7 +4,7 @@
 Created on Wed Sep  2 14:49:49 2020
 
 @author: tom verguts
-image classification; could a standard three-layer network solve this task...?
+image classification; could a standard two-layer network solve this task...?
 """
 
 import tensorflow as tf
@@ -41,17 +41,15 @@ epochs = 100
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 stdev = 0.001
-n_hid = 10
 
 X   = tf.placeholder(tf.float32, [None, image_size])
 Y   = tf.placeholder(tf.float32, [None, n_labels])
-W1  = tf.Variable(np.random.randn(image_size, n_hid).astype(np.float32)*stdev)
-W2  = tf.Variable(np.random.randn(n_hid, n_labels).astype(np.float32)*stdev)
+W   = tf.Variable(np.random.randn(image_size, n_labels).astype(np.float32)*stdev)
 B   = tf.Variable(np.random.randn(n_labels).astype(np.float32))
 
-hid  = tf.matmul(X, W1)
-hidT = 1/(1+tf.math.exp(-hid)) # hidden transformed : Note: this is not softmax
-pred = tf.nn.softmax(tf.add(tf.matmul(hidT, W2), B))
+net_in  = tf.add(tf.matmul(X, W), B)
+net_inT    = 1/(1+tf.math.exp(-net_in)) # hidden transformed : Note: this is not softmax
+pred = tf.nn.softmax(net_inT)
 cost = tf.reduce_mean(-tf.reduce_sum(Y*tf.math.log(pred), axis = 1))
 opt  = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
 init = tf.global_variables_initializer()
