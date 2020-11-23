@@ -33,7 +33,7 @@ import matplotlib.pyplot as plt
 
 # for piloting
 # use x_train for x_test to check within-data fitting
-x_train, y_train, x_test, y_test = x_train[:30,:], y_train[:30], x_train[:30,:], y_train[:30]
+x_train, y_train, x_test, y_test = x_train[:500,:], y_train[:500], x_test[:30,:], y_test[:30]
 
 # pre-processing
 if len(x_train.shape)>3:
