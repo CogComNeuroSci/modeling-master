@@ -14,6 +14,7 @@ import numpy as np
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
 
 
+# for plotting
 #fig, axes = plt.subplots(1, 4, figsize=(7,3))
 #for img, label, ax in zip(x_train[:4], y_train[:4], axes):
 #    ax.set_title(label)
@@ -37,7 +38,7 @@ with tf.Session() as sess:
     y_test  = sess.run(tf.one_hot(y_test, n_labels))
 
 learning_rate = 0.001
-epochs = 100
+epochs = 1000
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 stdev = 0.001

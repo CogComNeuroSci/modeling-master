@@ -4,7 +4,7 @@
 Created on Wed Sep  2 14:49:49 2020
 
 @author: tom verguts
-(conv model code adapted from Sudharsan Ravichandiran; cats/dogs code from Pieter Huycke)
+(conv model code adapted from Sudharsan Ravichandiran;
 image classification; could a convolutional network solve this task...?
 """
 
@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 
 # for piloting
 # use x_train for x_test to check within-data fitting
-x_train, y_train, x_test, y_test = x_train[:10000,:], y_train[:10000], x_test[:100,:], y_test[:100]
+x_train, y_train, x_test, y_test = x_train[:20000,:], y_train[:20000], x_test[:200,:], y_test[:200]
 
 # pre-processing
 if len(x_train.shape)>3:
@@ -41,8 +41,8 @@ plt.show()
 
 #%% initialize model
 image_size = x_train.shape[1:]
-learning_rate = 0.001
-epochs = 100
+learning_rate = 0.0002
+epochs = 1000
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 #n_labels = 2

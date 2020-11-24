@@ -14,6 +14,7 @@ import numpy as np
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
 
 
+# for plotting
 #fig, axes = plt.subplots(1, 4, figsize=(7,3))
 #for img, label, ax in zip(x_train[:4], y_train[:4], axes):
 #    ax.set_title(label)
@@ -30,7 +31,7 @@ y_train = y_train[:,0] # remove a dimension
 y_test  = y_test[:,0]
 
 # for piloting
-x_train, y_train, x_test, y_test = x_train[:10000,:], y_train[:10000], x_test[:100,:], y_test[:100]
+x_train, y_train, x_test, y_test = x_train[:1000,:], y_train[:1000], x_test[:100,:], y_test[:100]
 
 with tf.Session() as sess:
     y_train = sess.run(tf.one_hot(y_train, n_labels))
