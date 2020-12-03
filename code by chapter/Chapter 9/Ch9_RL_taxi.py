@@ -22,7 +22,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 algo = "ql"
-env = gym.make('Taxi-v2')
+env = gym.make('Taxi-v3')
 n_episodes, max_per_episode = 500, 200
 lr, gamma, lambd = 0.7, 0.95, 0.4
 Q = np.random.rand(env.observation_space.n, env.action_space.n) # giant Q matrix for flat RL
