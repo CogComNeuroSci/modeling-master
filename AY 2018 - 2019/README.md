@@ -23,8 +23,6 @@ Install missing packages (e.g. both ```sklearn``` and ```scipy``` were needed fo
 
 ## Contact
 
-Responsible for this course:
-
 - prof. Tom Verguts
     * [mail](mailto:Tom.Verguts@UGent.be)
     * [web entry](https://www.cogcomneurosci.com/about/#principal-investigator)
