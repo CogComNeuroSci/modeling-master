@@ -4,12 +4,14 @@
 Created on Sun Mar  3 20:42:02 2019
 
 @author: tom verguts
-interacting fireflies
+interacting fireflies, with the Kuramoto model
+The fireflies have disappeared from the chapter, but could stil be of interest
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 
-## figure 13.1
+## figure 12.1
 K = 0.3
 n_elem = 1000
 delta = 0.05
@@ -24,15 +26,15 @@ steps = np.array(range(n_elem-1)) + 1
 points = np.linspace(0, delta*n_elem, num = n_elem)
 fig, axes = plt.subplots(nrows = 2, ncols = 1)
 
-## figure 13.1a
+## figure 12.1a
 for loop in range(len(w)):
     theta[loop, :] = w[loop]*points + np.random.rand()*(2*np.pi)
     c[loop, :] = np.sin(theta[loop,:]+phase[loop])
     axes[0].plot(points, c[loop, :], color = colors[loop])
 axes[0].set_ylabel("luminance")
-axes[0].set_title("13.1a")
+axes[0].set_title("12.1a")
 
-## figure 13.1b
+## figure 12.1b
 theta = np.zeros((len(w), n_elem)) # location
 theta[:,0] = np.random.rand(len(w))*(2*np.pi) # initial location
 
@@ -49,4 +51,4 @@ for loop in range(len(w)):
     axes[1].plot(points, c[loop, :], color = colors[loop])
 axes[1].set_ylabel("luminance")
 axes[1].set_xlabel("time")
-axes[1].set_title("13.1b")
+axes[1].set_title("12.1b")
