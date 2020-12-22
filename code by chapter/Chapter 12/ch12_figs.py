@@ -1,67 +1,52 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Jul 28 10:03:12 2018
+Created on Sun Mar  3 20:42:02 2019
 
 @author: tom verguts
-chapter 12: basic bayes
+interacting fireflies
 """
-
-#%% initialize
 import numpy as np
 import matplotlib.pyplot as plt
 
-low, high = 0, 1
-p = 0.8
-sample_size = [5, 50, 500, 50]
-n_support = 500
-v = np.linspace(low, high, num = n_support) # vector of points where density is calculated
-delta_p = 1/n_support
-signif = 0.05/2
+## figure 13.1
+K = 0.3
+n_elem = 1000
+delta = 0.05
+colors = ["black", "blue", "red", "green"]
 
-#%% figure 12.1
-alpha, beta = [2, 2, 2, 2], [2, 2, 2, 40] # prior parameters for the beta distribution
+w =     [1, 1.05, 1.1, 1.2] # frequencies
+phase = np.zeros(len(w))  # zero phases
+#phase = np.random.randn(len(w))  # random phases
+theta = np.zeros((len(w), n_elem)) # location
+c     = np.zeros((len(w), n_elem)) # circle
+steps = np.array(range(n_elem-1)) + 1
+points = np.linspace(0, delta*n_elem, num = n_elem)
+fig, axes = plt.subplots(nrows = 2, ncols = 1)
 
-fig, axes = plt.subplots(nrows = 2, ncols = 2)
-#plt.subplot(121)
-for index in range(4):
-    r, c = index//2, index%2
-    n_heads = np.random.binomial(sample_size[index], p)
-    dens = (v**(alpha[index]-1+n_heads))*((1-v)**(beta[index]-1+(sample_size[index]-n_heads)))
-    tot = np.sum(dens)*delta_p
-    dens = dens/tot # normalize to integral of 1
-    mean_theta = np.dot(dens, v)*delta_p
-    max_theta = v[np.argmax(dens)]
-    left_point =  np.argmin(np.abs(np.cumsum(dens*delta_p)-signif))
-    right_point = np.argmin(np.abs(np.cumsum(dens*delta_p)-(1-signif)))
-    if (index==0) or (index==2):
-        axes[r, c].set_ylabel("posterior belief in p")
-    if (index==2) or (index==3):
-        axes[r, c].set_xlabel("p")    
-    axes[r, c].axis([low, high, 0, 25])
-    axes[r, c].plot(v, dens, color = "black")
-    axes[r, c].plot(
-      v[left_point:right_point],np.zeros(right_point-left_point)+0.15, color = "black", linewidth = 7)
-    axes[r, c].set_title("sample size = {}".format(sample_size[index]))
-    axes[r, c].plot(mean_theta, 2, marker = "o", color = "black")
-    axes[r, c].plot(max_theta, 2,  marker = "x", color = "black")
+## figure 13.1a
+for loop in range(len(w)):
+    theta[loop, :] = w[loop]*points + np.random.rand()*(2*np.pi)
+    c[loop, :] = np.sin(theta[loop,:]+phase[loop])
+    axes[0].plot(points, c[loop, :], color = colors[loop])
+axes[0].set_ylabel("luminance")
+axes[0].set_title("13.1a")
 
-#%%figure 12.2
-fig, axes = plt.subplots(nrows = 2, ncols = 2)
-n_trial = 100
-plot_set = [1, 9, 19, 79]
-alpha, beta = 1, 1
-prior = (v**(alpha-1))*((1-v)**(beta-1))
-plot_label = 0
-for trial_loop in range(n_trial):
-    # sample 
-    x = np.random.binomial(1, p)
-    post = prior * ((v**x)*((1-v)**(1-x)))
-    post = post/(np.sum(post)*delta_p)
-    prior = post
-    if trial_loop in plot_set:
-        r, c = plot_label//2, plot_label%2
-        axes[r, c].plot(v, post, color = "black")
-        axes[r, c].set_ylim(0, 9)
-        axes[r, c].set_title("posterior after {} trials".format(trial_loop+1))
-        plot_label += 1    
+## figure 13.1b
+theta = np.zeros((len(w), n_elem)) # location
+theta[:,0] = np.random.rand(len(w))*(2*np.pi) # initial location
+
+for time_loop in steps:
+    for loop in range(len(w)):
+        sum = 0
+        for j_loop in range(len(w)):
+            sum += np.sin(theta[j_loop, time_loop-1]-theta[loop, time_loop-1])
+        sum *= K/len(w)    
+        theta[loop, time_loop] = theta[loop, time_loop-1] + delta*(sum+w[loop])
+        c[loop, time_loop] = np.sin(theta[loop, time_loop]+phase[loop])      
+
+for loop in range(len(w)):
+    axes[1].plot(points, c[loop, :], color = colors[loop])
+axes[1].set_ylabel("luminance")
+axes[1].set_xlabel("time")
+axes[1].set_title("13.1b")

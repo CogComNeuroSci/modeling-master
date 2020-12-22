@@ -5,9 +5,9 @@ Created on Tue Jul 24 12:11:57 2018
 
 @author: tom verguts
 estimate a value function using dynamic programming
-in particular, equation (3.14) from Sutton & Barto
+in particular, equation (3.14) from S&B
 some states are slippery with probability slip
-this is for Q-values in ringworld
+this is for Q-values in lineworld
 """
 # %% preliminaries
 import numpy as np
@@ -24,11 +24,11 @@ def succ(state_pass = 1, action_pass = 1): # successor function
         return state_pass + action_pass*2 - 1
     
 nstates, nactions = 7, 2
-r = [0, 0, 0, 0, 0, 0, 0.8]
+r = [0, 0, 0.7, 0, 0, 0, 0.8]
 slip = 0.9
 slip_states = [0]
 Q_value = np.random.random((nstates, 2))
-gamma = 0.01 # discount factor
+gamma = 0.8 # discount factor
 stop, converge, threshold, max_iteration = False, False, 0.01, 10000
 halfway = 5 # intermediate-step value matrix to be printed
     
