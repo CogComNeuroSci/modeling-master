@@ -1,66 +1,43 @@
+# MCP (2020 - 2021)
 
-# MCP - Modeling of Cognitive processes
-
-[![GitHub license](https://img.shields.io/apm/l/test.svg)](https://github.com/CogComNeuroSci/Pieter_H/blob/master/LICENSE)
-[![Deadline](https://img.shields.io/badge/First%20MCP%20course-24%2F09%2F2019-red)](https://img.shields.io/badge/First%20MCP%20course-24%2F09%2F2019-red)
-[![Maintained](https://img.shields.io/maintenance/yes/2019.svg)](https://img.shields.io/maintenance/yes/2019.svg)
+[![Lines](https://img.shields.io/tokei/lines/github/CogComNeuroSci/modeling-master?style=plastic?color=yellowgreen)](https://img.shields.io/tokei/lines/github/CogComNeuroSci/modeling-master?style=plastic?color=yellowgreen)
+[![Commits](https://img.shields.io/github/last-commit/CogComNeuroSci/modeling-master?style=plastic)](https://img.shields.io/github/last-commit/CogComNeuroSci/modeling-master?style=plastic)
+[![Contributors](https://img.shields.io/github/contributors/CogComNeuroSci/modeling-master?style=plastic)](https://img.shields.io/github/contributors/CogComNeuroSci/modeling-master?style=plastic)
 
 ## Overview
 
-This is the GitHub repository used for organizing the code used in the 'Modeling of Cognitive processes' (MCP) course, supervised by Tom.
-As of 2020, the code is organized by chapter. Students should access the folder "code by chapter". Code organized by academic year (AY) is not maintained.
+This folder contains the code used in the MCP course (1 Master Exp. Psych. Ghent University) during AY 2020-2021. Note that this folder contains scripts that were used during the theoretical sessions. All scripts that were used in the practical sessions, or were used as start scripts for the tests, can be found on [Ufora](https://ufora.ugent.be/d2l/home) > MCP > Content.
 
-Students can find other relevant information on [Ufora](ufora) and on the UGent [course specification](vakfiche) site.
+## Organization
 
-[ufora]: ufora.ugent.be
-[vakfiche]: https://studiegids.ugent.be/2020/EN/studiefiches/H002000.pdf
+The folders are organized according to chapter. The chapters line up with the MCP handbook.
 
-
+Note that if you have any questions regarding the code, you can contact us via [Ufora](https://ufora.ugent.be/d2l/home) > Ufora-tools > Discussions. There you can ask questions in the specific subforum. If your problem is of a personal nature, feel free to contact on of us via email (see below). Since prof. Verguts is responsible for this course, we encourage you to contact him immediately. Note that we encourage you to use the forum to other students can profit from your questions.
 
 ## Programming environment   
 
-**Main software**
+In line with previous years, we rely heavily on Python 3 incorporated in the Anaconda environment.   
+Several modules are required to run the scripts written for this course, but the most important softwares are:
 
-- Python 3
-    
-#### Version control
+- python 3 (*v. 3.7.9*)
+- anaconda 3 (*v. 4.9.1*)
+- TensorFlow 1 (*v. 1.14.0*)
 
-- Python 3
-    - **v3.7.3**
-- Anaconda
-    - **v4.7.5**
-- Spyder
-    - **v3.3.6**
-
-#### Useful links
-
-- [Python 3.0 release page][py3]
-- The most recent version of Anaconda can be found [here][anaconda]
-
-[py3]: https://www.python.org/download/releases/3.0/
-[anaconda]: https://www.anaconda.com/distribution/
+Note that we always work with Anaconda via virtual environments.   
+Our preferred editor is Spyder.
 
 ## Contact
 
-Responsible for this course:
-
-- Tom Verguts
-- Mehdi Senoussi
+- prof. Tom Verguts
+    * [mail](mailto:Tom.Verguts@UGent.be)
+    * [web entry](https://www.cogcomneurosci.com/about/#principal-investigator)
+- dr. Mehdi Senoussi
+    * [mail](mailto:Mehdi.Senoussi@UGent.be)
+    * [web entry](https://www.cogcomneurosci.com/about/#mehdi-senoussi)
 - Pieter Huycke  
+    * [mail](mailto:Pieter.Huycke@UGent.be)
+    * [web entry](https://www.cogcomneurosci.com/about/#pieter-huycke)
 
-[Labsite]: https://cogcomneurosci.com/
+[Lab website]: https://cogcomneurosci.com/
 
----
-
-[Ghent University][UGent]   
-[Faculty of Psychology and Educational Sciences][Faculty]  
-[Department of Experimental Psychology][Department]  
-
-[UGent]:      https://www.ugent.be/en
-[Faculty]:    https://www.ugent.be/pp/en
-[Department]: https://www.ugent.be/pp/experimentele-psychologie/en/research
-
-Henri Dunantlaan 2  
-B-9000 Gent
-
-**Last edit: 31-08-2020**
+**Last edit: 11-12-2020**
