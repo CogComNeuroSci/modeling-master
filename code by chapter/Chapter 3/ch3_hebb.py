@@ -4,6 +4,7 @@
 Created on Wed Jan  8 16:35:15 2020
 
 @author: tom
+chapter 3: supervised Hebb (one step)
 """
 import numpy as np
 v1 = np.array([-0.5, 0.1, -0.7])

@@ -4,7 +4,7 @@
 Created on Thu Dec 28 12:15:46 2017
 
 @author: tom
-plots chapter 2
+plots chapter 2, decision making
 """
 
 # import

@@ -4,7 +4,7 @@
 Created on Tue Jul  3 13:49:33 2018
 
 @author: tom verguts
-create plots from chapter 3
+create plots from chapter 3 (supervised Hebb)
 """
 import matplotlib.pyplot as plt
 import numpy as np
