@@ -31,7 +31,7 @@ y_train = y_train[:,0] # remove a dimension
 y_test  = y_test[:,0]
 
 # for piloting
-x_train, y_train, x_test, y_test = x_train[:10000,:], y_train[:10000], x_test[:100,:], y_test[:100]
+x_train, y_train, x_test, y_test = x_train[:1000,:], y_train[:1000], x_test[:100,:], y_test[:100]
 
 with tf.Session() as sess:
     y_train = sess.run(tf.one_hot(y_train, n_labels))
@@ -42,7 +42,7 @@ epochs = 1000
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 stdev = 0.001
-n_hid = 10
+n_hid = 30
 
 X   = tf.placeholder(tf.float32, [None, image_size])
 Y   = tf.placeholder(tf.float32, [None, n_labels])

@@ -18,6 +18,7 @@ n_support = 500
 v = np.linspace(low, high, num = n_support) # vector of points where density is calculated
 delta_p = 1/n_support
 signif = 0.05/2
+labels = ["a)", "b)", "c)", "d)"]
 
 #%% figure 12.1
 alpha, beta = [2, 2, 2, 2], [2, 2, 2, 40] # prior parameters for the beta distribution
@@ -42,7 +43,8 @@ for index in range(4):
     axes[r, c].plot(v, dens, color = "black")
     axes[r, c].plot(
       v[left_point:right_point],np.zeros(right_point-left_point)+0.15, color = "black", linewidth = 7)
-    axes[r, c].set_title("sample size = {}".format(sample_size[index]))
+    #axes[r, c].set_title("sample size = {}".format(sample_size[index]))
+    axes[r, c].set_title(labels[index])
     axes[r, c].plot(mean_theta, 2, marker = "o", color = "black")
     axes[r, c].plot(max_theta, 2,  marker = "x", color = "black")
 
@@ -62,6 +64,11 @@ for trial_loop in range(n_trial):
     if trial_loop in plot_set:
         r, c = plot_label//2, plot_label%2
         axes[r, c].plot(v, post, color = "black")
-        axes[r, c].set_ylim(0, 9)
-        axes[r, c].set_title("posterior after {} trials".format(trial_loop+1))
+        axes[r, c].set_ylim(0, 10)
+        if (c==0):
+            axes[r, c].set_ylabel("posterior belief in p")
+        if (r==1):
+            axes[r, c].set_xlabel("p")
+        #axes[r, c].set_title("posterior after {} trials".format(trial_loop+1))
+        axes[r, c].set_title(labels[plot_label])
         plot_label += 1    

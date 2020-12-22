@@ -21,9 +21,9 @@ import gym
 import numpy as np
 import matplotlib.pyplot as plt
 
-algo = "ql"
+algo = "rw"
 env = gym.make('Taxi-v2')
-n_episodes, max_per_episode = 500, 200
+n_episodes, max_per_episode = 200, 200
 lr, gamma, lambd = 0.7, 0.95, 0.4
 Q = np.random.rand(env.observation_space.n, env.action_space.n) # giant Q matrix for flat RL
 tot_reward_epi, tot_finish = [], []
@@ -80,24 +80,24 @@ for ep in range(n_episodes):
     tot_reward_epi.append(tot_reward)
     tot_finish.append(t)
 
-# show what you found; now inactive to speed up the "graphics" coming up next
-#v_reward = np.convolve(tot_reward_epi,np.ones(window_conv)/window_conv)
-#plt.subplot(121)
-#plt.plot(v_reward[window_conv:-window_conv], color = color_list[algo])
-#v_finish = np.convolve(tot_finish,np.ones(window_conv)/window_conv)
-#plt.subplot(122)
-#plt.plot(v_finish[window_conv:-window_conv], color = color_list[algo])
+# show what you found; make it inactive to speed up the "graphics" coming up next
+v_reward = np.convolve(tot_reward_epi,np.ones(window_conv)/window_conv)
+plt.subplot(121)
+plt.plot(v_reward[window_conv:-window_conv], color = color_list[algo])
+v_finish = np.convolve(tot_finish,np.ones(window_conv)/window_conv)
+plt.subplot(122)
+plt.plot(v_finish[window_conv:-window_conv], color = color_list[algo])
 
 # and see it in action
-observation = env.reset()
-for t in range(10):
-        t += 1
-        env.render() # show the maze
-        try:
-            prob = np.exp(Q[observation,:])
-            prob = prob/np.sum(prob)
-            action = np.random.choice(range(env.action_space.n), p = prob) # softmax
-        except:        
-            action = env.action_space.sample() # random policy
-        observation, reward, done, info = env.step(action)
-        input() # for visual effect
+#observation = env.reset()
+#for t in range(10):
+#        t += 1
+#        env.render() # show the maze
+#        try:
+#            prob = np.exp(Q[observation,:])
+#            prob = prob/np.sum(prob)
+#            action = np.random.choice(range(env.action_space.n), p = prob) # softmax
+#        except:        
+#            action = env.action_space.sample() # random policy
+#        observation, reward, done, info = env.step(action)
+#        input() # for visual effect

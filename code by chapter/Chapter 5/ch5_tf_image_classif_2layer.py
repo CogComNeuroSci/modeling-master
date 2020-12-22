@@ -9,18 +9,18 @@ image classification; could a standard two-layer network solve this task...?
 
 import tensorflow as tf
 import numpy as np
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
 
 
 # for plotting
-#fig, axes = plt.subplots(1, 4, figsize=(7,3))
-#for img, label, ax in zip(x_train[:4], y_train[:4], axes):
-#    ax.set_title(label)
-#    ax.imshow(img)
-#    ax.axis("off")
-#plt.show()
+fig, axes = plt.subplots(1, 4, figsize=(7,3))
+for img, label, ax in zip(x_train[:4], y_train[:4], axes):
+    ax.set_title(label)
+    ax.imshow(img)
+    ax.axis("off")
+plt.show()
 
 # pre-processing
 n_labels = int(np.max(y_train)+1)
@@ -31,14 +31,14 @@ y_train = y_train[:,0] # remove a dimension
 y_test  = y_test[:,0]
 
 # for piloting
-x_train, y_train, x_test, y_test = x_train[:1000,:], y_train[:1000], x_test[:100,:], y_test[:100]
+x_train, y_train, x_test, y_test = x_train[:5,:], y_train[:5], x_test[:100,:], y_test[:100]
 
 with tf.Session() as sess:
     y_train = sess.run(tf.one_hot(y_train, n_labels))
     y_test  = sess.run(tf.one_hot(y_test, n_labels))
 
 learning_rate = 0.001
-epochs = 100
+epochs = 10
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 stdev = 0.001
