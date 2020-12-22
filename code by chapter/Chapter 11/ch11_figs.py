@@ -4,7 +4,7 @@
 Created on Sat Jul 28 10:03:12 2018
 
 @author: tom verguts
-chapter 12: basic bayes
+chapter 11: basic bayes
 """
 
 #%% initialize

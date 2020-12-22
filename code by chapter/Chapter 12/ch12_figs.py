@@ -4,7 +4,8 @@
 Created on Sun Mar  3 20:42:02 2019
 
 @author: tom verguts
-interacting fireflies, with the Kuramoto model
+chapter 12: interacting organisms
+Specifically, interacting fireflies with the Kuramoto model
 The fireflies have disappeared from the chapter, but could stil be of interest
 """
 
