@@ -21,15 +21,10 @@ import gym
 import numpy as np
 import matplotlib.pyplot as plt
 
-<<<<<<< HEAD:code by chapter/Chapter 9/Ch9_RL_taxi.py
 algo = "rw"
 env = gym.make('Taxi-v2')
 n_episodes, max_per_episode = 200, 200
-=======
 algo = "ql"
-env = gym.make('Taxi-v3')
-n_episodes, max_per_episode = 500, 200
->>>>>>> 745f6914fd4aea1398fb1927d3addfc078fc57b4:code by chapter/Chapter 09/Ch9_RL_taxi.py
 lr, gamma, lambd = 0.7, 0.95, 0.4
 Q = np.random.rand(env.observation_space.n, env.action_space.n) # giant Q matrix for flat RL
 tot_reward_epi, tot_finish = [], []
