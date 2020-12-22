@@ -4,7 +4,8 @@
 Created on Fri Jul  6 10:37:20 2018
 
 @author: tom verguts
-code for pics in chapter 11
+code for pics in chapter 10: unsupervised learning
+(chapter includes Boltzmann)
 """
 import numpy as np
 import matplotlib.pyplot as plt

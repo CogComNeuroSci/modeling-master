@@ -4,7 +4,7 @@
 Created on Thu Dec 27 15:24:48 2018
 
 @author: tom verguts
-boltzmann machine for implementing logical rules
+Chapter 10, unsupervised learning: boltzmann machine for implementing logical rules
 nothing is clamped in the free phase (and everything in the fixed phase)
 first unit is a bias unit
 approach here is almost literal implementation of Ackley et al (1985, Cog Sci, appendix)

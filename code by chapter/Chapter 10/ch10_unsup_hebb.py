@@ -4,6 +4,8 @@
 Created on Fri Jan 10 09:06:01 2020
 
 @author: tom verguts
+chapter 10: unsupervised learning: Unsupervised Hebbian learning rule
+Check if weights converge to first eigenvector of covariance matrix
 """
 
 import numpy as np

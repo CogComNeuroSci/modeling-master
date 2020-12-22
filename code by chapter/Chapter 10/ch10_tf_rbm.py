@@ -4,6 +4,7 @@
 Created on Sun Oct  4 10:05:24 2020
 
 @author: tom verguts
+Chapter 10: unsupervised learning, Boltzmann machines with TensorFlow
 code is adapted from http://lyy1994.github.io/
 """
 #import matplotlib.pyplot as plt

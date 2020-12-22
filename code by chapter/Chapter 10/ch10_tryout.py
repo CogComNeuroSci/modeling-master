@@ -4,6 +4,7 @@
 Created on Sun Dec 29 20:27:19 2019
 
 @author: tom
+chapter 10: unsup learning: RBM with scikit-learn
 """
 
 import numpy as np

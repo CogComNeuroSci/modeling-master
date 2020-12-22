@@ -4,7 +4,7 @@
 Created on Fri Dec  6 16:58:13 2019
 
 @author: tom verguts
-plotting function for chapter 10 py files
+plotting function for chapter 9 (RL-MDP) py files
 variable n is binary: is it just a single plot (n=0) or not (n>0)
 """
 
