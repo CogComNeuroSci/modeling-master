@@ -1,4 +1,4 @@
-# MCP (2020 - 2021)
+# Introduction to modeling cognitive processes
 
 [![Lines](https://img.shields.io/tokei/lines/github/CogComNeuroSci/modeling-master?style=plastic?color=yellowgreen)](https://img.shields.io/tokei/lines/github/CogComNeuroSci/modeling-master?style=plastic?color=yellowgreen)
 [![Commits](https://img.shields.io/github/last-commit/CogComNeuroSci/modeling-master?style=plastic)](https://img.shields.io/github/last-commit/CogComNeuroSci/modeling-master?style=plastic)
