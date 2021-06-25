@@ -26,6 +26,7 @@ window = 30
 window_conv = 20
 threshold = 0.8
 color_list = ["black", "black", "black", "black"]
+label_list = ["a)", "b)", "c)", "d)"]
 xlabels = [2, 3]
 ylabels = [0, 2]
 fig, axs = plt.subplots(nrows=2, ncols=2)
@@ -51,7 +52,8 @@ for gamma_loop in range(len(gamma)):
     v = np.convolve(r_tot[gamma_loop,:],np.ones(window_conv)/window_conv)
     #v = r_tot[gamma_loop,:]
     axs[int(np.floor(gamma_loop/2)), gamma_loop%2].plot(v[window_conv:-window_conv], color = color_list[gamma_loop])
-    axs[int(np.floor(gamma_loop/2)), gamma_loop%2].set_title("gamma = {}".format(gamma[gamma_loop]))
+    #axs[int(np.floor(gamma_loop/2)), gamma_loop%2].set_title("gamma = {}".format(gamma[gamma_loop]))
+    axs[int(np.floor(gamma_loop/2)), gamma_loop%2].set_title(label_list[gamma_loop])
     axs[int(np.floor(gamma_loop/2)), gamma_loop%2].set_ylim(bottom=0, top=1)
     if gamma_loop in xlabels:
         axs[int(np.floor(gamma_loop/2)), gamma_loop%2].set_xlabel("trial nr")

@@ -14,7 +14,7 @@ def logistic(x,y,slope,intercept):
 
 low = -2
 high = 4
-font_size = 8
+font_size = 12
 x = np.linspace(low,high,20)
 
 #%% fig 4.2
@@ -23,24 +23,36 @@ plt.figure(0)
 y = x + 1
 plt.subplot(321)
 plt.plot(x,y,color="black")
-plt.title("linear", {"fontsize": font_size})
+#plt.title("linear", {"fontsize": font_size})
+plt.title("a)", {"fontsize": font_size})
+plt.xlabel("x", fontsize = font_size)
+plt.ylabel("y", fontsize = font_size)
 # threshold activation function
 threshold = 1
 y = (x>threshold)
 plt.subplot(322)
 plt.plot(x,y,color="black")
-plt.title("threshold", {"fontsize": font_size})
+#plt.title("threshold", {"fontsize": font_size})
+plt.title("b)", {"fontsize": font_size})
+plt.xlabel("x", fontsize = font_size)
+plt.ylabel("y", fontsize = font_size)
 # sigmoid activation function
 # the same threshold is used in a soft way in this case
 y = 1/(1+np.exp(-2*(x-threshold)))
 plt.subplot(325)
 plt.plot(x,y,color="black")
-plt.title("sigmoid (soft threshold)", {"fontsize": font_size})
+#plt.title("sigmoid (soft threshold)", {"fontsize": font_size})
+plt.title("c)", {"fontsize": font_size})
+plt.xlabel("x", fontsize = font_size)
+plt.ylabel("y", fontsize = font_size)
 # Gaussian activation function
 y = np.exp(-(x-1)**2)
 plt.subplot(326)
 plt.plot(x,y,color="black")
-plt.title("Gaussian", {"fontsize": font_size})
+#plt.title("Gaussian", {"fontsize": font_size})
+plt.title("d)", {"fontsize": font_size})
+plt.xlabel("x", fontsize = font_size)
+plt.ylabel("y", fontsize = font_size)
 
 #%% fig 4.3
 plt.figure(1)

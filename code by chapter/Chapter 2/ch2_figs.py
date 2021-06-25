@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 #with RT simulation
 
 # initialize
-n_trials = 100
+n_trials = 20000
 b = [3, 0.2]
 w_p = 0.01
 w_m = 1
@@ -54,10 +54,14 @@ for loop in range(n_trials):
 # plot final trajectory
 f, axarr = plt.subplots(nrows = 2, ncols = 1)
 axarr[0].plot(range(len(x)),x,"ko-", range(len(y)),y,"k--")
-axarr[0].set_title("random trajectory")
+axarr[0].set_title("Random trajectory")
+#axarr[0].set_xlabel("Time")
+axarr[0].set_ylabel("Activation")
 # plot histogram
-axarr[1].hist(rt, color = "black")
+axarr[1].hist(rt, bins = 50, color = "black")
 axarr[1].set_title("RT distribution")
+#axarr[0].set_xlabel("Time")
+axarr[1].set_ylabel("Frequency")
 print("accuracy: {:2.0%}".format(accuracy/n_trials))
 print("too late: {:2.0%}".format(too_late/n_trials))
 

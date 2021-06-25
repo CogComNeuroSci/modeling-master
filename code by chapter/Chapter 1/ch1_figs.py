@@ -30,7 +30,7 @@ def y_der(x):    # the derivative of the function we aim to optimize
 
 n_steps = 100
 x_start = 2.7 # random starting point
-alpha = 0.2
+alpha = 2
 data = np.zeros((n_steps,4))
 data[0,0] = x_start
 for step in range(n_steps):
