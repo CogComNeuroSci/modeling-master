@@ -5,6 +5,7 @@
 @author: tom verguts
 does 2-layer network weight optimization via MSE minimization
 in TF2
+alternative (less elegant) model construction
 """
 
 import tensorflow as tf
@@ -17,10 +18,9 @@ train_x = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
 train_y = np.array([0, 1, 1, 1])
 train_y = train_y.reshape(4,1)
 
-model = tf.keras.Sequential([
-			tf.keras.Input(shape=(2,)),
-			tf.keras.layers.Dense(1)
-			] )
+model = tf.keras.Sequential()
+model.add(tf.keras.Input(shape=(2,)))
+model.add(tf.keras.layers.Dense(1))
 model.build()
 model.compile(optimizer = "adam", loss=tf.keras.losses.MeanSquaredError())
 history = model.fit(train_x, train_y, batch_size = 1, epochs = 500)
