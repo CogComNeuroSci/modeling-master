@@ -13,8 +13,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # define fixed parameters
-n_units   = 100
-n_stimuli = 3
+n_units   = 40
+n_stimuli = 2
 threshold = 0
 learning_rate = 1
 
@@ -51,6 +51,15 @@ def hopfield(start_pattern = None, n_sample = 0):
 	return pattern
 
 pattern = hopfield(start_pattern = start_pattern, n_sample = n_sample)
+
+# report data
 print("distance to different stimuli (0-1 scale): ", distance[-1,:])
+fig, ax = plt.subplots(nrows = 2, ncols = 1)
+
+ax[0].set_title("distance to stored stimuli across time") 
 for stim_loop in range(n_stimuli):
-	  plt.plot(distance[:, stim_loop], color = "black")
+	  ax[0].plot(distance[:, stim_loop], color = "black")
+
+ax[1].set_title("start pattern, stored patterns, final pattern")  
+data_to_plot = np.column_stack((start_pattern, X, pattern.numpy()))
+ax[1].imshow(data_to_plot.T)
