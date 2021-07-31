@@ -13,9 +13,8 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
-# images dataset
-#(x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
 
+# digits dataset
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
 # to make data set smaller (and training faster)
@@ -31,11 +30,9 @@ x_train, y_train, x_test, y_test = x_train[:500,:], y_train[:500], x_test[:500,:
 
 # pre-processing
 n_labels = int(np.max(y_train)+1)
-image_size = x_train.shape[1]*x_train.shape[2]*x_train.shape[3]
+image_size = x_train.shape[1]*x_train.shape[2]
 x_train = x_train.reshape(x_train.shape[0], image_size)  / 255
 x_test  = x_test.reshape(x_test.shape[0], image_size)    / 255
-y_train = y_train[:,0]
-y_test  = y_test[:,0]
 y_train = tf.one_hot(y_train, n_labels)
 y_test  = tf.one_hot(y_test, n_labels)
 
