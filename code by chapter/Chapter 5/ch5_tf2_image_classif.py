@@ -15,7 +15,6 @@ import matplotlib.pyplot as plt
 
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
 
-
 #fig, axes = plt.subplots(1, 4, figsize=(7,3))
 #for img, label, ax in zip(x_train[:4], y_train[:4], axes):
 #    ax.set_title(label)
@@ -39,15 +38,11 @@ n_train_stim, n_test_stim = 1000, 100
 x_train, y_train, x_test, y_test = x_train[:n_train_stim,:], y_train[:n_train_stim], x_test[:n_test_stim,:], y_test[:n_test_stim]
 
 learning_rate = 0.001
-epochs = 100
+epochs = 500
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 stdev = 0.001
-n_hid = 10
-
-W1  = tf.Variable(np.random.randn(image_size, n_hid).astype(np.float32)*stdev)
-W2  = tf.Variable(np.random.randn(n_hid, n_labels).astype(np.float32)*stdev)
-B   = tf.Variable(np.random.randn(n_labels).astype(np.float32))
+n_hid = 20
 
 model = tf.keras.Sequential([
 			tf.keras.Input(shape=(image_size,)),
@@ -67,42 +62,11 @@ model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs)
 plt.plot(history.history["loss"], color = "black")
 
 # print test data results
-to_test_x, to_test_y = [train_x, test_x], [train_y, test_y]
+to_test_x, to_test_y = [x_train, x_test], [y_train, y_test]
 labels =  ["train", "test"]
 print("\n")
 for loop in range(2):
     y_pred = model.predict(to_test_x[loop])
-    testdata_loss = tf.keras.losses.mean_squared_error(to_test_y[loop], y_pred)
+    testdata_loss = tf.keras.losses.categorical_crossentropy(to_test_y[loop], y_pred)
     testdata_loss_summary = np.mean(testdata_loss.numpy())
     print("mean {} data performance: {:.2f}".format(labels[loop], testdata_loss_summary))	
-
-# hid  = tf.matmul(X, W1)
-# hidT = 1/(1+tf.math.exp(-hid)) # hidden transformed : Note: this is not softmax
-# pred = tf.nn.softmax(tf.add(tf.matmul(hidT, W2), B))
-# cost = tf.reduce_mean(-tf.reduce_sum(Y*tf.math.log(pred), axis = 1))
-# opt  = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
-# init = tf.global_variables_initializer()
-
-# with tf.Session() as sess:
-#     sess.run(init)
-#     for epoch in range(epochs):
-#         for i in range(batches):
-#             offset = i * batch_size
-#             x = x_train[offset:(offset+batch_size)]
-#             y = y_train[offset:(offset+batch_size)]
-#             for (x_s, y_s) in zip(x, y):
-#                 x_s = x_s.reshape(1,image_size)
-#                 y_s = y_s.reshape(1,n_labels)
-#                 sess.run(opt, feed_dict= {X: x_s, Y: y_s})
-#         if not epoch % 5:
-#             for loop in range(2):
-#                 if loop == 0:
-#                     data_x, data_y = x_train, y_train
-#                 else:
-#                     data_x, data_y = x_test, y_test
-#                 c = sess.run(cost, feed_dict={X: data_x, Y: data_y})
-#                 correct_pred = tf.equal(tf.math.argmax(pred, 1), tf.math.argmax(Y, 1))
-#                 accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
-#                 acc = accuracy.eval({X: data_x, Y: data_y})
-#                 print("{} cost= {:.2f}, accuracy= {:.2f}".format(["train", "test"][loop], c, acc))        
-#             print("\n")   

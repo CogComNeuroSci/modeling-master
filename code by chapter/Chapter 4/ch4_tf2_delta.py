@@ -21,7 +21,7 @@ epochs = 100 # how often to go through the whole data set
 train_x = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
 test_x = train_x
 train_y = np.array([0, 1, 1, 1])
-train_y = train_y.reshape(4,1)
+train_y = train_y.reshape(4, 1)
 
 model = tf.keras.Sequential([
 			tf.keras.Input(shape=(2,)),

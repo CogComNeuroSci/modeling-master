@@ -41,7 +41,7 @@ y_test  = tf.one_hot(y_test, n_labels)
 
 # estimation parameters
 learning_rate = 0.001
-epochs = 500
+epochs = 500 # how often to go through the whole data set
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 
