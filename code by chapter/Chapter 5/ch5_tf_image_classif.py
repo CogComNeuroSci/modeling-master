@@ -28,13 +28,13 @@ x_train = x_train.reshape(x_train.shape[0], image_size)  / 255
 x_test  = x_test.reshape(x_test.shape[0], image_size)    / 255
 y_train = y_train[:,0] # remove a dimension
 y_test  = y_test[:,0]
+y_train = tf.one_hot(y_train, n_labels)
+y_test  = tf.one_hot(y_test, n_labels)
 
-# for piloting
-x_train, y_train, x_test, y_test = x_train[:10000,:], y_train[:10000], x_test[:100,:], y_test[:100]
 
-with tf.Session() as sess:
-    y_train = sess.run(tf.one_hot(y_train, n_labels))
-    y_test  = sess.run(tf.one_hot(y_test, n_labels))
+# for piloting, make a smaller data set
+n_train_stim, n_test_stim = 1000, 100
+x_train, y_train, x_test, y_test = x_train[:n_train_stim,:], y_train[:n_train_stim], x_test[:n_test_stim,:], y_test[:n_test_stim]
 
 learning_rate = 0.001
 epochs = 100

@@ -17,7 +17,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 learning_rate = 0.1
-epochs = 100
+epochs = 100 # how often to go through the whole data set
 train_x = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
 test_x = train_x
 train_y = np.array([0, 1, 1, 1])

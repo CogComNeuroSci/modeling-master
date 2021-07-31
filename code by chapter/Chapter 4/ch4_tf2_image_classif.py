@@ -34,8 +34,8 @@ n_labels = int(np.max(y_train)+1)
 image_size = x_train.shape[1]*x_train.shape[2]*x_train.shape[3]
 x_train = x_train.reshape(x_train.shape[0], image_size)  / 255
 x_test  = x_test.reshape(x_test.shape[0], image_size)    / 255
-y_train = y_train[:,0]
-y_test  = y_test[:,0]
+y_train = y_train[:,0] # remove a dimension
+y_test  = y_test[:,0]  
 y_train = tf.one_hot(y_train, n_labels)
 y_test  = tf.one_hot(y_test, n_labels)
 
