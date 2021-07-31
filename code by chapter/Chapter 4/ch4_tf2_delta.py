@@ -23,8 +23,12 @@ model = tf.keras.Sequential([
 			] )
 model.build()
 model.compile(optimizer = "adam", loss=tf.keras.losses.MeanSquaredError())
-history = model.fit(train_x, train_y, batch_size = 1, epochs = 500)
+history = model.fit(train_x, train_y, batch_size = 1, epochs = epochs)
 model.summary()
+test_data = model.predict(train_x)
 
 # error curve
 plt.plot(history.history["loss"], color = "black")
+
+# results on the test data
+print(test_data)
