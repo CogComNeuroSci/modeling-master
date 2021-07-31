@@ -22,7 +22,7 @@ model = tf.keras.Sequential()
 model.add(tf.keras.Input(shape=(2,)))
 model.add(tf.keras.layers.Dense(1))
 model.build()
-model.compile(optimizer = "adam", lr = 0.1, loss=tf.keras.losses.MeanSquaredError())
+model.compile(optimizer = "adam", loss=tf.keras.losses.MeanSquaredError())
 history = model.fit(train_x, train_y, batch_size = 1, epochs = 500)
 model.summary()
 
