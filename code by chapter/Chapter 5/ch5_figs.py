@@ -67,13 +67,15 @@ plt.contourf(xi, yi, Zi_full, extend = "both", colors = "none", hatches=['', '.'
 # (Code mostly stolen from Pieter)
 
 from numpy import arange
-from mpl_toolkits.mplot3d import Axes3D
-from pylab import meshgrid, cm, title
+#from mpl_toolkits.mplot3d import Axes3D
+#from pylab import meshgrid, cm, title
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as plt
 
 #texts = ["5.3a:\nFunction with one (global) minimum", 
 #         "5.3b:\nFunction with several local minima"]
+
+texts = ["(a)", "(b)"]
 
 # the function that I'm going to plot
 def z_func(x, y, nr):
@@ -86,15 +88,16 @@ x = arange(-8.0, 8.0, 0.1)
 y = arange(-8.0, 8.0, 0.1)
 
 # grid of point
-X, Y = meshgrid(x, y)
+X, Y = np.meshgrid(x, y)
 
 fig = plt.figure()
 
 for loop in range(2):
     Z = z_func(X, Y, loop+1)
     ax = fig.add_subplot(1, 2, loop+1, projection = "3d")
-#    title(texts[loop])
-    ax.plot_surface(X, Y, Z, cmap="Greys")
+    ax.set_title(texts[loop])
+#    ax.plot_surface(X, Y, Z, cmap="Greys")
+    ax.plot_surface(X, Y, Z, cmap = plt.cm.coolwarm)
     # drawing the function
     ax.zaxis.set_major_locator(LinearLocator(4))
     ax.xaxis.set_major_locator(LinearLocator(4))
