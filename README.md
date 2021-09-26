@@ -22,7 +22,7 @@ We rely heavily on Python 3 incorporated in the Anaconda environment. The most r
 - TensorFlow 2 (*v. 2.4)
 
 Note that we always work with Anaconda via virtual environments.   
-Our preferred editor is Spyder.
+Our preferred editor is Spyder. You can use our own TensorFlow 2 environment by creating a new environment with the modelling_mac.yml or modelling_windows.yml files.
 
 ## Contact
 
