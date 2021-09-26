@@ -4,8 +4,14 @@ This script demonstrates how to build a variational autoencoder with Keras.
 Based on
 Reference: "Auto-Encoding Variational Bayes" https://arxiv.org/abs/1312.6114
 
-Code is adapted from prl900:
+This code is a slightly adapted  version of code by prl900:
 https://gist.github.com/prl900/a423a1b021ed8d4ae78b0311e371e559
+
+Things to try:
+	- Compare the free energy (VAE) loss with the standard MSE loss discussed in the MCP.
+	Do you see differences?
+	- Give different weights to the reconstruction (xent) and complexity (kl) loss parts of the VAE.
+	What happens if you change the weights?
 '''
 
 import numpy as np
@@ -51,9 +57,9 @@ kl_loss = - 0.5 * tf.reduce_sum(1 + z_log_var - tf.square(z_mean) - tf.exp(z_log
 vae_loss = xent_loss + kl_loss
 
 vae = Model(x, x_decoded_mean)
-vae.add_loss(vae_loss)
-vae.compile(optimizer='rmsprop')
-# vae.compile(optimizer='rmsprop', loss="mse") # standard loss for auto-encoder
+#vae.add_loss(vae_loss)
+#vae.compile(optimizer='rmsprop')
+vae.compile(optimizer='rmsprop', loss="mse") # standard MSE loss for auto-encoder
 
 # train the VAE on MNIST digits
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
