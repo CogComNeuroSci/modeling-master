@@ -11,6 +11,7 @@ Things to try:
 	- Compare the free energy (VAE) loss with the standard MSE loss discussed in the MCP.
 	Do you see differences?
 	- Give different weights to the reconstruction (xent) and complexity (kl) loss parts of the VAE.
+	This corresponds to a beta-VAE as described in Higgins et al (2017, Arxiv).
 	What happens if you change the weights?
 '''
 
