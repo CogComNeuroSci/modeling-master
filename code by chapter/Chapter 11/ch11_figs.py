@@ -48,9 +48,9 @@ for index in range(4):
 
 #%%figure 12.2
 fig, axes = plt.subplots(nrows = 2, ncols = 2)
-n_trial = 100
-plot_set = [1, 9, 19, 79]
-alpha, beta = 20, 2
+n_trial = 1000
+plot_set = [1, 9, 19, 499]
+alpha, beta = 2, 2
 prior = (v**(alpha-1))*((1-v)**(beta-1))
 plot_label = 0
 for trial_loop in range(n_trial):
@@ -63,6 +63,6 @@ for trial_loop in range(n_trial):
     if trial_loop in plot_set:
         r, c = plot_label//2, plot_label%2
         axes[r, c].plot(v, post, color = "black")
-        axes[r, c].set_ylim(0, 9)
+        axes[r, c].set_ylim(0, 30)
         axes[r, c].set_title("posterior after {} trials".format(trial_loop+1))
         plot_label += 1    
