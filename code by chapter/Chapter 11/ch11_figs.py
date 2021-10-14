@@ -47,7 +47,7 @@ for index in range(4):
     axes[r, c].plot(max_theta, 2,  marker = "x", color = "black")
 
 #%%figure 12.2
-fig, axes = plt.subplots(nrows = 2, ncols = 2)
+#fig, axes = plt.subplots(nrows = 2, ncols = 2)
 n_trial = 1000
 plot_set = [1, 9, 19, 499]
 alpha, beta = 2, 2
