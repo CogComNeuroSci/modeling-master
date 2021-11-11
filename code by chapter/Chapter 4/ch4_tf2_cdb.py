@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 # initialize
 learning_rate = 0.01
-epochs = 100 # how often to go through the whole data set
+epochs = 100 # how often to go through the whole training data set
 
 filename = "cdb.npy"
 prototype = np.load(filename)
@@ -32,7 +32,8 @@ tot_n_train = prototype.shape[0]*n_train
 train_x = np.ndarray((tot_n_train, stim_dim))
 
 # generate a perturbation of the prototype
-# variable "same" indicates whether it is allowed for the 
+# variable "same" indicates whether it is allowed for the perturbation to equal the prototype
+# prob indicates the probability of a perturbation in any single element
 def perturbation(proto, prob = 0.05, same = True):
     proposal = np.copy(proto)
     done = False
