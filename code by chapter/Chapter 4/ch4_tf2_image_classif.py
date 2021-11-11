@@ -14,20 +14,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # images dataset
-#(x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
 
-(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+#(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
 # to make data set smaller (and training faster)
 x_train, y_train, x_test, y_test = x_train[:500,:], y_train[:500], x_test[:500,:], y_test[:500]
 
 # plot some images from the data set
-# fig, axes = plt.subplots(1, 4, figsize=(7,3))
-# for img, label, ax in zip(x_train[:4], y_train[:4], axes):
-#     ax.set_title(label)
-#     ax.imshow(img)
-#     ax.axis("off")
-# plt.show()
+fig, axes = plt.subplots(1, 4, figsize=(7,3))
+for img, label, ax in zip(x_train[:4], y_train[:4], axes):
+    ax.set_title(label)
+    ax.imshow(img)
+    ax.axis("off")
+#    plt.show()
 
 # pre-processing
 n_labels = int(np.max(y_train)+1)
@@ -41,7 +41,7 @@ y_test  = tf.one_hot(y_test, n_labels)
 
 # estimation parameters
 learning_rate = 0.001
-epochs = 500 # how often to go through the whole data set
+epochs = 50 # how often to go through the whole data set
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 
@@ -60,7 +60,8 @@ model.summary()
 model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs)
 
 # error curve
-plt.plot(history.history["loss"], color = "black")
+fig, ax = plt.subplots(1, figsize=(7,3))
+ax.plot(history.history["loss"], color = "black")
 
 # print test data results
 to_test_x, to_test_y = [x_train, x_test], [y_train, y_test]

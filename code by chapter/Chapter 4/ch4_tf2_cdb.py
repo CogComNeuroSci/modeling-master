@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+
+@author: tom verguts
+does 2-layer network weight optimization via MSE minimization
+in TF2
+for the cats vs dogs vs bagels example (example from a paper by James McClelland on prototype extraction;
+example discussed more fully in McLeod, Plunkett, & Rolls, 1998)
+by default, activation function = linear
+
+Note: you can also do it more concisely:
+model.compile(optimizer = "adam", loss=tf.keras.losses.MeanSquaredError())
+but then you cannot specify learning rate explicitly
+"""
+
+# imports
+import tensorflow as tf
+import numpy as np
+import matplotlib.pyplot as plt
+
+# initialize
+learning_rate = 0.01
+epochs = 100 # how often to go through the whole data set
+
+filename = "cdb.npy"
+prototype = np.load(filename)
+
+n_train = 10
+stim_dim = prototype.shape[1]
+tot_n_train = prototype.shape[0]*n_train
+train_x = np.ndarray((tot_n_train, stim_dim))
+
+# generate a perturbation of the prototype
+# variable "same" indicates whether it is allowed for the 
+def perturbation(proto, prob = 0.05, same = True):
+    proposal = np.copy(proto)
+    done = False
+    while not done:
+        for loop in range(stim_dim):
+            proposal[loop] = np.random.choice([-1, +1], p = [prob, 1-prob]) * proto[loop]
+        if (same == True) or (np.any(proposal != proto)):
+            done = True
+    return proposal
+
+for loop in range(prototype.shape[0]):
+	for train_loop in range(n_train):
+		train_x[loop*n_train + train_loop, :] = perturbation(prototype[loop], prob = 0.2, same = False)
+
+test_x = prototype                           # patterns to test the model after training
+train_y = np.array((np.zeros(n_train), np.zeros(n_train) + 1, np.zeros(n_train) + 2))
+train_y = train_y.reshape(tot_n_train, 1)            # from a (2,) vector to a (2,1) matrix 
+train_y = tf.one_hot(train_y, 3)
+
+# construct the model
+model = tf.keras.Sequential(layers = [
+ 			tf.keras.Input(shape=(stim_dim,)),
+ 			tf.keras.layers.Dense(3, activation = "sigmoid") # Dense?... remember the convolutional network?
+ 			] )
+model.build()
+
+# train & test the model
+opt = tf.keras.optimizers.Adam(learning_rate = learning_rate)           # Adam is a kind of gradient descent
+model.compile(optimizer = opt, loss=tf.keras.losses.MeanSquaredError()) # loss is what we called energy
+history = model.fit(train_x, train_y, batch_size = 1, epochs = epochs)
+model.summary()
+test_data = model.predict(test_x)
+
+
+# report data
+# train data: error curve
+plt.plot(history.history["loss"], color = "black")
+
+# test data
+print("predictions on the test data:")
+print(test_data)

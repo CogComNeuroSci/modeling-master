@@ -29,7 +29,7 @@ train_y = train_y.reshape(2, 1)            # from a (2,) vector to a (2,1) matri
 # construct the model
 model = tf.keras.Sequential(layers = [
  			tf.keras.Input(shape=(3,)),
- 			tf.keras.layers.Dense(1, activation = "relu") # Dense?... remember the convolutional network?
+ 			tf.keras.layers.Dense(1, activation = "sigmoid") # Dense?... remember the convolutional network?
  			] )
 model.build()
 

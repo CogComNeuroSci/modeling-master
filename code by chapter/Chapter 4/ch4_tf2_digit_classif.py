@@ -9,30 +9,32 @@ written for TensorFlow 2
 image classification; could a two-layer network solve this task...?
 """
 
+# import modules
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
 
-# digits dataset
+# import digits dataset
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
-# to make data set smaller (and training faster)
-x_train, y_train, x_test, y_test = x_train[:500,:], y_train[:500], x_test[:500,:], y_test[:500]
+# downscale to make data set smaller (and training faster)
+train_size, test_size = 10000, 500
+x_train, y_train, x_test, y_test = x_train[:train_size,:], y_train[:train_size], x_test[:test_size,:], y_test[:test_size]
 
 # plot some images from the data set
-# fig, axes = plt.subplots(1, 4, figsize=(7,3))
-# for img, label, ax in zip(x_train[:4], y_train[:4], axes):
-#     ax.set_title(label)
-#     ax.imshow(img)
-#     ax.axis("off")
-# plt.show()
+fig, axes = plt.subplots(1, 4, figsize=(7,3))
+for img, label, ax in zip(x_train[:4], y_train[:4], axes):
+      ax.set_title(label)
+      ax.imshow(img)
+      ax.axis("off")
+#      plt.show()
 
 # pre-processing
 n_labels = int(np.max(y_train)+1)
 image_size = x_train.shape[1]*x_train.shape[2]
-x_train = x_train.reshape(x_train.shape[0], image_size)  / 255
-x_test  = x_test.reshape(x_test.shape[0], image_size)    / 255
+x_train = x_train.reshape(x_train.shape[0], image_size)  / 255   # from 3D to 2D input data
+x_test  = x_test.reshape(x_test.shape[0], image_size)    / 255   # same here
 y_train = tf.one_hot(y_train, n_labels)
 y_test  = tf.one_hot(y_test, n_labels)
 
@@ -42,26 +44,30 @@ epochs = 500
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 
+# model construction
 model = tf.keras.Sequential([
 			tf.keras.Input(shape=(image_size,)),
 			tf.keras.layers.Dense(n_labels, activation = "softmax")
 			] )
 model.build()
 
-loss = tf.keras.losses.CategoricalCrossentropy()
+loss = tf.keras.losses.CategoricalCrossentropy()      # don't worry about the details; it's another error function for multi-category, binary data
 opt = tf.keras.optimizers.Adam(learning_rate = learning_rate)
 model.compile(optimizer = opt, loss = loss)
+
+# model fitting; this part typically takes the longest time
 history = model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs)
+
+# print a summary
 model.summary()
 
-model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs)
-
 # error curve
-plt.plot(history.history["loss"], color = "black")
+fig, ax = plt.subplots(1, figsize=(7,3))
+ax.plot(history.history["loss"], color = "black")
 
 # print test data results
 to_test_x, to_test_y = [x_train, x_test], [y_train, y_test]
-labels =  ["train", "test"]
+labels =  ["train", "test"] # we plot results separately for training data and for testing data
 print("\n")
 for loop in range(2):
     y_pred = model.predict(to_test_x[loop])

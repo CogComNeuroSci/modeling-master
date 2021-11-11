@@ -37,8 +37,8 @@ y_test  = tf.one_hot(y_test, n_labels)
 n_train_stim, n_test_stim = 1000, 100
 x_train, y_train, x_test, y_test = x_train[:n_train_stim,:], y_train[:n_train_stim], x_test[:n_test_stim,:], y_test[:n_test_stim]
 
-learning_rate = 0.001
-epochs = 500
+learning_rate = 0.0001
+epochs = 3000
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 stdev = 0.001
@@ -56,7 +56,7 @@ model.compile(optimizer = opt, loss = loss)
 history = model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs)
 model.summary()
 
-model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs)
+#model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs)
 
 # error curve
 plt.plot(history.history["loss"], color = "black")
