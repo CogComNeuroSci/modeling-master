@@ -20,7 +20,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # initialize
-learning_rate = 0.01
+learning_rate = 0.001
 epochs = 100 # how often to go through the whole training data set
 
 filename = "cdb.npy"
@@ -70,8 +70,11 @@ test_data = model.predict(test_x)
 
 # report data
 # train data: error curve
-plt.plot(history.history["loss"], color = "black")
+fig, axs = plt.subplots(1, 2)
+axs[0].plot(history.history["loss"], color = "black")
 
 # test data
 print("predictions on the test data:")
 print(test_data)
+axs[1].imshow(test_data)
+axs[1].set_title("confusion matrix")
