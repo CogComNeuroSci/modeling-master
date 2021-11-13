@@ -6,7 +6,7 @@ Created on Wed Sep  2 14:49:49 2020
 @author: tom verguts
 written for TensorFlow 2
 
-image classification; could a two-layer network solve this task...?
+digit classification; could a two-layer network solve this task...?
 """
 
 # import modules
@@ -28,7 +28,6 @@ for img, label, ax in zip(x_train[:4], y_train[:4], axes):
       ax.set_title(label)
       ax.imshow(img)
       ax.axis("off")
-#      plt.show()
 
 # pre-processing
 n_labels = int(np.max(y_train)+1)
@@ -40,7 +39,7 @@ y_test  = tf.one_hot(y_test, n_labels)
 
 # estimation parameters
 learning_rate = 0.001
-epochs = 500
+epochs = 50
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 

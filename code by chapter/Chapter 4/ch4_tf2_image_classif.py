@@ -16,7 +16,6 @@ import matplotlib.pyplot as plt
 # images dataset
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
 
-#(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
 # to make data set smaller (and training faster)
 x_train, y_train, x_test, y_test = x_train[:500,:], y_train[:500], x_test[:500,:], y_test[:500]
@@ -27,7 +26,6 @@ for img, label, ax in zip(x_train[:4], y_train[:4], axes):
     ax.set_title(label)
     ax.imshow(img)
     ax.axis("off")
-#    plt.show()
 
 # pre-processing
 n_labels = int(np.max(y_train)+1)

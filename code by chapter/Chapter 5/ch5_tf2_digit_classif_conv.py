@@ -41,13 +41,14 @@ y_test  = tf.one_hot(y_test, n_labels)
 
 
 learning_rate = 0.0001
-epochs = 1000
+epochs = 100
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 stdev = 0.001
 
 model = tf.keras.Sequential([
-			tf.keras.layers.Conv2D(filters = 10, kernel_size = (3, 3), input_shape = (28, 28, 1)),
+			tf.keras.layers.Conv2D(filters = 32, kernel_size = (3, 3), input_shape = (28, 28, 1)),
+			tf.keras.layers.Conv2D(filters = 64, kernel_size = (3, 3), input_shape = (28, 28, 1)),
 			tf.keras.layers.Flatten(),
 			tf.keras.layers.Dense(10, activation = "relu"),
 			tf.keras.layers.Dense(n_labels, activation = "softmax")])
