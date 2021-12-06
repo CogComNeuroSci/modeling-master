@@ -21,14 +21,14 @@ import matplotlib.pyplot as plt
 # initialize
 learning_rate = 0.5
 epochs = 100 # how often to go through the whole data set
-train_x = np.array([[1, 1, 0], [0, 1, 1]]) # a cat and a dog input pattern
+train_x = np.array([[0, 0], [0, 1], [1, 0], [1, 1]]) # a cat and a dog input pattern
 test_x = np.copy(train_x)                  # patterns to test the model after training
-train_y = np.array([0, 1])                 # a single output unit suffices for 2 categories
-train_y = train_y.reshape(2, 1)            # from a (2,) vector to a (2,1) matrix (not strictly needed)
+train_y = np.array([0, 1, 1, 0])                 # a single output unit suffices for 2 categories
+train_y = train_y.reshape(4, 1)            # from a (2,) vector to a (2,1) matrix (not strictly needed)
 
 # construct the model
 model = tf.keras.Sequential(layers = [
- 			tf.keras.Input(shape=(train_x.shape[1],)),
+ 			tf.keras.Input(shape=(2,)),
  			tf.keras.layers.Dense(1, activation = "sigmoid") # Dense?... remember the convolutional network?
  			] )
 model.build()

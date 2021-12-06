@@ -22,7 +22,7 @@ x_train, y_train, x_test, y_test = x_train[:500,:], y_train[:500], x_test[:500,:
 
 # plot some images from the data set
 fig, axes = plt.subplots(1, 4, figsize=(7,3))
-for img, label, ax in zip(x_train[:4], y_train[:4], axes):
+for img, label, ax in zip(x_train[28:32], y_train[28:32], axes):
     ax.set_title(label)
     ax.imshow(img)
     ax.axis("off")

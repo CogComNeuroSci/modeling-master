@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
 # downscale to make data set smaller (and training faster)
-train_size, test_size = 10000, 50
+train_size, test_size = 1000, 50
 x_train, y_train, x_test, y_test = x_train[:train_size,:], y_train[:train_size], x_test[:test_size,:], y_test[:test_size]
 
 # plot some images from the data set
@@ -41,7 +41,7 @@ y_test  = tf.one_hot(y_test, n_labels)
 
 
 learning_rate = 0.0001
-epochs = 100
+epochs = 1000
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 stdev = 0.001
@@ -50,6 +50,7 @@ model = tf.keras.Sequential([
 			tf.keras.layers.Conv2D(filters = 32, kernel_size = (3, 3), input_shape = (28, 28, 1)),
 			tf.keras.layers.Conv2D(filters = 64, kernel_size = (3, 3), input_shape = (28, 28, 1)),
 			tf.keras.layers.Flatten(),
+			tf.keras.layers.Dense(10, activation = "relu"),
 			tf.keras.layers.Dense(10, activation = "relu"),
 			tf.keras.layers.Dense(n_labels, activation = "softmax")])
 model.build()
