@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-# Problem setting
+
 """
-Implement an algorithm that minimizes f(x) = A*(x-B)**2 + C.
-Try out different values of A, B, and C.
-What is their role in the optimization?
+Algorithm to plot functions, such as f(x) = A*(x-B)**2 + C.
+Try out different values of A, B, and C to get an intuition on their role in the function
 Try to reason it through first, then implement it.
+You may only see the plot(s) after termination of the program
 Code by Pieter Huycke
 """
 
@@ -17,8 +17,9 @@ def plotFunc():
 
     """
     Plots a function based on a considered formula
-    The three values A, B and C are inputted by the user
-    x is varied in a range specified by the user
+	In the example f(x) = A*(x-B)**2 + C,
+    the three values A, B and C are inputted by the user;
+    x is the variable, and it varies in a range specified by the user
     """
 
     satisfied = False
@@ -109,7 +110,7 @@ def main():
             plotFunc()
         else:
             print("---------------------------\n"
-                  "The program is now executed\n"
+                  "The program is now finished\n"
                   "---------------------------")
             satisfied = True
 

@@ -4,7 +4,7 @@
 Created on Mon Aug 31 09:25:08 2020
 
 @author: tom verguts
-2-dimensional function minimization with TensorFlow
+2-dimensional function minimization with TensorFlow 1
 """
 
 import tensorflow as tf

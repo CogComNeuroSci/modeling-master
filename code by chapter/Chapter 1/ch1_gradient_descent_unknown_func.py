@@ -4,6 +4,7 @@
 Created on Thu Sep 20 13:34:00 2018
 
 @author: mehdisenoussi
+gradient descent where the gradient is approximated with finite differences (see line der = ...)
 """
 
 import matplotlib as mpl
@@ -12,7 +13,6 @@ import matplotlib as mpl
 from matplotlib import cm
 import pylab as pl
 import numpy as np
-#import time
 
 
 def quad_func(x):
@@ -31,7 +31,7 @@ n_steps = 20
 
 norm = mpl.colors.Normalize(vmin = 0, vmax = 1)
 
-func_to_use = quad_func#other_func2
+func_to_use = quad_func # choose here another function if you prefer (eg. other_func2)
 
 x = np.linspace(-20, 20, 5000)
 y = func_to_use(x)
@@ -41,13 +41,13 @@ axes.plot(x, y, 'k')
 
 x_desc = []
 x_desc.append(np.random.choice(x))    
-alpha = .2
+alpha = .2  # the step size
 y_desc = []
 y_desc.append(func_to_use(x_desc[-1]))
 col = cm.ScalarMappable(norm = norm, cmap = cm.afmhot).to_rgba(0)
 axes.plot(x_desc[-1], y_desc[-1], 'o', mec = 'k', color = col)
 
-# random first step
+# random first step; necessary because this version of finite differences uses the last *two* points on the curve for approximation of the derivative
 x_desc.append(x_desc[0] * np.random.random()*2)
 y_desc.append(func_to_use(x_desc[-1]))
 col = cm.ScalarMappable(norm = norm, cmap = cm.afmhot).to_rgba(1/float(n_steps+2))
@@ -62,7 +62,7 @@ for i in np.arange(n_steps):
     a = axes.plot(x_desc[-1], y_desc[-1], 'o', mec = 'k', color = col)
     axes.set_xlabel('alph * der = x_step\n%.2f * %.2f = %.2f' % (alpha, der, der*alpha))
     fig.canvas.draw()
-#    fig.waitforbuttonpress(0)
+#    fig.waitforbuttonpress(0) # if you want to step through the function
     
 
 pl.title('THE END\nstep: %i/%i' % (i+2, n_steps+1))
