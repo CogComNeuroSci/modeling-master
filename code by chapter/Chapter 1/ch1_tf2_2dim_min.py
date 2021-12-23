@@ -20,6 +20,6 @@ X = tf.Variable(np.random.randn(1, 2).astype(np.float32), name="X")
 def f_x():
     return (X[0, 0] - offsets[0])*(X[0, 0] - offsets[0]) + (X[0, 1] - offsets[1])*(X[0, 1] - offsets[1])
 
-for _ in range(100):
-    print([X.numpy(), f_x().numpy()])
+for _ in range(epochs):
+    print("X = ({:.2f}, {:.2f}), f(X) = {:.2f}".format(X.numpy()[0, 0], X.numpy()[0, 1], f_x().numpy()))
     opt = gradient_descent.GradientDescentOptimizer(update_rate).minimize(f_x)
