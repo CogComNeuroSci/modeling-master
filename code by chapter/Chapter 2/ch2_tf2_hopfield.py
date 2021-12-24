@@ -5,6 +5,7 @@ Created on Mon Oct  5 11:47:06 2020
 
 @author: tom verguts
 TF-based hopfield network for the john - male - poor - mary - female - rich example
+use ch2_tf2_hopfield_large.py for a larger-scale hopfield network
 """
 
 import tensorflow as tf

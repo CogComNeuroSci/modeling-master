@@ -4,6 +4,7 @@
 @author: mehdi senoussi
 
 Makes a simple model composed of 2 input units and one output unit
+to illustrate matrix multiplication (matmul) in TF2
 """
 
 import tensorflow as tf

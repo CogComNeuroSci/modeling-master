@@ -49,5 +49,5 @@ for trial_loop in range(ntrials):
 	RT[trial_loop] = step
 	Y.assign([[0, 0]])
 
-# plot the cat / dog competition
+# plot the  RT distribution
 plt.hist(RT, color = "black")
