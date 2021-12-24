@@ -3,8 +3,9 @@
 """
 Created on Thu Dec 28 12:15:46 2017
 
-@author: tom, mehdi
-Hopfield model
+@author: tom verguts, mehdi senoussi
+Hopfield model. The current model is small-scale because the input vectors and weight matrix are set by hand;
+a larger Hopfield model can be constructed using the code ch2_tf2_hopfield_large.py
 
 Instructions for the exercise:
     This network's weights are set by hand between line 32 and 41 for now.
@@ -37,7 +38,7 @@ Instructions for the exercise:
 
 """
 
-# import
+#%% import and initialization
 import numpy as np
 
 # the value for the different weights of the network
@@ -90,7 +91,7 @@ stop_threshold = 0.5
 x_test = np.vstack([np.array([0, 0, 0, 1, 0, 1]), # [John, Male]
                    np.array([1, 0, 1, 0, 0, 0])]) # [Mary, Female]
                    
-for loop in range(n_trials):
+for _ in range(n_trials):
     # start
 	# here, I sample a random testing pattern
 	nr = np.random.randint(x_test.shape[0])

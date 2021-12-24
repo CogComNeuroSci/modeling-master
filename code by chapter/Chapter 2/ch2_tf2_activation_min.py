@@ -4,7 +4,7 @@
 Created on Mon Aug 31 09:51:11 2020
 
 @author: tom verguts
-Does activation updating via minimization of activation function (2.3)
+Does activation updating via minimization of a cost function (equation 2.3)
 """
 
 import tensorflow as tf
@@ -26,7 +26,7 @@ step_size = 0.1
 
 Y  = tf.Variable(np.random.randn(1, 2).astype(np.float32)/10, name="Y") # this will be optimized to minimize cost
 
-def cost():
+def cost(): # this is the cost function (2.3) (in slightly more general notation than in the MCP book)
 	return -tf.matmul(Y,net) - tf.matmul(tf.matmul(Y,W_inh), tf.transpose(Y)) 
 
 

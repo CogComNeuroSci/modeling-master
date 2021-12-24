@@ -4,8 +4,8 @@
 Created on Mon Aug 31 09:51:11 2020
 
 @author: tom verguts
-Does cats-dogs network updating via minimization of activation function (2.3)
-plot histograms
+Does cats-dogs network updating via minimization of cost function (2.3)
+the output is a histogram of the model response times
 """
 
 import tensorflow as tf

@@ -5,10 +5,14 @@
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 This script plots the pet detector's energy function in 2D
-
+Inspecting the plot, you can see that if you start your descent on the "cat" side, you will end up at a cat output ((y_cat, y_dog) = (10, 0));
+and if you start at the "dog" side, you end up at a dog output ((y_cat, y_dog) = (0, 10))
+however, if the competition becomes too weak (abs(w) is small), then the minimum of the energy function goes to (10, 10) (at a grid bounded by 10)
+A tendency toward cat or dog can be implemented by multiplying the X or Y terms with a constant in Z = - X - Y - w*x*Y
+Such a constant can be thought of as a drift rate for resp. cats or dogs (called in_cat and in_dog in the MCP book)
 """
+
 import numpy as np
-import time
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import pyplot as plt
 from matplotlib import cm
@@ -25,7 +29,7 @@ ys = np.linspace(0, 10, n_unitsteps)
 X, Y = np.meshgrid(xs, ys)
 
 # the weight between the cat and dog units
-w = -.2
+w = -.15
 # the energy function
 Z = - X - Y - w*X*Y
 

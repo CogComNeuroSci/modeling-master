@@ -28,8 +28,8 @@ max_n_step = 300
 std_noise = 0.1
 threshold=2
 rt = []
-accuracy = 0
-too_late = 0
+accuracy = too_late = 0
+
 
 for loop in range(n_trials):
     # start
@@ -65,7 +65,7 @@ axarr[1].set_ylabel("Frequency")
 print("accuracy: {:2.0%}".format(accuracy/n_trials))
 print("too late: {:2.0%}".format(too_late/n_trials))
 
-#plots fig 2.5
+#plots fig 2.5: a function with two minima
 #
 fig = plt.subplots()
 x = np.linspace(start = -4, stop = 3, num = 100)

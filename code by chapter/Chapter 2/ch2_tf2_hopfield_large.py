@@ -5,9 +5,10 @@ Created on Mon July 19, 2021
 
 @author: tom verguts
 TF-based hopfield network for arbitrary vectors X1, X2, ...
-Both X_i and -X_i are attractors in this case.
+Both X_i and -X_i are attractors in this case; see MCP book for an explanation why (Exercise 3.11)
 """
 
+#%% import and initialisation
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
@@ -38,6 +39,7 @@ n_sample = 50
 distance = np.zeros((n_sample, n_stimuli))
 max_distance = np.sqrt(4*n_units)
 
+# %% main program
 # a function to sample the network iteratively
 def hopfield(start_pattern = None, n_sample = 0):
 	pattern = tf.cast(start_pattern, dtype = tf.double)
@@ -52,14 +54,17 @@ def hopfield(start_pattern = None, n_sample = 0):
 
 pattern = hopfield(start_pattern = start_pattern, n_sample = n_sample)
 
-# report data
+#%% print and plot results
 print("distance to different stimuli (0-1 scale): ", distance[-1,:])
 fig, ax = plt.subplots(nrows = 2, ncols = 1)
 
+# X axis is time; Y-axis is distance to each of the stored stimuli. If an attractor stimulus is reached,
+# the distance to that attractor should become zero (or very small)
 ax[0].set_title("distance to stored stimuli across time") 
 for stim_loop in range(n_stimuli):
 	  ax[0].plot(distance[:, stim_loop], color = "black")
 
+# row 1 is the initial, random pattern; rows 2, 3 are the stored patterns; row 4 is the stimulus reached at the final time step
 ax[1].set_title("start pattern, stored patterns, final pattern")  
 data_to_plot = np.column_stack((start_pattern, X, pattern.numpy()))
 ax[1].imshow(data_to_plot.T)
