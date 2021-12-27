@@ -7,46 +7,46 @@ Created on Mon Oct  5 11:47:06 2020
 TF2-based hopfield network, activation and learning equations
 """
 
+#%% import
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
-#plt.axis("off")
+#%% initialize and define data and functions
+dim = 2 # 1: 1-dim vectors; 2: 2-dim MNIST numbers
 def define_length(pattern):
 	length = 1
 	for loop in pattern.shape[1:]:
 		length *= loop
 	return length	
 
-# define data: simple 1D pattern
-# dim = 1
-# train_pattern = np.array([[1, 1, 1, -1, -1, -1], [-1, -1, -1, +1, +1, +1]])
-# start_pattern = np.array([-1, 1,  1, -1, 1, -1])
-# length = define_length(train_pattern)
+# define data
+if dim == 1:
+	 # 1D vectors
+    train_pattern = np.array([[1, 1, 1, -1, -1, -1], [-1, -1, -1, +1, +1, +1]])
+    start_pattern = np.array([-1, 1,  1, -1, 1, -1])
+    length = define_length(train_pattern)
+else:
+    # 2D numbers from MNIST data set
+    all_data = tf.keras.datasets.mnist.load_data()
+    start_number, stop_number = 14, 19
+    n_numbers    = stop_number - start_number
+    train_pattern = all_data[0][0][start_number:stop_number] # first n_numbers numbers from the training data
+    train_pattern = 2*(train_pattern>5) - 1  # recode to -1 / +1 patterns
+    length = define_length(train_pattern)
+    start_pattern = np.array(np.random.choice([-1, 1], size = length))
 
-# define data: numbers from MNIST data set
-dim = 2
-all_data = tf.keras.datasets.mnist.load_data()
-start_number = 14
-stop_number  = 16
-n_numbers    = stop_number - start_number
-train_pattern = all_data[0][0][start_number:stop_number] # first n_numbers numbers
-train_pattern = 2*(train_pattern>5) - 1
-length = define_length(train_pattern)
-start_pattern = np.array(np.random.choice([-1, 1], size = length))
-
-x_pattern = np.ndarray((9, length))
 
 # define variables
 n_train   = 50 # how many training steps to take
-n_samples = 1 # how often to step in activation space
-n_samples_test = 4
+n_samples_test = 4 # how often to step in activation space
+x_pattern= np.zeros((n_samples_test, length))
 w        = tf.Variable(np.random.randn(length, length).astype(np.float32)/10)
 update_w = tf.Variable(np.random.randn(length, length).astype(np.float32)/10)
 b        = tf.Variable(np.random.randn(1, length).astype(np.float32)/10)
 update_b = tf.Variable(np.random.randn(1, length).astype(np.float32)/10)
-weights = np.ndarray((n_train//5, length, length))
-bias    = np.ndarray((n_train//5, length))
+weights  = np.ndarray((n_train//5, length, length))
+bias     = np.ndarray((n_train//5, length))
 
 # a function to sample the network iteratively
 def hopfield_sample(start_pattern = None, n_sample = 10):
@@ -66,18 +66,12 @@ def hopfield_train(pattern = None):
 	update_b.assign(pattern)	
 	return [update_w, update_b]
 
-# computation graph definition
-# x             = tf.placeholder(tf.float32, shape=[1, length])
-# hopfield_sa   = hopfield_sampl(start_pattern = x, n_sample = n_samples)
-# hopfield_tr   = hopfield_train(pattern = x)
-# init          = tf.global_variables_initializer()
-
-# preprocess
+#%% preprocess
 if dim > 1:# dimension of input pattern
 	train_pattern =  train_pattern.reshape(train_pattern.shape[0], length)
-	start_pattern  = start_pattern.reshape(length)
+	start_pattern = start_pattern.reshape(length)
 	
-# main routine	
+# main routine: training	
 for loop in range(n_train):
 	nr = np.random.randint(train_pattern.shape[0]) # a random training pattern
 	update_w, update_b = hopfield_train(pattern = train_pattern[nr])
@@ -88,34 +82,41 @@ for loop in range(n_train):
 		weights[indx] = w.numpy()
 		bias[indx]   = b.numpy()
 
-# training is over		
+# training is over: sample novel data pattern novel_x		
 novel_x = start_pattern	
 for loop in range(n_samples_test):
 	x_pattern[loop] = novel_x
 	novel_x = hopfield_sample(novel_x)
-		
-# plot intermediate weight matrices
-# fig, ax = plt.subplots(nrows = 2, ncols = 2)
-# for loop in range(n_train//(n_train//4)):
-#  	row = loop//2
-#  	col = loop%2
-#  	ax[row, col].imshow(weights[loop])
 
-# plot intermediate patterns, for the final weight matrix
-fig, ax = plt.subplots(nrows = 1, ncols = 4)
-for loop in range(n_samples_test):
- 	x_image = x_pattern[loop].reshape(28, 28)
- 	ax[loop].set_xticks([])
- 	ax[loop].set_yticks([])
- 	ax[loop].set_title("sample {}".format(loop))
- 	ax[loop].imshow(x_image, cmap = "gray")
+# %% plot results for MNIST data (i.e., if dim = 2)
+if dim == 2:
+    # plot intermediate weight matrices
+    fig, ax = plt.subplots(nrows = 2, ncols = 2)
+    fig.suptitle("weight matrices during training")
+    for loop in range(n_train//(n_train//4)):
+        row, col = loop//2, loop%2
+        ax[row, col].imshow(weights[loop])
 
-# plot training pattern	
-# fig, ax = plt.subplots(nrows = 3, ncols = 3)
-# fig.suptitle("training pattern")
-# for loop in range(n_numbers):
-# 	row = loop//3
-# 	col = loop%3
-# 	x_image = train_pattern[loop].reshape(28, 28)
-# 	ax[row, col].imshow(x_image)
-# 		
+    # plot intermediate patterns, for the final weight matrix
+    fig, ax = plt.subplots(nrows = 1, ncols = 4)
+    fig.suptitle("what does a random pattern drift toward?")
+    for loop in range(n_samples_test):
+        x_image = x_pattern[loop].reshape(28, 28)
+        ax[loop].set_xticks([])
+        ax[loop].set_yticks([])
+        ax[loop].set_title("sample {}".format(loop))
+        ax[loop].imshow(x_image, cmap = "gray")
+        ax[loop].set_axis_off() # it's not a function plot, so nicer w/o axes
+
+    # plot training pattern
+    nrows = int(np.floor(n_numbers/3) + (n_numbers%3 > 0))
+    ncols = int(np.minimum(n_numbers, 3))
+    fig, ax = plt.subplots(nrows = nrows, ncols = ncols)
+    fig.suptitle("training patterns")
+    for loop in range(n_numbers):
+        row, col = loop//3, loop%3
+        x_image = train_pattern[loop].reshape(28, 28)
+        try: 
+            ax[row, col].imshow(x_image)
+        except:
+            ax[loop].imshow(x_image)	
