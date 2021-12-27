@@ -5,6 +5,8 @@ Created on Mon Aug 31 09:51:11 2020
 
 @author: tom verguts
 Does activation updating via minimization of a cost function (equation 2.3)
+It's also possible to change Y explicitly, rather than implicitly via a cost function, as done here
+In particular, one can explicitly code equations like (2.4) and (2.5)
 """
 
 import tensorflow as tf
