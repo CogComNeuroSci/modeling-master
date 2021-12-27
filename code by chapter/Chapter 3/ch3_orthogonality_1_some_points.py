@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 @author: mehdisenoussi
+left plot:  3D input space with two animals (cat and dog) plotted in it
+right plot: 2D output space after one training step, with two novel animals
+(one cat, one dog) plotted in it
 """
 
 import numpy as np
@@ -43,10 +46,11 @@ axs[0].set_xlabel('$x_{1}$: Has its pic. on FB')
 axs[0].set_ylabel('$x_{2}$: Has 4 legs')
 axs[0].set_zlabel('$x_{3}$: Bites visitors')
 
-# y1 and y2
+# initialize weights and targets
 weights = np.zeros(shape = [2, 3])
 targets = np.array([[1, 0], [0, 1]])
 
+# apply the hebb learning rule (see MCP book equation (3.2))
 weights = weights + beta * np.dot(targets[0,:][:, np.newaxis], np.array([x1_1, x2_1, x3_1]).T)
 weights = weights + beta * np.dot(targets[1,:][:, np.newaxis], np.array([x1_2, x2_2, x3_2]).T)
 
@@ -54,12 +58,14 @@ axs[1].plot([0, 1], [0,1], 'k--')
 axs[1].set_xlabel('$y_{1}:$ cat detector')
 axs[1].set_ylabel('$y_{2}:$ dog detector')
 
+# try a novel cat
 x1_new = [1]
 x2_new = [1]
 x3_new = [0]
 activations = np.dot(weights, np.array([x1_new, x2_new, x3_new]))
 axs[1].plot(activations, 'ro')
 
+# try a novel dog
 x1_new = [0]
 x2_new = [1]
 x3_new = [1]

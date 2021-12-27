@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-@author: mehdisenoussi
+@author: mehdi senoussi
+left plot:  3D input space with many animals (cat and dog) plotted in it
+right plot: 2D output space after one training step, with the old two and two novel animals
+ (one cat, one dog) plotted in it. Output is pretty bad in this case: Stimuli
+ from two categories overlap in output space
 """
 
 import numpy as np
 
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
-import matplotlib.pyplot as pl
+import matplotlib.pyplot as plt
 
 # learning parameter
 beta = .4
@@ -25,7 +29,7 @@ x1_2 = np.random.randn(n_samples) + 10
 x2_2 = np.random.randn(n_samples) + 10
 x3_2 = np.random.randn(n_samples) + 10
 
-fig = pl.figure(figsize = (13, 7))
+fig = plt.figure(figsize = (13, 7))
 axs = [];
 axs.append(fig.add_subplot(1, 2, 1, projection='3d'))
 axs.append(fig.add_subplot(1, 2, 2))

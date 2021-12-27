@@ -2,10 +2,13 @@
 # -*- coding: utf-8 -*-
 """
 @author: mehdisenoussi
+left plot:  3D input space with many animals (cat and dog) plotted in it
+right plot: 2D output space after one training step, with the old two and two novel animals
+(one cat, one dog) plotted in it. Output is pretty good in this case:
+Stimuli from different categories do not overlap in output space
 """
 
 import numpy as np
-
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as pl
