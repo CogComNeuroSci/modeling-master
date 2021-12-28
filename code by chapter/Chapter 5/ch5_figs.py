@@ -6,6 +6,8 @@ Created on Wed Jul  4 10:25:17 2018
 @author: tom verguts
 pics from chapter 5
 """
+
+#%% imports and initializations
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -31,7 +33,8 @@ def plotlines():
 def rbf(x,y,cen_x,cen_y):
     return np.exp(-((x-cen_x)**2 + (y-cen_y)**2))
     
-#%% figure 5.3a
+#%% outputs of 2- and 3-layer networks 
+# figure 5.3a
 # determine the convex set
 plt.subplot(121)
 plotlines()
@@ -47,9 +50,9 @@ for row in range(len(xi)):
     for column in range(len(yi)):
         Zi[row,column] = 2*conv(Xi[row,column],Yi[row,column])-1
 plt.contourf(xi, yi, Zi, extend = "both", colors = "none", hatches=['', '.'])
-#plt.title("Fig 5.3a \nAn AND of linear functions (dots) \n is a convex set", {"fontsize": font_size})
+plt.title("Fig 5.3a \nAn AND of linear functions (dots) \n is a convex set", {"fontsize": font_size})
 
-#%% figure 5.3b
+# figure 5.3b
 plt.subplot(122)
 plotlines()
 Zi_full = np.zeros(Xi.shape)
@@ -61,10 +64,10 @@ for index in checklist:
     Zi_full = np.any([Zi_full,Zi],axis=0)   
 Zi_full = 2*Zi_full-1
 plt.contourf(xi, yi, Zi_full, extend = "both", colors = "none", hatches=['', '.'])
-#plt.title("Fig 5.3b \nAn OR of convex sets (dots)", {"fontsize": font_size})
+plt.title("Fig 5.3b \nAn OR of convex sets (dots)", {"fontsize": font_size})
 
-#%% figure 5.3
-# (Code mostly stolen from Pieter)
+#%% figure 5.4: Local and global minima
+# (Code mostly stolen from Pieter Huycke)
 
 from numpy import arange
 #from mpl_toolkits.mplot3d import Axes3D
@@ -72,10 +75,10 @@ from numpy import arange
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as plt
 
-#texts = ["5.3a:\nFunction with one (global) minimum", 
-#         "5.3b:\nFunction with several local minima"]
+texts = ["5.3a:\nFunction with one (global) minimum", 
+         "5.3b:\nFunction with several local minima"]
 
-texts = ["(a)", "(b)"]
+#texts = ["(a)", "(b)"]
 
 # the function that I'm going to plot
 def z_func(x, y, nr):
@@ -104,7 +107,8 @@ for loop in range(2):
     ax.yaxis.set_major_locator(LinearLocator(4))
     ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
 
-#%% figure 5.5a
+#%% This figure did not survive in the final version of the MCP book
+# vanishing and exploding gradients
 font_size = 10
 plt.subplot(121)
 x = np.arange(0,5)
@@ -116,7 +120,7 @@ plt.xticks(x,5-np.arange(0,5))
 plt.xlabel("Layer number (lower is deeper)")
 plt.title("Fig 5.5a \nVanishing and exploding functions", {"fontsize": font_size})
 
-#%% figure 5.5b
+# RELU transformation function
 plt.subplot(122)
 x = np.linspace(-2,2)
 y = np.maximum(0,x) # rectified linear function
@@ -126,10 +130,10 @@ plt.ylabel("y = max{0,x}")
 plt.title("Fig 5.5b \nA novel transformation function", {"fontsize": font_size})
 
 
-#%% figure 5.9 Radial basis functions
+#%% figure 5.7 Radial basis functions
 x_center, y_center = 1, 0
 plt.figure()
-#plt.title("fig 5.6: \nRadial basis activation function", {"fontsize": font_size})
+plt.title("fig 5.7: \nRadial basis activation function", {"fontsize": font_size})
 ngrid = 100
 xi = np.linspace(low_rbf, high_rbf, ngrid)
 yi = np.linspace(low_rbf, high_rbf, ngrid)

@@ -3,8 +3,11 @@
 """
 Created on Sat Oct 31 10:52:51 2020
 
-@author: tom
+@author: tom verguts
+several linear cuts in 2D space
+convenient to make slides illustrating how backprop works
 """
+
 import matplotlib.pyplot as plt
 import numpy as np
 
