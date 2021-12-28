@@ -5,7 +5,7 @@
 @author: tom verguts
 does 2-layer network weight optimization via MSE minimization
 in TF2
-for the cats vs dogs example (see handbook for details of the example)
+for the cats vs dogs example (see MCP book for details of the example)
 by default, activation = linear
 
 Note: you can also do it more concisely:
@@ -13,7 +13,7 @@ model.compile(optimizer = "adam", loss=tf.keras.losses.MeanSquaredError())
 but then you cannot specify learning rate explicitly
 """
 
-# imports
+#%% imports and initialization
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
@@ -26,23 +26,23 @@ test_x = np.copy(train_x)                  # patterns to test the model after tr
 train_y = np.array([0, 1])                 # a single output unit suffices for 2 categories
 train_y = train_y.reshape(2, 1)            # from a (2,) vector to a (2,1) matrix (not strictly needed)
 
-# construct the model
+#%% construct the model
 model = tf.keras.Sequential(layers = [
  			tf.keras.Input(shape=(train_x.shape[1],)),
  			tf.keras.layers.Dense(1, activation = "sigmoid") # Dense?... remember the convolutional network?
  			] )
 model.build()
 
-# train & test the model
+#%% train & test the model
 opt = tf.keras.optimizers.Adam(learning_rate = learning_rate)           # Adam is a kind of gradient descent
 model.compile(optimizer = opt, loss=tf.keras.losses.MeanSquaredError()) # loss is what we called energy
 history = model.fit(train_x, train_y, batch_size = 1, epochs = epochs)
 model.summary()
 test_data = model.predict(test_x)
-print(model.get_weights())
+print(model.get_weights()) # train_x.shape[1] + 1 parameters are given; can you see why?
 
 
-# report data
+#%% report data
 # train data: error curve
 plt.plot(history.history["loss"], color = "black")
 

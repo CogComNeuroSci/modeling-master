@@ -8,6 +8,7 @@ in TF2
 alternative (less elegant) model construction
 """
 
+#%% imports and initialization
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,13 +19,16 @@ train_x = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
 train_y = np.array([0, 1, 1, 1])
 train_y = train_y.reshape(4,1)
 
+#%% model construction
 model = tf.keras.Sequential()
 model.add(tf.keras.Input(shape=(2,)))
 model.add(tf.keras.layers.Dense(1))
 model.build()
 model.compile(optimizer = "adam", loss=tf.keras.losses.MeanSquaredError())
+
+#%% main code: fitting the model
 history = model.fit(train_x, train_y, batch_size = 1, epochs = 500)
 model.summary()
 
-# error curve
+#%% output: the error curve
 plt.plot(history.history["loss"], color = "black")

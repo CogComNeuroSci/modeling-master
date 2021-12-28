@@ -12,11 +12,13 @@ model.compile(optimizer = "adam", loss=tf.keras.losses.MeanSquaredError())
 but then you cannot specify learning rate explicitly
 """
 
+#%% imports and initializations
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
 learning_rate = 0.1
+n_hidden = 2
 epochs = 100 # how often to go through the whole data set
 train_x = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
 test_x = train_x
@@ -24,17 +26,19 @@ train_y = np.array([0, 1, 1, 1])
 train_y = train_y.reshape(4, 1)
 
 model = tf.keras.Sequential([
-			tf.keras.Input(shape=(2,)),
+			tf.keras.Input(shape=(n_hidden,)),
 			tf.keras.layers.Dense(1, activation = "sigmoid")
 			] )
 model.build()
 
+#%% main code
 opt = tf.keras.optimizers.Adam(learning_rate = learning_rate)
 model.compile(optimizer = opt, loss=tf.keras.losses.MeanSquaredError())
 history = model.fit(train_x, train_y, batch_size = 1, epochs = epochs)
 model.summary()
 test_data = model.predict(test_x)
 
+#%% show results
 # error curve
 plt.plot(history.history["loss"], color = "black")
 

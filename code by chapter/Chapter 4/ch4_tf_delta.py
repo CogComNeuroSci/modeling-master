@@ -7,6 +7,7 @@ Created on Sun Aug 30 21:37:36 2020
 does 2-layer network weight optimization via MSE minimization
 """
 
+#%% imports and initializations
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt

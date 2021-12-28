@@ -4,8 +4,8 @@
 Created on Tue Jul 27 18:11:31 2021
 
 @author: tom verguts
-simple online updater
-can be used to check convergence properties etc
+simple online updater of a rescorla-wagner type rule
+can be used to check convergence properties for different update (learning) rates
 """
 
 import numpy as np
@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 n_trials = 200
 gamma = 1
 mean, std = 1, 0.00
-beta_list = [0.1, 1, 1.2, -0.5]
+beta_list = [0.1, 1, 1.2, -0.5] # list of update (learning) rates to be checked
 
 fig, axs = plt.subplots(nrows = 1, ncols = 4)
 

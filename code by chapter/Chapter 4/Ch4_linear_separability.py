@@ -3,7 +3,7 @@
 """
 Created on Tue Oct 13 21:09:37 2020
 
-@author: tom
+@author: tom verguts
 illustration that the task-switch stroop task is nonlin separable
 """
 
@@ -14,6 +14,7 @@ from itertools import product, combinations
 
 
 fig = plt.figure()
+fig.suptitle("rotate to see that the task switch stroop taks is not lin separable")
 ax = fig.gca(projection='3d')
 #ax.set_aspect("equal")
 r = [-1, 1]
@@ -30,3 +31,9 @@ for (idx, list_loop) in enumerate([list1, list2]):
 	col = color_list[idx]
 	for loop in list_loop:		
 		ax.scatter3D(loop[0], loop[1], loop[2], c = col, s = 100);
+ax.set_xlabel("color")   # e.g., red or blue
+ax.set_xticks([-1, +1]) 
+ax.set_ylabel("word")    # e.g., red or blue
+ax.set_yticks([-1, +1])
+ax.set_zlabel("task")    # e.g. attend color or attend word
+ax.set_zticks([-1, +1]) 
