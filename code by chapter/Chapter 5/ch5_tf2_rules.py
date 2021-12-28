@@ -3,12 +3,12 @@
 """
 
 @author: tom verguts
-does 2-layer network weight optimization via MSE minimization
+does 3-layer network weight optimization via MSE minimization
 in TF2
 for the logical rules AND, OR, or any other 2-valued logical rule (see MCP handbook for details of the example)
 by default, the activation function is linear (argument activation = ...) in tf.keras.Sequential
 
-
+TO BE UPDATED!
 """
 
 #%% imports and initializations
@@ -23,11 +23,11 @@ train_x   = np.array([[0, 0], [0, 1], [1, 0], [1, 1]]) # a cat and a dog input p
 test_x    = np.copy(train_x)                  # patterns to test the model after training
 train_y   = np.array([0, 1, 1, 0])                 # a single output unit suffices for 2 categories
 train_y   = train_y.reshape(4, 1)            # from a (2,) vector to a (2,1) matrix (not strictly needed)
-n_input, n_output  = train_x.shape[1], 1
+n_hidden, n_output  = 2, 1
 
 #%% construct the model
 model = tf.keras.Sequential(layers = [
- 			tf.keras.Input(shape=(n_input,)),
+ 			tf.keras.Input(shape=(n_hidden,)),
  			tf.keras.layers.Dense(n_output, activation = "sigmoid") # Dense?... remember the convolutional network?
  			] )
 model.build()
