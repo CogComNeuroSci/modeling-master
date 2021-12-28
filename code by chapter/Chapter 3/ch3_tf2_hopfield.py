@@ -4,7 +4,7 @@
 Created on Mon Oct  5 11:47:06 2020
 
 @author: tom verguts
-TF2-based hopfield network, activation and learning equations
+TF2-based hopfield network, activation and learning equations (i.e., combining chapters 2 and 3)
 """
 
 #%% import
@@ -13,7 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #%% initialize and define data and functions
-dim = 2 # 1: 1-dim vectors; 2: 2-dim MNIST numbers
+dim = 1 # 1: 1-dim vectors; 2: 2-dim MNIST numbers
 def define_length(pattern):
 	length = 1
 	for loop in pattern.shape[1:]:
@@ -88,7 +88,11 @@ for loop in range(n_samples_test):
 	x_pattern[loop] = novel_x
 	novel_x = hopfield_sample(novel_x)
 
-# %% plot results for MNIST data (i.e., if dim = 2)
+# %% print results for 1D vectors, or plot results for MNIST data (i.e., if dim = 2)
+if dim == 1:
+    print("start pattern: {}\n".format(start_pattern))
+    print("end pattern: {}\n".format(novel_x))
+
 if dim == 2:
     # plot intermediate weight matrices
     fig, ax = plt.subplots(nrows = 2, ncols = 2)
