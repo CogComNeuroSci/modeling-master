@@ -4,7 +4,7 @@
 Created on Mon Jun 25 10:32:55 2018
 
 @author: tom verguts
-defines the log-likelihoods of the logit and learning models
+defines the log-likelihoods of the alpha-beta (ie, loglinear) and learning models
 """
 
 import pandas as pd
@@ -14,8 +14,9 @@ import numpy as np
 def logit(beta_in,x1, x2):
     return 1/(1+np.exp(beta_in*(x2-x1)))
 
-# likelihood for the alpha-beta model
+
 def logL_ab(parameter, nstim, file_name): 
+    """ likelihood for the alpha-beta model"""
     data = pd.read_csv(file_name)
     ntrials = data.shape[0]
     # calculate log-likelihood
@@ -28,9 +29,11 @@ def logL_ab(parameter, nstim, file_name):
                 )
     return -logLik    
 
-# likelihood for the learning model
-# prior = (mean, precision)    
+  
 def logL_learn(parameter = [0.6, 1], nstim = 5, file_name = "", data = None, prior = (0, 0), startvalue = 0): 
+    """likelihood for the learning model
+	parameter = learning rate, temperature
+    prior = (mean, precision); higher precision (> 0) gives more weight to the prior"""  
     if len(file_name)>0:
         data = pd.read_csv(file_name)
     else:
