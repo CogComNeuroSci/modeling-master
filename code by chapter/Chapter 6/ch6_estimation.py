@@ -14,13 +14,13 @@ import ch6_likelihood as Lik
 from scipy import optimize
 
 def estimate_ab(nstim = None, file_name = "", maxiter = 10, algorithm = "Powell"):
-	""" estimate parameters of the alpha-beta model.
+    """ estimate parameters of the alpha-beta model.
     by default, the non-gradient-based powell algorithm is used"""
     res = optimize.minimize(Lik.logL_ab, x0 = np.random.rand(2), method = algorithm, tol = 1e-10, args =(nstim,file_name) )
     return res
 
 def estimate_learn(nstim = 4, file_name = "", maxiter = 10, algorithm = "Powell", data = None, prior = (0, 0)):
-	""" estimate parameters of the rescorla-wagner model.
+    """ estimate parameters of the rescorla-wagner model.
     by default, the non-gradient-based powell algorithm is used"""
     res = optimize.minimize(Lik.logL_learn, x0 = np.random.rand(2), method = algorithm, \
                             tol = 1e-10, args = (nstim, file_name, data, prior), options = {"maxiter": maxiter, "disp": True} )

@@ -5,6 +5,13 @@ Created on Mon Jun 25 10:32:55 2018
 
 @author: tom verguts
 defines the log-likelihoods of the alpha-beta (ie, loglinear) and learning models
+
+TBD:
+the alpha-beta formulation can be improved by coding alpha and beta as parameters from min to plus infinity
+(instead of in range (0,1), as is done now, which leads to instability
+ 
+the learning model formulation can be improved by taking the log directly rather than first exponentiating
+and then taking the log
 """
 
 import pandas as pd
@@ -46,15 +53,17 @@ def logL_learn(parameter = [0.6, 1], nstim = 5, file_name = "", data = None, pri
         logLik = logLik + (
                 np.log( logit(parameter[1],value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]],
                                         value[data.iloc[trial_loop,1-data.iloc[trial_loop,3]+1]]) ) )
+        prediction_error = parameter[0]*(data.iloc[trial_loop,4]-value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]])
         value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]] = (
-                value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]] +
-                parameter[0]*(data.iloc[trial_loop,4]-value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]]) )
+                value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]] + prediction_error)
     logLik = logLik - (prior[1]/np.sqrt(2*np.pi))*( (parameter[0]-prior[0])**2 + (parameter[1]-prior[0])**2 )  
     return -logLik/100000
 
-# likelihood for the learning model with separate learning rates for positive and negative learning
-# prior = (mean, precision)    
+
 def logL_learn2(parameter = [0.6, 0.3, 1], nstim = 5, file_name = "", data = None, prior = (0, 0), startvalue = 0): 
+    """likelihood for the learning model with two learning rates
+	parameter = learning rate 1, learning rate 2, temperature
+    prior = (mean, precision); higher precision (> 0) gives more weight to the prior"""  
     if len(file_name)>0:
         data = pd.read_csv(file_name)
     else:
