@@ -10,6 +10,7 @@ at all to recover parameters from the model
 the current program (test_estimator) can be used to test if you can recover (ie, accurately estimate)
 parameters from a model
 Note: output of scipy.optimize used to be an array of parameter values... now it's a bigger object with .x being the estimates
+number of rows in param_list equals len(alpha_list)*len(beta_list)
 """
 
 #%% import and initialize
@@ -17,14 +18,14 @@ import numpy as np
 import ch6_generation as generator
 import ch6_estimation as estimator # this function itself uses ch6_likelihood
 
-model = "ab" # alpha-beta model or learning model
+model = "learn" # alpha-beta model or learning model
 if model == "ab":
     nstim = None
 else:   # learning model
     nstim = 4    
 
-alpha_list = [0.6]           #  in ab model, this is overall difficulty   ; in learning model, this is learning rate
-beta_list =  [0.3, 0.5, 0.7] #  in ab model, this is hard-trial difficulty; in learning model, this is slope (inv temperature)
+alpha_list = [0.3, 0.7] #  in ab model, this is overall difficulty   ; in learning model, this is learning rate
+beta_list =  [0.3, 0.5] #  in ab model, this is hard-trial difficulty; in learning model, this is slope (inv temperature)
 param_list = []              #  list of real and estimated parameters (one column for each)
 np.set_printoptions(precision = 2, suppress = True)
 
@@ -42,7 +43,7 @@ def main(algorithm_used: str = "powell", n_trials: int = 100, file_name_to_write
                 pars = estimator.estimate_ab(nstim, file_name_to_write, algorithm = algorithm_used)
             else:
                 # generate data and send them to a file
-                generator.generate_learn(alpha = alpha_loop, beta = beta_loop, ntrials = n_trials, file_name = file_name_to_write, algorithm = algorithm_used)
+                generator.generate_learn(alpha = alpha_loop, beta = beta_loop, ntrials = n_trials, file_name = file_name_to_write)
                 # import data from a file and estimate its parameters
                 pars = estimator.estimate_learn(nstim, file_name_to_write, algorithm = algorithm_used)
             param_list.append([alpha_loop, beta_loop, pars.x[0], pars.x[1]])     
@@ -53,4 +54,4 @@ def main(algorithm_used: str = "powell", n_trials: int = 100, file_name_to_write
         print("single parameter, cannot calculate correlation")
 
 #%% main code
-main(algorithm_used = "nelder-mead", file_name_to_write = "simulation_data_1.csv")
+main(algorithm_used = "powell", n_trials = 1000, file_name_to_write = "simulation_data_1.csv")

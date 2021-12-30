@@ -4,10 +4,10 @@
 Created on Sun Dec  8 12:51:49 2019
 
 @author: tom verguts
-show likelihood curve for the learning model
+show likelihood curve for the learning model (for generating fig 6.4 in MCP book)
 """
 
-#%% initialize
+#%% import and initialize
 import numpy as np
 from ch6_generation import generate_learn
 from ch6_likelihood import logL_learn
