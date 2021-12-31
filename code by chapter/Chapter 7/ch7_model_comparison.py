@@ -4,21 +4,23 @@
 Created on Thu Dec 26 09:26:59 2019
 
 @author: tom verguts
-AIC and BIC calculation example
+AIC, BIC, and transfer-likelihood (i.e., cross-validation) calculation example
+for the four-armed bandit problem (table 7.2)
 """
 
-#%% initialize
+#%% import and initialize
 import numpy as np
 from ch6_generation import generate_learn, generate_learn2
 from ch6_estimation import estimate_learn, estimate_learn2
 from ch6_likelihood import logL_learn, logL_learn2
+
 algorithm = "Powell"
 learning_rate, learning_rate2, temperature = 0.8, 0.05, 1
 ntrials = 1000
 constant = 100000 # constant used in likelihood calculation
 
 
-#%% actual simulation
+#%% actual simulation, estimation, and model comparison
 for loop in range(2):
     if loop == 0:
         # data set 1: same learning rate for all trials
@@ -37,9 +39,9 @@ for loop in range(2):
                                    switch = True)
         data_new.insert(0, "index", range(ntrials))
         
-    # model 1
+    # model 1: same learning rate for all trials
     res = estimate_learn(nstim = 4, maxiter = 20000, data = data, algorithm = algorithm)
-    Lik = res.fun*constant
+    Lik = res.fun*constant # note that ch6_likelihood.py actually calculates minus log-likelihood...
     est_par = res.x
     print(est_par)
     AIC = 2*Lik + 2*est_par.size
@@ -47,7 +49,7 @@ for loop in range(2):
     cross_val = logL_learn(parameter = est_par, data = data_new)*constant
     print("Model 1: -log L = {0:.3f}, AIC = {1:.2f}, BIC = {2:.2f}, cross-val = {3:.2f}".format(Lik, AIC, BIC, cross_val))
 
-    # model 2
+    # model 2: different learning rate for positive and negative rewards
     res2 = estimate_learn2(nstim = 4, maxiter = 20000, data = data, algorithm = algorithm)
     Lik2 = res2.fun*constant
     est_par2 = res2.x
