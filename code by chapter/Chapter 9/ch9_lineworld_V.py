@@ -11,20 +11,19 @@ this is for V-values in lineworld
 in lineworld (not in gridworld), V and Q definitions are consistent with S&B notation. In particular, V and Q 
 values are calculated for SUBSEQUENT states only; current state is never included
 """
-# %% preliminaries
+# %% import and initialize
 
 import numpy as np
 import matplotlib.pyplot as plt
-from ch10_plotting import plot_value
+from ch9_plotting import plot_value
 
 np.set_printoptions(precision=4, suppress = True)
 
-
-def succ(state_pass = 1, action_pass = 1): # successor function
+def succ(state_pass = 1, action_pass = 1): # successor function (p(s',r / s,a))
     return state + action_pass*2 - 1
     
 nstates = 7
-r = [0.3, 0, 0, 0, 0, 0, 0.8]
+r = [0.3, 0, 0, 0, 0, 0, 0.8] # reward in each state
 slip = 0.8
 value = np.random.random(nstates)
 gamma = 0.4 # discount factor
@@ -46,9 +45,7 @@ while stop == False:
                 action_v = r[1] + gamma*previous_value[1]
             elif (state==nstates-1):
                 action_v = r[nstates-2] + gamma*previous_value[nstates-2]
-            elif state in (4, 5):
-#                action_v =  r[succ(state,action)] + \
-#                            gamma*(slip*previous_value[succ(state,1-action)] + (1-slip)*previous_value[succ(state,action)])
+            elif state in (4, 5): # the slippery states
                 action_v = slip*    (r[succ(state,1-action)] + gamma*previous_value[succ(state,1-action)]) + \
                           (1-slip)* (r[succ(state,action)]   + gamma*previous_value[succ(state,action)])
             else:    
@@ -57,15 +54,14 @@ while stop == False:
             total_v += action_v
         value[state] = total_v
     if np.mean(np.abs(value-previous_value))<threshold:
-        converge = True
-        stop = True
+        converge = stop = True
     elif iteration>max_iteration:
         stop = True
     if iteration == halfway:
         #plot_value(1, 0, value)
         pass
     
-#%% show what you did
+#%% plot results
 print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))
 plot_value(fig, axs, 0, 0, value, title = "V", n = 0)
 print(value)

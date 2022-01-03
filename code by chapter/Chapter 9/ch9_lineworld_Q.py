@@ -9,15 +9,17 @@ in particular, equation (3.14) from S&B
 some states are slippery with probability slip
 this is for Q-values
 this is for lineworld
+note: discount factor is called gamma in S & B, but eta in MCP book
 """
 # %% preliminaries
 import numpy as np
 import matplotlib.pyplot as plt
-from ch10_plotting import plot_value
+from ch9_plotting import plot_value
 
 np.set_printoptions(precision=4, suppress = True)
 
-def succ(state_pass = 1, action_pass = 1): # successor function
+def succ(state_pass = 1, action_pass = 1): 
+	"""successor function"""
     return state + action_pass*2 - 1
     
 nstates, nactions = 7, 2
