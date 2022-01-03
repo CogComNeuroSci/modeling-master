@@ -19,7 +19,7 @@ from ch9_plotting import plot_value
 np.set_printoptions(precision=4, suppress = True)
 
 def succ(state_pass = 1, action_pass = 1):
-	"""The successor function"""
+    """The successor function"""
     return state + action_pass*2 - 1
     
 nstates = 7
@@ -58,10 +58,8 @@ while stop == False:
         converge = stop = True
     elif iteration>max_iteration:
         stop = True
-#    if iteration == halfway:
-#        plot_value(1, 0, value)
     
 #%% show what you did
 print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))
-plot_value(fig, axs, 1, 1, value, n = 0)
 print(value)
+plot_value(fig, axs, 1, 1, value, n = 0, title = "optimal V values", grid = False)

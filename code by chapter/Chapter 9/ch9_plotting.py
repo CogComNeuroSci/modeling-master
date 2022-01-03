@@ -8,7 +8,7 @@ plotting function for chapter 9 (RL-MDP) py files
 variable n is binary: is it just a single plot (n=0) or not (n>0)
 """
 
-def plot_value(fig, axs, row, column, value_matrix, title = "", n = 3):
+def plot_value(fig, axs, row, column, value_matrix, title = "", n = 3, grid = True):
     offset = 0.05
     if n > 0:
         number = axs.shape[0]*row + column
@@ -27,5 +27,5 @@ def plot_value(fig, axs, row, column, value_matrix, title = "", n = 3):
             obj.text(offset + yloop/ncol, offset + ((nrow-1) - xloop)/nrow, "{:.1f}".format(value_matrix.flat[xloop*ncol + yloop]))
     obj.set_xticklabels([])
     obj.set_yticklabels([])
-    obj.grid(True)
+    obj.grid(grid)
     return

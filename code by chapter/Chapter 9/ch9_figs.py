@@ -10,6 +10,7 @@ currently implemented for random policy only
 in particular, equation (3.14) for V estimates, from Sutton & Barto RL book
 all transition probs p() are deterministic in this case
 actions are (in this order): up, down, left, right
+note: discount factor is called gamma in S & B, but eta in MCP book
 """
 #%% import and initialize
 import numpy as np
@@ -23,9 +24,9 @@ def state2rc(state_pass = 1):
     return state_pass // 5, state_pass % 5
 
 def succ(state_pass = 1, action_pass = 1): 
-	"""successor function: sutton & barto call this p(s',r / s,a),
-	but note that it is deterministic in this case so it can be represented more
-	simply than with a probability distribution"""
+    """successor function: sutton & barto call this p(s',r / s,a),
+    but note that it is deterministic in this case so it can be represented more
+    simply than with a probability distribution"""
     row, column = state2rc(state_pass)
     if action_pass == 0:
         row -= 1
@@ -35,7 +36,7 @@ def succ(state_pass = 1, action_pass = 1):
         row += 1
     else:
         column -= 1
-    return row, column    
+    return row, column # what state s' you end up in; r is not conditional on s, a in this example 
     
 
 nstates = 25
@@ -63,6 +64,7 @@ while stop == False:
         total_v = 0
         for action in range(4):  # sum across a in eq (3.14)
             action_prob = 1/4    # random policy has this pi(a/s)
+			# this if-elif structure implements the sum over (s', r) in (3.14)
             if (row==0) & (column==1):   # fly from A to A' (state 21)
                 action_v = 10+gamma*previous_value[state2rc(21)]
             elif (row==0) & (column==3): # fly from B to B' (state 13)
@@ -85,10 +87,10 @@ while stop == False:
     elif iteration>max_iteration:
         stop = True
     if iteration == halfway:
-        plot_value(fig, axs, 0, 1, value, title = "halfway")
+        plot_value(fig, axs, row = 0, column = 1, value_matrix = value, title = "halfway")
     
 #%% show final results of the iteration process
-plot_value(fig, axs, 0, 2, value, title = "final")
+plot_value(fig, axs, 0, 2, value, "final")
 print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))
 print("final value estimates for the random policy: \n")
 print(value)

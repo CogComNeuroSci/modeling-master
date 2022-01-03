@@ -10,6 +10,7 @@ some states are slippery with probability slip
 this is for V-values in lineworld
 in lineworld (not in gridworld), V and Q definitions are consistent with S&B notation. In particular, V and Q 
 values are calculated for SUBSEQUENT states only; current state is never included
+note: discount factor is called gamma in S & B, but eta in MCP book
 """
 # %% import and initialize
 
@@ -63,5 +64,5 @@ while stop == False:
     
 #%% plot results
 print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))
-plot_value(fig, axs, 0, 0, value, title = "V", n = 0)
+plot_value(fig, axs, 0, 0, value, title = "V values", n = 0, grid = False)
 print(value)
