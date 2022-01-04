@@ -31,7 +31,7 @@ slip_states = [0]
 Q_value = np.random.random((nstates, 2))
 gamma = 0.8 # discount factor
 stop, converge, threshold, max_iteration = False, False, 0.01, 10000
-halfway = 5 # intermediate-step value matrix to be printed
+
     
 #%% main code
 # start to iterate
@@ -54,11 +54,6 @@ while stop == False:
         stop = True
     elif iteration>max_iteration:
         stop = True
-    else:
-        pass
-    if iteration == halfway:
-        #plot_value(1, 0, value)
-        pass
     
 #%% print and plot results
 print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))
@@ -67,5 +62,6 @@ fig, axs = plt.subplots(1,3)
 centerx, centery, length = 0.5, 0.5, 0.4
 resolution = 100
 states = "ABCDEFG"
+fig.suptitle("values in ringworld")
 for plot_loop in range(3):
-    plot_value_circular(fig, axs, plot_loop, Q_value, r, centerx, centery, length, resolution, states)
+    plot_value_circular(fig, axs, plot_loop, Q_value, r, centerx, centery, length, resolution = resolution, states = states)

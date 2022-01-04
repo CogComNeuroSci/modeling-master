@@ -3,7 +3,8 @@
 """
 Created on Thu Aug 27 14:18:00 2020
 
-@author: tom
+@author: tom verguts
+as you can see... under construction
 """
 
 import gym, time
