@@ -11,6 +11,7 @@ in particular, equation (3.14) for V estimates, from Sutton & Barto RL book
 all transition probs p() are deterministic in this case
 actions are (in this order): up, down, left, right
 note: discount factor is called gamma in S & B, but eta in MCP book
+walking is free (cost 0) but bumping into a wall costs -1
 """
 #%% import and initialize
 import numpy as np

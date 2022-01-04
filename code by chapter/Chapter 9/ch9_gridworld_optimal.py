@@ -4,21 +4,26 @@
 Created on Tue Jul 24 12:11:57 2018
 
 @author: tom verguts
-estimate the optimal value function using dynamic programming
-in particular, equation (3.19) from S&B
-note: all p() are deterministic in this case
+estimate the optimal V value function for S & B's gridworld using dynamic programming
+in particular, equation (3.19) from S & B
+note: all successor mappings p(s', r / s, a) are deterministic in this case
+compare this result to the values of the random policy calculated in ch9_figs.py;
+note that values are much higher with this code, because it's for the optimal policy							   
 """
-#%% initialize
+
+#%% import and initialize
 import numpy as np
-from ch10_plotting import plot_value
+from ch9_plotting import plot_value
 import matplotlib.pyplot as plt
 
 np.set_printoptions(precision=4, suppress = True)
 
-def state2rc(state_pass = 1):  # state to (row, column)
+def state2rc(state_pass = 1):
+    """ state to (row, column) function"""
     return state_pass // 5, state_pass % 5
 
-def succ(state_pass = 1, action_pass = 1): # successor function
+def succ(state_pass = 1, action_pass = 1):
+    """successor function"""
     row, column = state2rc(state_pass)
     if action_pass == 0:
         row -= 1
@@ -33,10 +38,11 @@ def succ(state_pass = 1, action_pass = 1): # successor function
 nstates = 25
 value = np.random.random((5,5))
 ntrials = 100
-gamma = 0.9
+gamma = 0.9 # discount factor
 stop, converge, threshold, max_iteration = False, False, 0.005, 100
 
-#%% start to iterate
+#%% main code 
+# start to iterate
 iteration = 0
 while stop == False:
     previous_value = np.copy(value)
@@ -45,7 +51,6 @@ while stop == False:
         row, column = state2rc(state)
         total_v = []
         for action in range(4):
-            action_prob = 1/4 # random policy
             if (row==0) & (column==1):
                 action_v = 10+gamma*previous_value[state2rc(21)]
             elif (row==0) & (column==3):
@@ -61,7 +66,7 @@ while stop == False:
             else:
                 action_v = 0+gamma*previous_value[succ(state,action)]
             total_v.append(action_v)
-        value[row,column] = max(total_v)
+        value[row,column] = max(total_v) # this is the max in S & B eq (3.19)
     if np.mean(np.abs(value-previous_value))<threshold:
         converge = True
         stop = True
@@ -72,6 +77,6 @@ while stop == False:
     
 #%% show what you did
 fig, axs = plt.subplots(1, 1)
+plot_value(fig, axs, 0, 0, value, n = 0)
 print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))
 print(value)
-plot_value(fig, axs, 0, 0, value, n = 0)

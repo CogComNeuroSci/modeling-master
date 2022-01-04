@@ -6,12 +6,13 @@ Created on Tue Jul 24 12:11:57 2018
 @author: tom verguts
 estimate the optimal value function using dynamic programming
 in particular, equation (3.19) from S&B
-this is a slippery world: in 2 states close to B, the agent remains at the same place
+this is a slippery world: in 2 states close to A,
+the agent remains at the same place with probability slip
 """
-#%% initialize
+#%% import and initialize
 import numpy as np
 import matplotlib.pyplot as plt
-from ch10_plotting import plot_value
+from ch9_plotting import plot_value
 
 np.set_printoptions(precision=4, suppress = True)
 
@@ -47,7 +48,6 @@ while stop == False:
         row, column = state2rc(state)
         total_v = []
         for action in range(4):
-            action_prob = 1/4 # random policy
             if (row==0) & (column==1):
                 action_v = 10+gamma*previous_value[state2rc(21)]
             elif (row==0) & (column==3):
@@ -67,12 +67,9 @@ while stop == False:
             total_v.append(action_v)
         value[row,column] = max(total_v)
     if np.mean(np.abs(value-previous_value))<threshold:
-        converge = True
-        stop = True
+        converge = stop = True
     elif iteration>max_iteration:
         stop = True
-    else:
-        pass
     
 #%% show what you did
 print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))

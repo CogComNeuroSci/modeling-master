@@ -4,11 +4,17 @@
 Created on Tue Jul 24 12:11:57 2018
 
 @author: tom verguts
-estimate the optimal value function using dynamic programming
+estimate the optimal V value function using dynamic programming
 in particular, equation (3.19) from Sutton & Barto
 note: all p() are deterministic in this case
-this is for a slightly different grid where the agent in B is warped to state 24
+this code is for a slightly different grid where the agent arriving in B is warped to state 24
+instead of to state 13, as in the standard case. 
+This is to illustrate that the approach can find out whether it's worthwhile to
+go around state B or not: it is (typically, but depending on gamma) not worthwhile 
+in case of warp to state 13, bcs state 13 is relatively closeby.
+But it is worthwhile in case of warp to state 24, bcs that's far aways
 """
+#%% import and initialize
 import numpy as np
 import matplotlib.pyplot as plt
 from ch10_plotting import plot_value
@@ -36,8 +42,9 @@ ntrials = 100
 gamma = 0.9
 stop, converge, threshold, max_iteration = False, False, 0.005, 100
 
+#%% main code
 # start to iterate
-#print(value)
+
 iteration = 0
 while stop == False:
     previous_value = np.copy(value)
@@ -71,7 +78,7 @@ while stop == False:
     else:
         pass
     
-# show what you did
+#%% print and plot results
 print("n iterations = {0}; stopping criterion was{1}reached".format(iteration, [" not ", " "][converge]))
 print(value)
 fig, axs = plt.subplots(1, 1)
