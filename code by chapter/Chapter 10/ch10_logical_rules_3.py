@@ -9,17 +9,19 @@ now it's a RESTRICTED boltzmann machine
 under construction...
 """
 
-#%% initialize
+#%% import and initialize
 import numpy as np
 from sklearn.neural_network import BernoulliRBM
-np.set_printoptions(suppress = True, precision = 2)
+
+np.set_printoptions(suppress = True, precision = 4)
 n_burnin = 3000
 n_test_trials = 10000
 X_and = np.array( [[0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 1]] )
 X_or  = np.array( [[0, 0, 0], [1, 0, 1], [0, 1, 1], [1, 1, 1]] )
 X_101 = np.array( [[0, 0, 0], [1, 0, 1], [0, 1, 0], [1, 1, 0]] )
 X_xor = np.array( [[0, 0, 0], [1, 0, 1], [0, 1, 1], [1, 1, 0]] )
-X = X_or
+#X = X_or
+X = np.array([[1, 1, 1]])
 p = np.zeros((2**X.shape[1],))
 p_tot = np.copy(p)
 n_samples = 10
@@ -28,7 +30,7 @@ n_rep = 5
 #%% fit model n_rep times
 for rep_loop in range(n_rep):
     p = np.zeros((2**X.shape[1],))
-    model = BernoulliRBM(n_components = 1, n_iter = 200, batch_size = 20, learning_rate = 0.05)
+    model = BernoulliRBM(n_components = 5, n_iter = 200, batch_size = 20, learning_rate = 0.001)
     model.fit(X)
 
     # check equilibrium distribution
@@ -37,17 +39,17 @@ for rep_loop in range(n_rep):
         for sample_loop in range(n_samples):
             v_new = model.gibbs(v_old)
             v_old = v_new
-        row = np.dot(v_new, 2**np.array([0, 1, 2]))
+        row = np.dot(v_new, 2**np.array([0, 1, 2])) # search for the corresponding row in p (eg (0, 1, 0) --> row 2; (1, 1, 0) --> row 3)
         p[row] += 1
     p = p/np.sum(p)
     p_tot += p     
 # end of simulation    
-
-#%% wrap up
 p_tot /= n_rep    
-print("overall distribution")
+
+#%% print and plot
+print("overall distribution of each X pattern")
 print(p_tot)
-print("conditional distributions")
+print("\n conditional distributions of the test patterns")
 test_patterns = [[0, 0], [1, 0], [0, 1], [1, 1]]
 for test_index in range(len(test_patterns)):
     prob_res = np.zeros((p_tot.shape)) # restricted probabilities
