@@ -29,7 +29,7 @@ indx       = np.arange(n_stim)           # order in which stimuli are walked thr
 assignment = np.zeros((n_stim, n_stim))  # assignment of stimuli to tables
 np.random.shuffle(indx)                  # randomly shuffle the stimulus order
 n_class = 0
-
+verbose = False 
 #%% chinese restaurant process
 assignment[indx[0], 0] = 1               # first stimulus to first table
 for loop in indx[1:]:
@@ -48,6 +48,7 @@ for loop in indx[1:]:
 
 #%% report results
 print("n classes is {}".format(n_class))
-print(data)
-print(assignment)
+if verbose:
+    print(data)
+    print(assignment)
 	 

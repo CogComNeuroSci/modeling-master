@@ -10,8 +10,8 @@ TBD:
 the alpha-beta formulation can be improved by coding alpha and beta as parameters from min to plus infinity
 (instead of in range (0,1), as is done now, which leads to instability
  
-the learning model formulation can be improved by taking the log directly rather than first exponentiating
-and then taking the log
+the learning model formulation logL_learn was used in the MCP book reported simulations;
+the formulation logL_learnR is an improved formulation: It's more Robust because it avoids exponentiation as much as possible
 """
 
 import pandas as pd
@@ -59,6 +59,29 @@ def logL_learn(parameter = [0.6, 1], nstim = 5, file_name = "", data = None, pri
     logLik = logLik - (prior[1]/np.sqrt(2*np.pi))*( (parameter[0]-prior[0])**2 + (parameter[1]-prior[0])**2 )  
     return -logLik/100000
 
+def logL_learnR(parameter = [0.6, 1], nstim = 5, file_name = "", data = None, prior = (0, 0), startvalue = 0): 
+    """Robust version of the likelihood for the learning model
+    this code avoid the exponentiation as much as possible
+	parameter = learning rate, temperature
+    prior = (mean, precision); higher precision (> 0) gives more weight to the prior"""  
+    if len(file_name)>0:
+        data = pd.read_csv(file_name)
+    else:
+        data = data
+    ntrials = data.shape[0]
+    # calculate log-likelihood
+    logLik = 0
+    value = np.random.rand(nstim)
+    for trial_loop in range(ntrials):
+        v_chosen =   value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]]
+        v_unchosen = value[data.iloc[trial_loop,2-data.iloc[trial_loop,3]]]						 
+        max_v = np.maximum(v_chosen, v_unchosen)
+        logLik = logLik + parameter[1]*v_chosen - parameter[1]*max_v - np.log(np.exp(parameter[1]*(v_chosen-max_v)) + np.exp(parameter[1]*(v_unchosen-max_v)))
+        prediction_error = parameter[0]*(data.iloc[trial_loop,4]-value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]])
+        value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]] = (
+                value[data.iloc[trial_loop,data.iloc[trial_loop,3]+1]] + prediction_error)
+    logLik = logLik - (prior[1]/np.sqrt(2*np.pi))*( (parameter[0]-prior[0])**2 + (parameter[1]-prior[0])**2 )  
+    return -logLik
 
 def logL_learn2(parameter = [0.6, 0.3, 1], nstim = 5, file_name = "", data = None, prior = (0, 0), startvalue = 0): 
     """likelihood for the learning model with two learning rates

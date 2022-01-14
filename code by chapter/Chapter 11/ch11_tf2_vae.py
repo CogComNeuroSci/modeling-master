@@ -14,7 +14,7 @@ Things to try:
 	This corresponds to a beta-VAE as described in Higgins et al (2017, Arxiv).
 	What happens if you change the weights?
 '''
-
+#%% import and initialize
 import numpy as np
 import matplotlib
 matplotlib.use('Qt5agg')
@@ -33,6 +33,7 @@ latent_dim = 2
 intermediate_dim = 256
 epochs = 50
 epsilon_std = 1.0
+use_vae = True
 
 x = Input(batch_shape=(batch_size, original_dim))
 h = Dense(intermediate_dim, activation='relu')(x)
@@ -55,12 +56,14 @@ x_decoded_mean = decoder_mean(h_decoded)
 
 xent_loss = original_dim * metrics.binary_crossentropy(x, x_decoded_mean)
 kl_loss = - 0.5 * tf.reduce_sum(1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var), axis = -1 )
-vae_loss = xent_loss + kl_loss
+vae_loss = xent_loss + kl_loss # this is now L_B, eq (7) in Kingma & Welling
 
 vae = Model(x, x_decoded_mean)
-#vae.add_loss(vae_loss)
-#vae.compile(optimizer='rmsprop')
-vae.compile(optimizer='rmsprop', loss="mse") # standard MSE loss for auto-encoder
+if use_vae:
+    vae.add_loss(vae_loss)
+    vae.compile(optimizer='rmsprop') # vae loss
+else:
+    vae.compile(optimizer='rmsprop', loss="mse") # standard MSE loss for auto-encoder
 
 # train the VAE on MNIST digits
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -70,6 +73,7 @@ x_test = x_test.astype('float32') / 255.
 x_train = x_train.reshape((len(x_train), np.prod(x_train.shape[1:])))
 x_test = x_test.reshape((len(x_test), np.prod(x_test.shape[1:])))
 
+#%% actual model fitting
 vae.fit(x_train, x_train,
         shuffle=True,
         epochs=epochs,
@@ -93,7 +97,7 @@ _h_decoded = decoder_h(decoder_input)
 _x_decoded_mean = decoder_mean(_h_decoded)
 generator = Model(decoder_input, _x_decoded_mean)
 
-
+#%% print and plot results
 # display a 2D manifold of the digits
 n = 15  # figure with 15x15 digits
 digit_size = 28

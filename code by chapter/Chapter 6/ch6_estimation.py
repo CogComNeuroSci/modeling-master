@@ -26,6 +26,14 @@ def estimate_learn(nstim = 4, file_name = "", maxiter = 100, algorithm = "Powell
                             tol = 1e-10, args = (nstim, file_name, data, prior), options = {"maxiter": maxiter, "disp": True} )
     return res
 
+def estimate_learnR(nstim = 4, file_name = "", maxiter = 100, algorithm = "Powell", data = None, prior = (0, 0)):
+    """ estimate parameters of the rescorla-wagner model.
+    by default, the non-gradient-based powell algorithm is used
+    this one uses the robust version of the likelihood function"""
+    res = optimize.minimize(Lik.logL_learnR, x0 = np.random.rand(2), method = algorithm, \
+                            tol = 1e-10, args = (nstim, file_name, data, prior), options = {"maxiter": maxiter, "disp": True} )
+    return res
+
 def estimate_learn2(nstim = 4, file_name = "", maxiter = 100, algorithm = "Powell", data = None, prior = (0, 0)):
     """ estimate parameters of the rescorla-wagner model with two learning rates.
     by default, the non-gradient-based powell algorithm is used"""
