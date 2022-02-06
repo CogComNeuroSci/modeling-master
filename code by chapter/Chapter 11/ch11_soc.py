@@ -72,7 +72,7 @@ A_choice = np.zeros((len(choice_obs_names), len(context_names), len(choice_names
 
 for choice_id in range(len(choice_names)):
 
-  A_choice[choice_id, :, choice_id] = 1.0
+  A_choice[choice_id, :, choice_id] = 1.0 # you can observe your actions without ambiguity
 
 A[1] = A_choice
 
@@ -89,12 +89,13 @@ B_choice = np.zeros( (len(choice_names), len(choice_names), len(choice_action_na
 
 for choice_i in range(len(choice_names)):
   
-  B_choice[choice_i, :, choice_i] = 1.0 # you can observe your actions without ambiguity
+  B_choice[choice_i, :, choice_i] = 1.0 # you can control your actions without ambiguity
 
 B[1] = B_choice
 
-C = utils.obj_array_zeros(num_obs)
-from pymdp.maths import softmax
+# prior preferences C over X
+C = utils.obj_array_zeros(num_obs) # note: num_obs is a list, which is why we can use obj_array_zeros here
+#from pymdp.maths import softmax
 
 C_behavior = np.zeros(len(behavior_obs_names))
 C_behavior[1] = +1.0 # good
@@ -102,6 +103,7 @@ C_behavior[2] = -1 # bad
 
 C[0] = C_behavior  # C[1] can remain all zeros
 
+# prior beliefs D over Z
 D = utils.obj_array(num_factors)
 D_context = np.array([0.5,0.5])
 
