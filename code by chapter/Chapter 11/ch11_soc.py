@@ -173,9 +173,9 @@ def run_active_inference_loop(my_agent, my_env, T = 5):
   
   for t in range(T):
     qs = my_agent.infer_states(obs)
-    print("***", qs[0], qs[1])
+    #print("***", qs[0], qs[1])
     ent[t,:] = entropy(qs)
-    print(ent[t,:])
+    #print(ent[t,:])
     # if t == T-1:
     #     fig, ax = plt.subplots()
     #     ax.bar([0, 1], qs[0])
