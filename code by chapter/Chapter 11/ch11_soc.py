@@ -39,7 +39,7 @@ num_modalities = len(num_obs)
 A = utils.obj_array( num_modalities )
 
 prob_good = [0, 1] # what is the probability of being good (element 0) and being bad (element 1)
-p_consis = 0.55 # consistency of the behavior with the trait
+p_consist_model = 0.8 # consistency of the behavior with the trait according to the model
 
 
 def entropy(q):
@@ -63,8 +63,8 @@ for choice_id, choice_name in enumerate(choice_names):
   
   elif choice_name == 'Sample':
 
-    A_behavior[1:,:,choice_id] = np.array([ [p_consis, 1-p_consis], 
-                                          [1-p_consis, p_consis]])
+    A_behavior[1:,:,choice_id] = np.array([ [p_consist_model, 1-p_consist_model], 
+                                          [1-p_consist_model, p_consist_model]])
   
 A[0] = A_behavior
 
@@ -99,7 +99,7 @@ C = utils.obj_array_zeros(num_obs) # note: num_obs is a list, which is why we ca
 
 C_behavior = np.zeros(len(behavior_obs_names))
 C_behavior[1] = +1.0 # good
-C_behavior[2] = -1 # bad
+C_behavior[2] = -0.1 # bad
 
 C[0] = C_behavior  # C[1] can remain all zeros
 
@@ -197,8 +197,8 @@ def run_active_inference_loop(my_agent, my_env, T = 5):
   print("Q = ", qs[0]) 
   return ent
 
-p_consist = 0.9 # This is how consistent behavior is with actual character
-env = Knowthyself(p_consist = p_consist)
+p_consist_process = 0.8 # This is how consistent behavior is with actual character in reality (ie, the generative process)
+env = Knowthyself(p_consist = p_consist_process)
 
 T = 10
 
@@ -218,7 +218,9 @@ my_agent = Agent(A = A, B = B, C = C, D = D) # redefine the agent with the new p
 entr = run_active_inference_loop(my_agent, env, T = T)
 fig, ax = plt.subplots()
 
-ax.plot(range(T), entr[:,0])
+ax.plot(range(T), entr[:,0], color = "black")
+ax.spines["right"].set_visible(False)
+ax.spines["top"].set_visible(False)
 ax.set_xlabel("Time")
 ax.set_ylabel("Entropy")
 ax.set_ylim([0, 0.73])
