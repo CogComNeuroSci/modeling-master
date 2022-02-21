@@ -12,8 +12,7 @@ see MCP book, figure 11.3b and accompanying text
 import numpy as np
 import matplotlib.pyplot as plt
 
-p_conc  = 0.5
-prior_d = np.array([p_conc, 1-p_conc]) # z = 0, 1; should sum to 1
+p_conc  = 0.5 # a priori probability of concavity
 lik     = np.array([0.8, 0.2])   # prob x = 0 for z = 0, 1
 z_label = ["concave", "convex"]  
 x_label = ["shadow", "light"]
@@ -81,7 +80,7 @@ for idx, z in enumerate(z_vec):
 ax[0].plot(z_vec, F, color = "black")
 ax[0].plot(z_vec, s, color = "red")
 
-# calculate free energy across different Q's; data remain a single observation
+# calculate free energy across different Q's; data are n data points
 q_vec = np.arange(low_z, high_z, step_size)
 F = np.ndarray(q_vec.size)
 s = np.ndarray(q_vec.size)
