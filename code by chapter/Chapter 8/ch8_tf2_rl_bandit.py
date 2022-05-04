@@ -5,7 +5,8 @@
 @author: tom verguts
 does estimation of weights for RL purposes in TF2
 note that action is separate from estimation; only the estimation part is thus optimal
-
+if you want temperature parameter, easiest solution seems to be to multiply training data with it
+this approach combines aspects from ch 8 and 9 
 """
 
 #%% imports and initializations
@@ -24,6 +25,9 @@ train_y = np.random.uniform(size = train_x_sample.shape[0])
 train_y = (train_y[:, np.newaxis] < np.tile(p[:, np.newaxis], (n_rep, 1)))*1
 train_y = train_y.reshape(train_y.size, 1)
 
+loss = tf.keras.losses.BinaryCrossentropy()
+#loss = tf.keras.losses.MeanSquaredError()
+
 model = tf.keras.Sequential([
 			tf.keras.Input(shape=(train_x.shape[1],)),
 			tf.keras.layers.Dense(1, activation = "sigmoid")
@@ -32,7 +36,7 @@ model.build()
 
 #%% main code
 opt = tf.keras.optimizers.Adam(learning_rate = learning_rate)
-model.compile(optimizer = opt, loss=tf.keras.losses.MeanSquaredError())
+model.compile(optimizer = opt, loss = loss)
 history = model.fit(train_x_sample, train_y, batch_size = 1, epochs = epochs)
 model.summary()
 test_data = model.predict(test_x)
@@ -42,5 +46,5 @@ test_data = model.predict(test_x)
 plt.plot(history.history["loss"], color = "black")
 
 # weights
-print("predictions on the test data:")
+print("model weights:")
 print(model.layers[0].weights)
