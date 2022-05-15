@@ -15,7 +15,7 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
-n_trials = 1000
+n_trials = 500
 learning_rate = 0.1
 epsilon = 0.1
 buffer_size = 10
@@ -23,9 +23,11 @@ p = np.array([0.2, 0.2, 0.2, 0.95])  # payoff probabilities
 n_action = p.size
 actions = np.arange(n_action)
 action_1hot = np.eye(n_action)
+optimal_action = np.argmax(p)
 x_data = np.zeros((buffer_size, n_action))
 y_data = np.zeros((buffer_size, 1))
 reward = np.zeros(n_trials)
+optimal = np.zeros(n_trials)
 
 #%% model construction
 model = tf.keras.Sequential([
@@ -57,17 +59,19 @@ for loop in range(n_trials):
 	else:                           # exploit 
 		action = np.argmax(np.array(model.layers[0].weights[0]))
 	reward[loop] = (np.random.uniform()<p[action])*1
+	optimal[loop] = (action == optimal_action)*1
 	x_data, y_data = update_buffer(x_data, y_data, action, reward[loop])
 	# learn	
 	if (loop%buffer_size == 0) and (loop > 0):
 		learn(x_data, y_data)		
 
 #%% show results
-# error curve
-filter_size = 3
+filter_size = 5
 filt= np.ones(filter_size)/filter_size
-plt.plot(np.convolve(reward, filt)[filter_size:-filter_size], color = "black")
+fig, axs = plt.subplots(nrows = 1, ncols = 2)
+axs[0].plot(np.convolve(reward, filt)[filter_size:-filter_size], color = "black")
+axs[1].plot(np.convolve(optimal, filt)[filter_size:-filter_size], color = "black")
 
-# weights
-print("model weights:")
-print(model.layers[0].weights)
+# print weights
+#print("model weights:")
+#print(model.layers[0].weights)
