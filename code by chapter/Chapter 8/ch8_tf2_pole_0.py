@@ -4,7 +4,7 @@
 Created on Tue May  3 14:43:48 2022
 
 @author: tom verguts
-under construction
+first attempt at deep q-learning
 """
 
 import gym
