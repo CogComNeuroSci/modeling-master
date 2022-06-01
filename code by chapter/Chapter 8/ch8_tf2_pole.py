@@ -4,7 +4,7 @@
 Created on Tue May  3 14:43:48 2022
 
 @author: tom verguts
-under construction
+solves the cart pole problem with deep q learning and episode replay
 """
 
 import gym
@@ -15,13 +15,13 @@ import os
 
 def build_network(input_dim, action_dim, learning_rate):
     model = tf.keras.Sequential([ 
-			tf.keras.Input(shape=(input_dim,)), 
+#			tf.keras.Input(shape=(input_dim,)), 
 #            tf.keras.layers.Dense(64, activation = "sigmoid"),
-            tf.keras.layers.Dense(8, activation = "relu"),
-            tf.keras.layers.Dense(action_dim, activation = "linear")
+            tf.keras.layers.Dense(8, input_shape = (input_dim,), activation = "relu", name = "layer1"),
+            tf.keras.layers.Dense(action_dim, activation = "linear", name = "layer2")
 			] )
     model.build()
-    loss = tf.keras.losses.MeanSquaredError()
+    loss = {"layer2": tf.keras.losses.MeanSquaredError()}
     model.compile(optimizer = \
          tf.keras.optimizers.Adam(learning_rate = learning_rate), loss = loss)
     return model
@@ -55,39 +55,25 @@ class Agent(object):
             self.r_buffer[(location + data_loop)%self.buffer_size] = data[data_loop, -1].astype(int)
         return np.minimum(location + n_step, self.buffer_size)                    
             
-    def learn(self, n: int, print_condition: bool = True):
-        #self.epsilon = self.epsilon_max
+    def learn(self, n: int, verbose: bool = True):
+        #self.epsilon = self.epsilon_max # in case you want to reset epsilon on each episode
         sample_size = np.minimum(100, n);
         sample = np.random.choice(n, sample_size)
         q_predict = self.network.predict(self.x_buffer[sample])
         q_next = self.network.predict(self.xn_buffer[sample])
         q_max = np.amax(q_next, axis = 1)
-        if print_condition:
-            print(self.x_buffer)
+        if verbose:
+            print("x buffer:", self.x_buffer)
             print("n: ", n)
-            print("q_predict")
-            print(q_predict)
-            print("q_next")
-            print(q_next)
-            print("q_max")
-            print(q_max.shape) 
-            print("updated q_target:")     
+            print("q_predict", q_predict)
+            print("q_next", q_next)
         q_target = q_predict.copy()
         target_indices = np.dot(self.y_buffer[sample], np.arange(self.n_actions)).astype(int)
         q_target[list(range(q_target.shape[0])), target_indices] = np.squeeze(self.r_buffer[sample])
         q_target[list(range(q_target.shape[0])), target_indices] += self.gamma*q_max
-            #print("indices")
-            #print(target_indices)
-       	history = self.network.fit(self.x_buffer[sample], q_target, batch_size = 64, epochs = 2000, verbose = 0)	
-        print(history.history)
-        print(q_predict[0])
-        print(q_target[0])
-        if print_condition:
-            print("***")
-            q_predict = self.network.predict(self.x_buffer[sample])
-            print(q_predict)
-            print(q_target)
-            print(np.mean(np.mean((q_predict-q_target)**2)))
+       	self.network.fit(self.x_buffer[sample], q_target, batch_size = 64, epochs = 2000, verbose = 0)	
+        if verbose:
+            print("q_target", q_target)
            
     def sample(self, state):
         if np.random.uniform() < self.epsilon:
@@ -102,9 +88,11 @@ class Agent(object):
 def learn_w(n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
     lc = np.zeros(n_loop)
     buffer_count = 0
+    stop_crit = False
+    loop, success = 0, 0
     # learn
-    for loop in range(n_loop):
-        print("loop", loop)
+    while not stop_crit:
+        print("episode loop", loop)
         n_step, done = 0, False
         state = env.reset()
         data = np.zeros((max_n_step, input_dim*2 + 2)) # data for this loop
@@ -120,14 +108,17 @@ def learn_w(n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
                 data[n_step, -1]  = -100
             n_step += 1
             state = next_state
-
         buffer_count = rl_agent.update_buffer(data, n_step, buffer_count)
-        if (not loop % rl_agent.learn_gran) and (buffer_count > 500):
-            rl_agent.learn(buffer_count, print_condition = False)
+        if (not loop % rl_agent.learn_gran) and (buffer_count > 500): # don't learn first 500 trials
+            rl_agent.learn(buffer_count, verbose = False)
         lc[loop] = n_step
-    return lc
+        loop += 1
+        success += (n_step == max_n_step)
+        print("n steps = " + str(n_step) + "\n")
+        stop_crit = (loop == n_loop) or (success > 10)
+    return lc, success > 10
 
-def perform():
+def perform(verbose: bool = False):
     state = env.reset() 
     n_step, done = 0, False
     while not done:
@@ -136,16 +127,24 @@ def perform():
         next_state, reward, done, info = env.step(action)
         n_step += 1
         state = next_state
-        print(n_step)
+        if verbose:
+            print(n_step)
         
 if __name__ == "__main__":
     env = gym.make("CartPole-v0")
+    load_model, save_model, train_model = False, False, False
     rl_agent = Agent(env.observation_space.shape[0], env.action_space.n, \
                            buffer_size = 1000, epsilon_min = 0.001, epsilon_max = 0.99, \
                            epsilon_dec = 0.999, lr = 0.001, gamma = 0.9, learn_gran = 1)
-    lc = learn_w(n_loop = 150, max_n_step = 200, input_dim = env.observation_space.shape[0])
-    rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model")
-    plt.plot(lc)
-    perform()
-
+    if load_model:
+        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model")
+    if train_model:
+        lc, solved = learn_w(n_loop = 100, max_n_step = 200, input_dim = env.observation_space.shape[0])
+    if save_model:
+        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model")
+    if train_model:
+        plt.plot(lc)
+    if train_model and solved:
+        print("Problem solved.")
+    perform(verbose = False)
     env.close()
