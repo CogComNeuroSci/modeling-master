@@ -118,8 +118,8 @@ def learn_w(n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
         stop_crit = (loop == n_loop) or (success > 10)
     return lc, success > 10
 
-def perform(verbose: bool = False):
-    state = env.reset() 
+def perform(env, rl_agent, verbose: bool = False):
+    state = env.reset()
     n_step, done = 0, False
     while not done:
         env.render()
@@ -146,5 +146,5 @@ if __name__ == "__main__":
         plt.plot(lc)
     if train_model and solved:
         print("Problem solved.")
-    perform(verbose = False)
+    perform(env, rl_agent, verbose = False)
     env.close()
