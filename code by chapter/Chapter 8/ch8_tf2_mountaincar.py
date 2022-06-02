@@ -16,9 +16,8 @@ from ch8_tf2_pole import Agent, perform
 
 def build_network(input_dim, action_dim, learning_rate):
     model = tf.keras.Sequential([ 
-#			tf.keras.Input(shape=(input_dim,)), 
-            tf.keras.layers.Dense(64, activation = "relu"),
-            tf.keras.layers.Dense(16, input_shape = (input_dim,), activation = "relu", name = "layer1"),
+           tf.keras.layers.Dense(16, input_shape = (input_dim,), activation = "relu", name = "layer0"),
+           tf.keras.layers.Dense(8, activation = "relu", name = "layer1"),
             tf.keras.layers.Dense(action_dim, activation = "linear", name = "layer2")
 			] )
     model.build()
@@ -64,13 +63,13 @@ if __name__ == "__main__":
     load_model, save_model, train_model = False, False, True
     rl_agent = Agent(env.observation_space.shape[0], env.action_space.n, \
                            buffer_size = 1000, epsilon_min = 0.001, epsilon_max = 0.99, \
-                           epsilon_dec = 0.999, lr = 0.002, gamma = 0.99, learn_gran = 1)
+                           epsilon_dec = 0.999, lr = 0.001, gamma = 0.99, learn_gran = 1)
     if load_model:
-        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model")
+        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_mountaincar")
     if train_model:
-        lc, solved = learn_w(n_loop = 100, max_n_step = 200, input_dim = env.observation_space.shape[0])
+        lc, solved = learn_w(n_loop = 200, max_n_step = 200, input_dim = env.observation_space.shape[0])
     if save_model:
-        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model")
+        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_mountaincar")
     if train_model:
         plt.plot(lc)
     if train_model and solved:
