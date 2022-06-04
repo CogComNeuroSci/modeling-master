@@ -44,15 +44,17 @@ class Agent(object):
         self.xn_buffer = np.zeros((self.buffer_size, self.n_states))
         self.y_buffer = np.zeros((self.buffer_size, self.n_actions))
         self.r_buffer = np.zeros((self.buffer_size, 1))
+        self.d_buffer = np.zeros((self.buffer_size, 1))
 
     def update_buffer(self, data, n_step, location):        
         for data_loop in range(n_step):
             self.x_buffer[(location + data_loop)%self.buffer_size]  = data[data_loop, 0:self.n_states]
             self.xn_buffer[(location + data_loop)%self.buffer_size] = data[data_loop, self.n_states:2*self.n_states]
             action_1hot = np.zeros(self.n_actions)
-            action_1hot[data[data_loop, -2].astype(int)] = 1
+            action_1hot[data[data_loop, -3].astype(int)] = 1
             self.y_buffer[(location + data_loop)%self.buffer_size] = action_1hot
-            self.r_buffer[(location + data_loop)%self.buffer_size] = data[data_loop, -1].astype(int)
+            self.r_buffer[(location + data_loop)%self.buffer_size] = data[data_loop, -2].astype(int)
+            self.d_buffer[(location + data_loop)%self.buffer_size] = data[data_loop, -1]
         return np.minimum(location + n_step, self.buffer_size)                    
             
     def learn(self, n: int, verbose: bool = True):
@@ -62,6 +64,7 @@ class Agent(object):
         q_predict = self.network.predict(self.x_buffer[sample])
         q_next = self.network.predict(self.xn_buffer[sample])
         q_max = np.amax(q_next, axis = 1)
+        include_v = 1 - self.d_buffer[sample]
         if verbose:
             print("x buffer:", self.x_buffer)
             print("n: ", n)
@@ -70,7 +73,7 @@ class Agent(object):
         q_target = q_predict.copy()
         target_indices = np.dot(self.y_buffer[sample], np.arange(self.n_actions)).astype(int)
         q_target[list(range(q_target.shape[0])), target_indices] = np.squeeze(self.r_buffer[sample])
-        q_target[list(range(q_target.shape[0])), target_indices] += self.gamma*q_max
+        q_target[list(range(q_target.shape[0])), target_indices] += self.gamma*q_max * np.squeeze(include_v)
        	self.network.fit(self.x_buffer[sample], q_target, batch_size = 64, epochs = 2000, verbose = 0)	
         if verbose:
             print("q_target", q_target)
@@ -95,17 +98,18 @@ def learn_w(n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
         print("episode loop", loop)
         n_step, done = 0, False
         state = env.reset()
-        data = np.zeros((max_n_step, input_dim*2 + 2)) # data for this loop
+        data = np.zeros((max_n_step, input_dim*2 + 3)) # data for this loop
         while not done:
             action = rl_agent.sample(state)
             next_state, reward, done, info = env.step(action)
             data[n_step, 0:input_dim] = state
             data[n_step, input_dim:2*input_dim] = next_state
-            data[n_step, -2]  = action
+            data[n_step, -3]  = action
             if not done or n_step >= max_n_step-1:
-                data[n_step, -1]  = reward
+                data[n_step, -2]  = reward
             else:
-                data[n_step, -1]  = -100
+                data[n_step, -2]  = -100
+            data[n_step, -1] = int(done)
             n_step += 1
             state = next_state
         buffer_count = rl_agent.update_buffer(data, n_step, buffer_count)

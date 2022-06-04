@@ -37,14 +37,16 @@ def learn_w(n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
         print("episode loop", loop)
         n_step, done = 0, False
         state = env.reset()
-        data = np.zeros((max_n_step, input_dim*2 + 2)) # data for this loop
+        data = np.zeros((max_n_step, input_dim*2 + 3)) # data for this loop
         while not done:
             action = rl_agent.sample(state)
             next_state, reward, done, info = env.step(action)
             data[n_step, 0:input_dim] = state
             data[n_step, input_dim:2*input_dim] = next_state
-            data[n_step, -2]  = action
-            data[n_step, -1]  = reward + (reward==0)*50
+            data[n_step, -3]  = action
+            fb = reward + int(done)*(n_step<(200-1))*50
+            data[n_step, -2]  = fb
+            data[n_step, -1]  = done
             n_step += 1
             state = next_state
         buffer_count = rl_agent.update_buffer(data, n_step, buffer_count)
@@ -52,7 +54,8 @@ def learn_w(n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
             rl_agent.learn(buffer_count, verbose = False)
         lc[loop] = n_step
         loop += 1
-        success += (reward == 0)
+        success += (fb > 0)
+#        print("*", reward, done, next_state)
         print("n steps = " + str(n_step) + "\n")
         stop_crit = (loop == n_loop) or (success > 10)
     return lc, success > 10
