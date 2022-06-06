@@ -5,6 +5,7 @@ Created on Tue May  3 14:43:48 2022
 
 @author: tom verguts
 solves the cart pole problem with deep q learning and episode replay
+as described in mnih et al
 """
 
 import gym
@@ -13,11 +14,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-def build_network(input_dim, action_dim, learning_rate):
+def build_network(input_dim: int, action_dim: int, learning_rate, hidlayer1: int, hidlayer2: int):
     model = tf.keras.Sequential([ 
-#			tf.keras.Input(shape=(input_dim,)), 
-#            tf.keras.layers.Dense(64, activation = "sigmoid"),
-            tf.keras.layers.Dense(8, input_shape = (input_dim,), activation = "relu", name = "layer1"),
+            tf.keras.layers.Dense(hidlayer1, input_shape = (input_dim,), activation = "relu", name = "layer0"),
+            tf.keras.layers.Dense(hidlayer2, activation = "relu", name = "layer1"),
             tf.keras.layers.Dense(action_dim, activation = "linear", name = "layer2")
 			] )
     model.build()
@@ -26,8 +26,9 @@ def build_network(input_dim, action_dim, learning_rate):
          tf.keras.optimizers.Adam(learning_rate = learning_rate), loss = loss)
     return model
 
+
 class Agent(object):
-    def __init__(self, n_states, n_actions, buffer_size, epsilon_min, epsilon_max, epsilon_dec, lr, gamma, learn_gran):
+    def __init__(self, n_states, n_actions, buffer_size, epsilon_min, epsilon_max, epsilon_dec, lr, gamma, learn_gran, nhid1, nhid2):
         self.n_states = n_states
         self.n_actions = n_actions
         self.actions = np.arange(n_actions)
@@ -39,12 +40,15 @@ class Agent(object):
         self.lr = lr
         self.gamma = gamma
         self.learn_gran = learn_gran
-        self.network = build_network(self.n_states, self.n_actions, self.lr)
+        self.nhid1 = nhid1
+        self.nhid2 = nhid2
+        self.network = build_network(self.n_states, self.n_actions, self.lr, self.nhid1, self.nhid2)
         self.x_buffer = np.zeros((self.buffer_size, self.n_states))
         self.xn_buffer = np.zeros((self.buffer_size, self.n_states))
         self.y_buffer = np.zeros((self.buffer_size, self.n_actions))
         self.r_buffer = np.zeros((self.buffer_size, 1))
         self.d_buffer = np.zeros((self.buffer_size, 1))
+
 
     def update_buffer(self, data, n_step, location):        
         for data_loop in range(n_step):
@@ -88,7 +92,7 @@ class Agent(object):
         return action
 
 
-def learn_w(n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
+def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
     lc = np.zeros(n_loop)
     buffer_count = 0
     stop_crit = False
@@ -139,11 +143,11 @@ if __name__ == "__main__":
     load_model, save_model, train_model = True, False, True
     rl_agent = Agent(env.observation_space.shape[0], env.action_space.n, \
                            buffer_size = 1000, epsilon_min = 0.001, epsilon_max = 0.99, \
-                           epsilon_dec = 0.999, lr = 0.001, gamma = 0.9, learn_gran = 1)
+                           epsilon_dec = 0.999, lr = 0.001, gamma = 0.9, learn_gran = 1, nhid1 = 16, nhid2 = 8)
     if load_model:
         rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_cartpole")
     if train_model:
-        lc, solved = learn_w(n_loop = 200, max_n_step = 200, input_dim = env.observation_space.shape[0])
+        lc, solved = learn_w(env, n_loop = 100, max_n_step = 200, input_dim = env.observation_space.shape[0])
     if save_model:
         tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_cartpole")
     if train_model:
