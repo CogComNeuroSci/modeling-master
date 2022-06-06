@@ -45,8 +45,6 @@ def learn_w(n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
         lc[loop] = n_step
         loop += 1
         success += (fb > 0)
-#        print("*", reward, done, next_state)
-        print("eps = " + str(rl_agent.epsilon)+ "\n")
         print("n steps = " + str(n_step) + "\n")
         stop_crit = (loop == n_loop) or (success > 10)
     return lc, success > 10
