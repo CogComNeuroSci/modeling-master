@@ -6,6 +6,7 @@ Created on Tue May  3 14:43:48 2022
 @author: tom verguts
 solves the cart pole problem with deep q learning and episode replay
 as described in mnih et al
+i was inspired by machine learning with phil for this implementation
 """
 
 import gym
