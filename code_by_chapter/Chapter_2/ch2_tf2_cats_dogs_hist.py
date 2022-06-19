@@ -16,9 +16,10 @@ import matplotlib.pyplot as plt
 
 # initialize variables
 #x_cat = np.array([1, 1, 0]) # prototypical cat
-x_dog = np.array([0.8, 1, 1, 0.8, 1, 1]) # prototypical dog
-x = x_dog #/np.linalg.norm(x_dog)
-W = np.array([[2, 1, 0, 2, 1, 0], [0, 1, 2, 0, 1, 2]]).astype(np.float32)
+overlap = 0.8
+x_dog = np.array([overlap, 1, 1, overlap, 1, 1, overlap, 1, 1]) # prototypical dog
+x = x_dog #/np.linalg.norm(x_dog) # in case you want to normalize the input vector
+W = np.array([[2, 1, 0, 2, 1, 0, 2, 1, 0], [0, 1, 2, 0, 1, 2, 0, 1, 2]]).astype(np.float32)
 net = np.matmul(W, x).reshape(2,1).astype(np.float32) # net input to the cat and dog output units
 w_inh = -0.2    # lateral inhibition between cat and dog
 W_inh = w_inh*np.array([[0, 1], [1, 0]])
