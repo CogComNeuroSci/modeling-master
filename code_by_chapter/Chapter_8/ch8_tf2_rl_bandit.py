@@ -3,7 +3,9 @@
 """
 
 @author: tom verguts
+implements a multi-armed bandit task
 does estimation of weights for RL purposes in TF2
+there is a single output unit; choices are encoded in the weights
 note that action is separate from estimation; only the estimation part is thus optimal
 if you want temperature parameter, easiest solution seems to be to multiply training data with it
 this approach combines aspects from ch 8 and 9 
