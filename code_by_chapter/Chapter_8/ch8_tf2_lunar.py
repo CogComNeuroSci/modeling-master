@@ -4,7 +4,7 @@
 Created on Wed Jun 22 08:38:02 2022
 
 @author: tom verguts
-solves the taxi problem using policy gradient (-like) algorithm
+solves the lunar lander problem using policy gradient (-like) algorithm
 under construction
 """
 #%% import, initialization, definitions
@@ -25,7 +25,7 @@ class PG_Agent(object):
         self.lr = lr
         self.gamma = gamma
         self.max_n_step = max_n_step
-        self.x_buffer = np.zeros((self.max_n_step, 1))
+        self.x_buffer = np.zeros((self.max_n_step, n_states))
         self.y_buffer = np.zeros((self.max_n_step, 2))
         self.network = self.build_network()
 
@@ -41,7 +41,9 @@ class PG_Agent(object):
 #           return -K.log(y_pred[: , action_true] + 1e-5) * advantage
 
         model = tf.keras.Sequential([ 
-                tf.keras.layers.Dense(self.n_actions, input_shape = (self.n_states,), activation = "softmax", name = "layer")
+                tf.keras.layers.Dense(64, input_shape = (self.n_states,), activation = "relu"),
+                tf.keras.layers.Dense(64, activation = "relu"),
+                tf.keras.layers.Dense(self.n_actions, activation = "softmax")
 		    	] )
         model.build()
         model.compile(optimizer = \
@@ -49,7 +51,7 @@ class PG_Agent(object):
         return model
  
     def empty_buffer(self):
-        self.x_buffer = np.zeros((self.max_n_step, 1))
+        self.x_buffer = np.zeros((self.max_n_step, self.n_states))
         self.y_buffer = np.zeros((self.max_n_step, 2))		
 		
     def update_buffer(self, n_step, states, actions, rewards):
@@ -68,15 +70,12 @@ class PG_Agent(object):
         self.y_buffer[:, 1] = (self.y_buffer[:, 1] - avg)/(std + int(std == 0))  	    
             
     def learn(self, verbose: bool = True):
-        state_array = np.zeros((self.max_n_step, self.n_states))
-        state_array[list(range(self.max_n_step)), self.x_buffer.astype(int)] = 1
-       	self.network.train_on_batch(state_array, self.y_buffer)	
+       	self.network.train_on_batch(self.x_buffer, self.y_buffer)	
         if verbose:
             print("what do you want to see?")
  
     def sample(self, state):
-        state_array = np.zeros((1, self.n_states))
-        state_array[0, state] = 1
+        state_array = np.array(state)[np.newaxis, :]
         prob = np.squeeze(self.network.predict(state_array))
 #        print(prob)
         action = np.random.choice(self.actions, p = prob) 
@@ -92,13 +91,13 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
         print("episode loop", loop)
         n_step, done = 0, False
         state = env.reset()
-        states  = np.zeros(max_n_step)
+        states  = np.zeros((max_n_step, env.observation_space.shape[0]))
         actions = np.zeros(max_n_step) # to construct y_buffer
         rewards = np.zeros(max_n_step) # to construct y_buffer
         for t in range(max_n_step):
             action = rl_agent.sample(state)
             next_state, reward, done, info = env.step(action)
-            states[n_step]  = state
+            states[n_step, :]  = state
             actions[n_step] = action
             rewards[n_step] = reward
             n_step += 1
@@ -108,25 +107,26 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
         rl_agent.empty_buffer()
         rl_agent.update_buffer(n_step, states, actions, rewards)
         rl_agent.learn(verbose = False)
-        lc[loop] = n_step
+        lc[loop] = np.max(rewards)
         loop += 1
-        success += int(n_step < max_n_step)
-        print("n steps = " + str(n_step) + "\n")
+        success += int(np.max(rewards) >= 200)
+        rw = np.max(rewards[:t])
+        print("n steps = " + str(n_step) + " , max rew = {:.1f}".format(rw) + "\n" )
         stop_crit = (loop == n_loop) or (success > 10)
     return lc, success > 10
 
 #%% main code
 if __name__ == "__main__":
-    env = gym.make('Taxi-v2')
-    load_model, save_model, train_model, performance = False, False, True, False
-    rl_agent = PG_Agent(n_states = env.observation_space.n, n_actions = env.action_space.n, \
-                           lr = 0.3, gamma = 0.99, max_n_step = 200)
+    env = gym.make('LunarLander-v2')
+    load_model, save_model, train_model, performance = False, True, True, True
+    rl_agent = PG_Agent(n_states = env.observation_space.shape[0], n_actions = env.action_space.n, \
+                           lr = 0.001, gamma = 0.99, max_n_step = 1000)
     if load_model:
-        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_taxi")
+        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_lunar")
     if train_model:
-        lc, solved = learn_w(env, n_loop = 3000, input_dim = env.observation_space.n, max_n_step = rl_agent.max_n_step)
+        lc, solved = learn_w(env, n_loop = 2000, input_dim = env.observation_space.shape[0], max_n_step = rl_agent.max_n_step)
     if save_model:
-        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_taxi")
+        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_lunar")
     if train_model:
         plt.plot(lc)
     if train_model and solved:
