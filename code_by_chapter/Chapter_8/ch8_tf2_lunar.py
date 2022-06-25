@@ -5,7 +5,7 @@ Created on Wed Jun 22 08:38:02 2022
 
 @author: tom verguts
 solves the lunar lander problem using policy gradient (-like) algorithm
-under construction
+
 """
 #%% import, initialization, definitions
 import gym
@@ -118,13 +118,13 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
 #%% main code
 if __name__ == "__main__":
     env = gym.make('LunarLander-v2')
-    load_model, save_model, train_model, performance = False, True, True, True
+    load_model, save_model, train_model, performance = False, False, True, True
     rl_agent = PG_Agent(n_states = env.observation_space.shape[0], n_actions = env.action_space.n, \
-                           lr = 0.001, gamma = 0.99, max_n_step = 1000)
+                           lr = 0.001, gamma = 0.99, max_n_step = 10)
     if load_model:
-        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_lunar")
+        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_lunar.h5", compile = False)
     if train_model:
-        lc, solved = learn_w(env, n_loop = 2000, input_dim = env.observation_space.shape[0], max_n_step = rl_agent.max_n_step)
+        lc, solved = learn_w(env, n_loop = 100, input_dim = env.observation_space.shape[0], max_n_step = rl_agent.max_n_step)
     if save_model:
         tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_lunar")
     if train_model:
