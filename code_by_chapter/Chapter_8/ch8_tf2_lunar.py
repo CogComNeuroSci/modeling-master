@@ -118,15 +118,15 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
 #%% main code
 if __name__ == "__main__":
     env = gym.make('LunarLander-v2')
-    load_model, save_model, train_model, performance = False, False, True, True
+    load_model, save_model, train_model, performance = False, False, False, True
     rl_agent = PG_Agent(n_states = env.observation_space.shape[0], n_actions = env.action_space.n, \
-                           lr = 0.001, gamma = 0.99, max_n_step = 10)
+                           lr = 0.001, gamma = 0.99, max_n_step = 5)
     if load_model:
-        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_lunar.h5", compile = False)
+        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_lunar", compile = False)
     if train_model:
-        lc, solved = learn_w(env, n_loop = 100, input_dim = env.observation_space.shape[0], max_n_step = rl_agent.max_n_step)
+        lc, solved = learn_w(env, n_loop = 2, input_dim = env.observation_space.shape[0], max_n_step = rl_agent.max_n_step)
     if save_model:
-        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_lunar")
+        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_lunar.h5")
     if train_model:
         plt.plot(lc)
     if train_model and solved:
