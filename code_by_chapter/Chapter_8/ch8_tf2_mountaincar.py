@@ -4,7 +4,8 @@
 Created on Tue May  3 14:43:48 2022
 
 @author: tom verguts
-the mountain car problem: works but not amazingly efficient
+the mountain car problem with DQN (as in mnhih et al; uses double-DQN class AgentD)
+works but not amazingly efficient
 """
 
 import gym

@@ -5,7 +5,7 @@ Created on Wed Jun 22 08:38:02 2022
 
 @author: tom verguts
 solves the lunar lander problem using policy gradient (-like) algorithm
-
+it works but it's inefficient because it doesn't store old data that can be used for training
 """
 #%% import, initialization, definitions
 import gym

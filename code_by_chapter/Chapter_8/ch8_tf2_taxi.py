@@ -5,7 +5,6 @@ Created on Wed Jun 22 08:38:02 2022
 
 @author: tom verguts
 solves the taxi problem using policy gradient (-like) algorithm
-under construction
 """
 #%% import, initialization, definitions
 import gym
