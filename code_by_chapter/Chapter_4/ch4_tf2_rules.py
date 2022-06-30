@@ -21,7 +21,7 @@ learning_rate = 0.5
 epochs    = 100 # how often to go through the whole data set
 train_x   = np.array([[0, 0], [0, 1], [1, 0], [1, 1]]) # a cat and a dog input pattern
 test_x    = np.copy(train_x)                  # patterns to test the model after training
-train_y   = np.array([0, 1, 1, 0])                 # a single output unit suffices for 2 categories
+train_y   = np.array([0, 0, 0, 1])                 # a single output unit suffices for 2 categories
 train_y   = train_y.reshape(4, 1)            # from a (2,) vector to a (2,1) matrix (not strictly needed)
 n_input, n_output  = train_x.shape[1], 1
 

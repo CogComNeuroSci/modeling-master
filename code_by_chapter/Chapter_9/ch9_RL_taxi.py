@@ -32,7 +32,10 @@ Q = np.random.rand(env.observation_space.n, env.action_space.n) # giant Q matrix
 tot_reward_epi, tot_finish = [], []
 color_list = {"rw": "black", "sarsa": "red", "sarsalam": "blue", "ql": "green"}
 window_conv = 10 # convolution window for smooth curves
-verbose = False # do you want to see intermediate results in optimisation
+verbose = True # do you want to see intermediate results in optimisation
+
+def smoothen(vector, window):
+    return np.convolve(vector, np.ones(window)/window)
 
 #%% main code
 for ep in range(n_episodes):
@@ -87,12 +90,12 @@ for ep in range(n_episodes):
 #%% plot results
 fig, axs = plt.subplots(1, 2)
 
-v_reward = np.convolve(tot_reward_epi,np.ones(window_conv)/window_conv)
+v_reward = smoothen(tot_reward_epi, window_conv)
 axs[0].set_title("average reward obtained")
 axs[0].plot(v_reward[window_conv:-window_conv], color = color_list[algo])
 axs[0].set_xlabel("trial number")
 
-v_finish = np.convolve(tot_finish,np.ones(window_conv)/window_conv)
+v_finish = smoothen(tot_finish, window_conv)
 axs[1].set_title("average number of steps needed to finish")
 axs[1].plot(v_finish[window_conv:-window_conv], color = color_list[algo])
 axs[1].set_xlabel("trial number")

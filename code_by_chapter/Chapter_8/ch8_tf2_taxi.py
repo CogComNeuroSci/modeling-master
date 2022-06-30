@@ -104,6 +104,7 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
             state = next_state
             if done:
                 break
+            print(rl_agent.network.get_weights()[0][0:5])
         rl_agent.empty_buffer()
         rl_agent.update_buffer(n_step, states, actions, rewards)
         rl_agent.learn(verbose = False)

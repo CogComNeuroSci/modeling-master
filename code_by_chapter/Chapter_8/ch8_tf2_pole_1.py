@@ -78,6 +78,7 @@ class Agent(object):
             print("q_next", q_next)
         q_target = q_predict.copy()
         target_indices = np.dot(self.y_buffer[sample], np.arange(self.n_actions)).astype(int)
+#        print(target_indices)
         q_target[list(range(q_target.shape[0])), target_indices] = np.squeeze(self.r_buffer[sample])
         q_target[list(range(q_target.shape[0])), target_indices] += self.gamma*q_max * np.squeeze(include_v)
        	self.network.fit(self.x_buffer[sample], q_target, batch_size = 64, epochs = 2000, verbose = 0)	
@@ -149,7 +150,7 @@ if __name__ == "__main__":
     if load_model:
         rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_cartpole")
     if train_model:
-        lc, solved = learn_w(env, n_loop = 100, max_n_step = 200, input_dim = env.observation_space.shape[0])
+        lc, solved = learn_w(env, n_loop = 50, max_n_step = 200, input_dim = env.observation_space.shape[0])
     if save_model:
         tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_cartpole")
     if train_model:
