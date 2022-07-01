@@ -159,7 +159,7 @@ def perform(env, rl_agent, verbose: bool = False):
         
 if __name__ == "__main__":
     env = gym.make("Taxi-v2")
-    load_model, save_model, train_model, performance, plot_results = False, False, False, False, False
+    load_model, save_model, train_model, performance, plot_results = False, False, False, False, True
     rl_agent = Agent(env.observation_space.n, env.action_space.n, \
                            buffer_size = 100, epsilon_min = 0.1, epsilon_max = 1, \
                            epsilon_dec = 0.99, lr = 0.07, gamma = 0.95, learn_gran = 1)
