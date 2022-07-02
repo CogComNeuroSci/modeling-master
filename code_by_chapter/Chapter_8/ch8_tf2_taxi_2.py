@@ -7,8 +7,10 @@ Created on Tue May  3 14:43:48 2022
 solves the taxi problem with deep q learning and episode replay
 as described in mnih et al
 build_network0 has zero hidden layers... should be similar to tabular version
+but it's less efficient for some reason
 """
 
+#%% imports and definitions
 import gym
 import tensorflow as tf
 import numpy as np
@@ -19,10 +21,10 @@ from ch9_RL_taxi import smoothen
 
 def build_network0(input_dim: int, action_dim: int, learning_rate: float):
 ##model without hidden layers
-    initializer = tf.keras.initializers.Constant(1)
+    initializer = tf.keras.initializers.Constant(0)
     model = tf.keras.Sequential()
     model.add(tf.keras.Input(shape=(input_dim,)))
-    model.add(tf.keras.layers.Dense(action_dim, activation = "linear", kernel_initializer=initializer, name = "layer"))
+    model.add(tf.keras.layers.Dense(action_dim, activation = "linear", use_bias = False,  kernel_initializer=initializer, name = "layer"))
     model.build()
     loss = {"layer": tf.keras.losses.MeanSquaredError()}
     model.compile(optimizer = \
@@ -32,7 +34,7 @@ def build_network0(input_dim: int, action_dim: int, learning_rate: float):
 
 class Agent(object):
 ## similar to the earlier Agent classes but importing the older wasn't worth it in this case    
-    def __init__(self, n_states, n_actions, buffer_size, epsilon_min, epsilon_max, epsilon_dec, lr, gamma, learn_gran):
+    def __init__(self, n_states, n_actions, buffer_size, epsilon_min, epsilon_max, epsilon_dec, lr, gamma, learn_gran, update_gran):
         self.n_states = n_states
         self.n_actions = n_actions
         self.actions = np.arange(n_actions)
@@ -44,7 +46,9 @@ class Agent(object):
         self.lr = lr
         self.gamma = gamma
         self.learn_gran = learn_gran
+        self.update_gran = update_gran
         self.network = build_network0(self.n_states, self.n_actions, self.lr)
+        self.network_target = build_network0(self.n_states, self.n_actions, self.lr)
         self.x_buffer = np.zeros((self.buffer_size, 1)).astype(int)
         self.xn_buffer = np.zeros((self.buffer_size, 1)).astype(int)
         self.y_buffer = np.zeros((self.buffer_size, 1)).astype(int)
@@ -63,14 +67,14 @@ class Agent(object):
             
     def learn(self, n: int, verbose: bool = True):
         #self.epsilon = self.epsilon_max # in case you want to reset epsilon on each episode
-        sample_size = np.minimum(100, n)
+        sample_size = np.minimum(200, n)
         sample = np.random.choice(n, sample_size)
         v_x = np.zeros((sample_size, self.n_states))
         v_x[list(range(sample_size)), np.squeeze(self.x_buffer[sample])] = 1
         q_predict = self.network.predict(v_x)
         v_xn = np.zeros((sample_size, self.n_states))
         v_xn[list(range(sample_size)), np.squeeze(self.xn_buffer[sample])] = 1
-        q_next = self.network.predict(v_xn)
+        q_next = self.network_target.predict(v_xn)
         q_max = np.amax(q_next, axis = 1)
         include_v = 1 - self.d_buffer[sample]
         if verbose:
@@ -85,7 +89,10 @@ class Agent(object):
        	self.network.train_on_batch(v_x, q_target)	
         if verbose:
             print("q_target", q_target)
-        
+
+    def update_q(self):
+        self.network_target.set_weights(self.network.get_weights())    
+
     def sample(self, state):
     ## epsilon-greedy sample    
         if np.random.uniform() < self.epsilon:
@@ -134,6 +141,8 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
             state = next_state
             reward_vec[loop] += reward
         buffer_count = rl_agent.update_buffer(data, n_step-1, buffer_count)
+        if not loop % rl_agent.update_gran:
+            rl_agent.update_q()
         if (not loop % rl_agent.learn_gran) and (buffer_count > 10): # don't learn first n trials
             rl_agent.learn(buffer_count, verbose = False)
         lc[loop] = n_step
@@ -157,17 +166,18 @@ def perform(env, rl_agent, verbose: bool = False):
         if verbose:
             print(n_step)
         
+#%% 
 if __name__ == "__main__":
     env = gym.make("Taxi-v2")
-    load_model, save_model, train_model, performance, plot_results = False, False, False, False, True
+    load_model, save_model, train_model, performance, plot_results = False, False, True, False, True
     rl_agent = Agent(env.observation_space.n, env.action_space.n, \
-                           buffer_size = 100, epsilon_min = 0.1, epsilon_max = 1, \
-                           epsilon_dec = 0.99, lr = 0.07, gamma = 0.95, learn_gran = 1)
+                           buffer_size = 200, epsilon_min = 0.1, epsilon_max = 1, \
+                           epsilon_dec = 0.99, lr = 0.3, gamma = 0.95, learn_gran = 1, update_gran = 5)
 
     if load_model:
         rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_taxi_dqn.h5")
     if train_model:
-        lc, solved, reward_vec, W = learn_w(env, n_loop = 300, max_n_step = 200, input_dim = env.observation_space.n)
+        lc, solved, reward_vec, W = learn_w(env, n_loop = 1000, max_n_step = 200, input_dim = env.observation_space.n)
     if save_model:
         tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_taxi_dqn.h5")
     if plot_results:

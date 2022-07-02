@@ -33,7 +33,7 @@ def smoothen(vector, window):
     return np.convolve(vector, np.ones(window)/window)
 
 def softmax(inv_temp, weights):
-    prob = np.exp(gamma[gamma_loop]*weights)
+    prob = np.exp(inv_temp*weights)
     return prob/np.sum(prob)
 	
 #%% let's play: different gamma's

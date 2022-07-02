@@ -25,7 +25,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 env = gym.make('Taxi-v2')
-algo = "sarsa" # options are rw, sarsa, sarsalam, or ql
+algo = "ql" # options are rw, sarsa, sarsalam, or ql
 n_episodes, max_per_episode = 200, 200
 lr, gamma, lambd = 0.7, 0.95, 0.4 # learning rate, discount rate, eligibility trace (lambda)
 Q = np.random.rand(env.observation_space.n, env.action_space.n) # giant Q matrix for flat RL
@@ -36,6 +36,15 @@ verbose = True # do you want to see intermediate results in optimisation
 
 def smoothen(vector, window):
     return np.convolve(vector, np.ones(window)/window)
+
+def safe_softmax():
+    try:
+        prob = np.exp(Q[observation,:])
+        prob = prob/np.sum(prob)
+        action = np.random.choice(range(env.action_space.n), p = prob) # softmax
+    except:        
+        action = env.action_space.sample() # random policy
+    return action    
 
 #%% main code
 if __name__ == "__main__":
@@ -50,12 +59,7 @@ if __name__ == "__main__":
         if verbose:
             print("episode {}".format(ep))
         for t in range(max_per_episode):
-            try:
-                prob = np.exp(Q[observation,:])
-                prob = prob/np.sum(prob)
-                action = np.random.choice(range(env.action_space.n), p = prob) # softmax
-            except:        
-                action = env.action_space.sample() # random policy
+            action = safe_softmax()
             observation1, reward, done, info = env.step(action)
             if algo == "rw":
                 backup = reward
@@ -109,11 +113,6 @@ if __name__ == "__main__":
         for t in range(n_steps):
             t += 1
             env.render() # show the maze
-            try:
-                prob = np.exp(Q[observation,:])
-                prob = prob/np.sum(prob)
-                action = np.random.choice(range(env.action_space.n), p = prob) # softmax
-            except:        
-                action = env.action_space.sample() # random policy
+            action = safe_softmax()
             observation, reward, done, info = env.step(action)
             input() # press Enter in the console to proceed to the next state
