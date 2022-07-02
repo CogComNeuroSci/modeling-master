@@ -20,11 +20,11 @@ sys.path.append('/Users/tom/Documents/Modcogproc/modeling-master/code_by_chapter
 from ch9_RL_taxi import smoothen
 
 def build_network0(input_dim: int, action_dim: int, learning_rate: float):
-##model without hidden layers
+##model without hidden layers; no bias to make it more similar to tabular q-learning
     initializer = tf.keras.initializers.Constant(0)
     model = tf.keras.Sequential()
     model.add(tf.keras.Input(shape=(input_dim,)))
-    model.add(tf.keras.layers.Dense(action_dim, activation = "linear", use_bias = False,  kernel_initializer=initializer, name = "layer"))
+    model.add(tf.keras.layers.Dense(action_dim, activation = "linear", use_bias = False, kernel_initializer=initializer, name = "layer"))
     model.build()
     loss = {"layer": tf.keras.losses.MeanSquaredError()}
     model.compile(optimizer = \
@@ -116,8 +116,7 @@ class Agent(object):
         return action
 
     
-def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
-    W= np.zeros((5, 500, 6))
+def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4, success_crit: int = 200):
     lc = np.zeros(n_loop)
     reward_vec = np.zeros(n_loop)
     buffer_count = 0
@@ -150,9 +149,9 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
         loop += 1
         success += (reward == 20)
         print("n steps = " + str(n_step) + "\n")
-        stop_crit = (loop == n_loop) or (success > 100)
+        stop_crit = (loop == n_loop) or (success > success_crit)
 
-    return lc, success > 100, reward_vec, W
+    return lc, success > success_crit, reward_vec
 
 def perform(env, rl_agent, verbose: bool = False):
     state = env.reset()
@@ -177,7 +176,8 @@ if __name__ == "__main__":
     if load_model:
         rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_taxi_dqn.h5")
     if train_model:
-        lc, solved, reward_vec, W = learn_w(env, n_loop = 1000, max_n_step = 200, input_dim = env.observation_space.n)
+        lc, solved, reward_vec = learn_w(env, n_loop = 1000, 
+                                        max_n_step = 200, input_dim = env.observation_space.n, success_crit = 200)
     if save_model:
         tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_taxi_dqn.h5")
     if plot_results:
