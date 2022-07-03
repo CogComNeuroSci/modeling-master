@@ -20,7 +20,7 @@ sys.path.append('/Users/tom/Documents/Modcogproc/modeling-master/code_by_chapter
 from ch9_RL_taxi import smoothen
 
 def build_network0(input_dim: int, action_dim: int, learning_rate: float):
-##model without hidden layers; no bias to make it more similar to tabular q-learning
+    ##model without hidden layers; no bias to make it more similar to tabular q-learning
     initializer = tf.keras.initializers.Constant(0)
     model = tf.keras.Sequential()
     model.add(tf.keras.Input(shape=(input_dim,)))
@@ -33,7 +33,7 @@ def build_network0(input_dim: int, action_dim: int, learning_rate: float):
 
 
 class Agent(object):
-## similar to the earlier Agent classes but importing the older wasn't worth it in this case    
+    ## similar to the earlier Agent classes but importing the older wasn't worth it in this case    
     def __init__(self, n_states, n_actions, buffer_size, epsilon_min, epsilon_max, epsilon_dec, lr, gamma, learn_gran, update_gran):
         self.n_states = n_states
         self.n_actions = n_actions
@@ -77,24 +77,22 @@ class Agent(object):
         q_next = self.network_target.predict(v_xn)
         q_max = np.amax(q_next, axis = 1)
         include_v = 1 - self.d_buffer[sample]
-        if verbose:
-            print("x buffer:", self.x_buffer)
-            print("n: ", n)
-            print("q_predict", q_predict)
-            print("q_next", q_next)
         q_target = q_predict.copy()
         target_indices = np.squeeze(np.array(self.y_buffer[sample]))
         q_target[list(range(q_target.shape[0])), target_indices] = np.squeeze(self.r_buffer[sample])
         q_target[list(range(q_target.shape[0])), target_indices] += self.gamma*q_max * np.squeeze(include_v)
        	self.network.train_on_batch(v_x, q_target)	
         if verbose:
+            print("x buffer:", self.x_buffer)
+            print("q_predict", q_predict)
+            print("q_next", q_next)
             print("q_target", q_target)
 
     def update_q(self):
         self.network_target.set_weights(self.network.get_weights())    
 
     def sample(self, state):
-    ## epsilon-greedy sample    
+        ## epsilon-greedy sample    
         if np.random.uniform() < self.epsilon:
            action = np.random.choice(self.actions)
         else:
@@ -106,7 +104,7 @@ class Agent(object):
         return action
 
     def sample_soft(self, state):
-    ## softmax sampling
+        ## softmax sampling
         v = np.zeros((1, self.n_states))
         v[0, state] = 1
         y = self.network.predict(np.array(v))
@@ -116,7 +114,7 @@ class Agent(object):
         return action
 
     
-def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4, success_crit: int = 200):
+def learn_w(env, rl_agent, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4, success_crit: int = 200):
     lc = np.zeros(n_loop)
     reward_vec = np.zeros(n_loop)
     buffer_count = 0
@@ -164,11 +162,23 @@ def perform(env, rl_agent, verbose: bool = False):
         state = next_state
         if verbose:
             print(n_step)
+
+def plot_data(window, reward_vec, lc):
+    window_conv = window
+    reward_vec_conv = smoothen(reward_vec, window_conv)
+    lc_conv = smoothen(lc, window_conv)
+    fig, axs = plt.subplots(1, 2)
+    axs[0].plot(reward_vec_conv[window_conv:-window_conv], color = "black")
+    axs[0].set_xlabel("trial number")
+    axs[0].set_title("average reward")
+    axs[1].set_title("average number of steps needed to finish")
+    axs[1].plot(lc_conv[window_conv:-window_conv], color = "black")
+    axs[1].set_xlabel("trial number")
         
 #%% 
 if __name__ == "__main__":
     env = gym.make("Taxi-v2")
-    load_model, save_model, train_model, performance, plot_results = False, False, True, False, True
+    load_model, save_model, train_model, performance, plot_results = False, False, True, True, False
     rl_agent = Agent(env.observation_space.n, env.action_space.n, \
                            buffer_size = 200, epsilon_min = 0.1, epsilon_max = 1, \
                            epsilon_dec = 0.99, lr = 0.3, gamma = 0.95, learn_gran = 1, update_gran = 5)
@@ -176,21 +186,12 @@ if __name__ == "__main__":
     if load_model:
         rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_taxi_dqn.h5")
     if train_model:
-        lc, solved, reward_vec = learn_w(env, n_loop = 1000, 
-                                        max_n_step = 200, input_dim = env.observation_space.n, success_crit = 200)
+        lc, solved, reward_vec = learn_w(env, rl_agent, n_loop = 100, 
+                                        max_n_step = 20, input_dim = env.observation_space.n, success_crit = 200)
     if save_model:
         tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_taxi_dqn.h5")
     if plot_results:
-        window_conv = 10
-        reward_vec_conv = smoothen(reward_vec, window_conv)
-        lc_conv = smoothen(lc, window_conv)
-        fig, axs = plt.subplots(1, 2)
-        axs[0].plot(reward_vec_conv[window_conv:-window_conv], color = "black")
-        axs[0].set_xlabel("trial number")
-        axs[0].set_title("average reward")
-        axs[1].set_title("average number of steps needed to finish")
-        axs[1].plot(lc_conv[window_conv:-window_conv], color = "black")
-        axs[1].set_xlabel("trial number")
+        plot_data(window = 10, reward = reward_vec, lc = lc)
     if train_model and solved:
         print("Problem solved.")
     if performance:
