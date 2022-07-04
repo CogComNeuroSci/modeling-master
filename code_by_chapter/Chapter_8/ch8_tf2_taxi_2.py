@@ -18,15 +18,19 @@ import matplotlib.pyplot as plt
 import os, sys
 sys.path.append('/Users/tom/Documents/Modcogproc/modeling-master/code_by_chapter/Chapter_9')
 from ch9_RL_taxi import smoothen
+#from IPython.display import clear_output
+#from time import sleep
 
-def build_network0(input_dim: int, action_dim: int, learning_rate: float):
-    ##model without hidden layers; no bias to make it more similar to tabular q-learning
-    initializer = tf.keras.initializers.Constant(0)
+def build_network(input_dim: int, action_dim: int, learning_rate: float, nhid1: int, nhid2: int, use_bias: bool = True):
     model = tf.keras.Sequential()
     model.add(tf.keras.Input(shape=(input_dim,)))
-    model.add(tf.keras.layers.Dense(action_dim, activation = "linear", use_bias = False, kernel_initializer=initializer, name = "layer"))
+    if nhid1 > 0:
+        model.add(tf.keras.layers.Dense(nhid1, input_shape = (input_dim,), activation = "relu"))
+    if nhid2 > 0:
+        model.add(tf.keras.layers.Dense(nhid2, activation = "relu"))
+    model.add(tf.keras.layers.Dense(action_dim, use_bias = use_bias, activation = "linear", name = "outputlayer"))
     model.build()
-    loss = {"layer": tf.keras.losses.MeanSquaredError()}
+    loss = {"outputlayer": tf.keras.losses.MeanSquaredError()}
     model.compile(optimizer = \
          tf.keras.optimizers.Adam(learning_rate = learning_rate), loss = loss)
     return model
@@ -34,6 +38,7 @@ def build_network0(input_dim: int, action_dim: int, learning_rate: float):
 
 class Agent(object):
     ## similar to the earlier Agent classes but importing the older wasn't worth it in this case    
+    ## use_bias is clamped to False in this class (different from its child Agent_hier)
     def __init__(self, n_states, n_actions, buffer_size, epsilon_min, epsilon_max, epsilon_dec, lr, gamma, learn_gran, update_gran):
         self.n_states = n_states
         self.n_actions = n_actions
@@ -47,8 +52,8 @@ class Agent(object):
         self.gamma = gamma
         self.learn_gran = learn_gran
         self.update_gran = update_gran
-        self.network = build_network0(self.n_states, self.n_actions, self.lr)
-        self.network_target = build_network0(self.n_states, self.n_actions, self.lr)
+        self.network = build_network(self.n_states, self.n_actions, self.lr, 0, 0, False)
+        self.network_target = build_network(self.n_states, self.n_actions, self.lr, 0, 0, False)
         self.x_buffer = np.zeros((self.buffer_size, 1)).astype(int)
         self.xn_buffer = np.zeros((self.buffer_size, 1)).astype(int)
         self.y_buffer = np.zeros((self.buffer_size, 1)).astype(int)
@@ -151,6 +156,28 @@ def learn_w(env, rl_agent, n_loop: int = 100, max_n_step: int = 200, input_dim: 
 
     return lc, success > success_crit, reward_vec
 
+#def perform(env, rl_agent, verbose: bool = False):
+#    frames = []
+#    state = env.reset()
+#    n_step, done = 0, False
+#    while not done:
+#        action = rl_agent.sample(state)
+#        next_state, reward, done, info = env.step(action)
+#        n_step += 1
+#        state = next_state
+#        frames.append({"frame": env.render(mode = "ansi"), "state": state,
+#                       "action": action, "reward": reward})
+#        if verbose:
+#            print(n_step)
+#    for i, frame in enumerate(frames):
+#        clear_output(wait=True)
+#        print(frame['frame'])
+#        print(f"Timestep: {i + 1}")
+#        print(f"State: {frame['state']}")
+#        print(f"Action: {frame['action']}")
+#        print(f"Reward: {frame['reward']}")
+#        sleep(.1)
+
 def perform(env, rl_agent, verbose: bool = False):
     state = env.reset()
     n_step, done = 0, False
@@ -187,11 +214,11 @@ if __name__ == "__main__":
         rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_taxi_dqn.h5")
     if train_model:
         lc, solved, reward_vec = learn_w(env, rl_agent, n_loop = 100, 
-                                        max_n_step = 20, input_dim = env.observation_space.n, success_crit = 200)
+                                        max_n_step = 200, input_dim = env.observation_space.n, success_crit = 200)
     if save_model:
         tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_taxi_dqn.h5")
     if plot_results:
-        plot_data(window = 10, reward = reward_vec, lc = lc)
+        plot_data(window = 10, reward_vec = reward_vec, lc = lc)
     if train_model and solved:
         print("Problem solved.")
     if performance:

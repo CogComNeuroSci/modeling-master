@@ -14,20 +14,8 @@ import gym
 import tensorflow as tf
 import numpy as np
 import os
-from ch8_tf2_taxi_2 import Agent, perform, learn_w, plot_data
+from ch8_tf2_taxi_2 import Agent, perform, learn_w, plot_data, build_network
 
-def build_network(input_dim: int, action_dim: int, learning_rate: float, nhid1: int, nhid2: int):
-    model = tf.keras.Sequential()
-    model.add(tf.keras.Input(shape=(input_dim,)))
-    model.add(tf.keras.layers.Dense(nhid1, input_shape = (input_dim,), activation = "relu"))
-    if nhid2 > 0:
-        model.add(tf.keras.layers.Dense(nhid2, activation = "relu"))
-    model.add(tf.keras.layers.Dense(action_dim, activation = "linear", name = "outputlayer"))
-    model.build()
-    loss = {"outputlayer": tf.keras.losses.MeanSquaredError()}
-    model.compile(optimizer = \
-         tf.keras.optimizers.Adam(learning_rate = learning_rate), loss = loss)
-    return model
 
 def decode(i):
     # taken from gym github bcs could not be used in current env class
@@ -52,8 +40,8 @@ class Agent_hier(Agent):
                               epsilon_dec, lr, gamma, learn_gran, update_gran)
         self.nhid1 = nhid1
         self.nhid2 = nhid2
-        self.network = build_network(self.n_states, self.n_actions, self.lr, self.nhid1, self.nhid2)
-        self.network_target = build_network(self.n_states, self.n_actions, self.lr, self.nhid1, self.nhid2)
+        self.network = build_network(self.n_states, self.n_actions, self.lr, self.nhid1, self.nhid2, True)
+        self.network_target = build_network(self.n_states, self.n_actions, self.lr, self.nhid1, self.nhid2, True)
     
     def fillup(self, state_list):
         v = np.zeros(self.n_states)
@@ -109,7 +97,7 @@ class Agent_hier(Agent):
 #%% 
 if __name__ == "__main__":
     env = gym.make("Taxi-v2")
-    load_model, save_model, train_model, performance, plot_results = False, True, True, False, True
+    load_model, save_model, train_model, performance, plot_results = False, False, True, False, True
     n_states = 25 + 5 + 4 # from multiplication to addition!
     rl_agent = Agent_hier(n_states, env.action_space.n, \
                            buffer_size = 200, epsilon_min = 0.1, epsilon_max = 1, \
@@ -119,7 +107,7 @@ if __name__ == "__main__":
         rl_agent.network_target = tf.keras.models.load_model(os.getcwd()+"/model_taxi_dqn.h5")
         rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_taxi_dqn.h5")
     if train_model:
-        lc, solved, reward_vec = learn_w(env, rl_agent, n_loop = 500, 
+        lc, solved, reward_vec = learn_w(env, rl_agent, n_loop = 100, 
                                         max_n_step = 200, success_crit = 200)
     if save_model:
         tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_taxi_dqn.h5")
@@ -127,6 +115,6 @@ if __name__ == "__main__":
         plot_data(window = 10, reward_vec = reward_vec, lc = lc)
     if train_model and solved:
         print("Problem solved.")
-    if performance:
+    if performance: # doesn't work here due to different input shape; to be done
         perform(env, rl_agent, verbose = True)
     env.close()
