@@ -211,12 +211,12 @@ if __name__ == "__main__":
                            epsilon_dec = 0.99, lr = 0.3, gamma = 0.95, learn_gran = 1, update_gran = 5)
 
     if load_model:
-        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_taxi_dqn.h5")
+        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/models/model_taxi_dqn.h5")
     if train_model:
         lc, solved, reward_vec = learn_w(env, rl_agent, n_loop = 100, 
                                         max_n_step = 200, input_dim = env.observation_space.n, success_crit = 200)
     if save_model:
-        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_taxi_dqn.h5")
+        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/models/model_taxi_dqn.h5")
     if plot_results:
         plot_data(window = 10, reward_vec = reward_vec, lc = lc)
     if train_model and solved:
