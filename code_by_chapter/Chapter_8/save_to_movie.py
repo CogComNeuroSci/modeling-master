@@ -4,12 +4,15 @@
 Created on Sun Jun 26 11:09:15 2022
 
 @author: tom verguts
+run an agent for some (n_step) steps, and then make a movie of it
+doesn't work for taxi env... suggestions welcome if you know how to do that
 """
 
 import os
 import gym
 import tensorflow as tf
 from ch8_tf2_lunar import PG_Agent
+from ch8_tf2_pole_2 import AgentD
 import imageio
 import moviepy.editor
 
@@ -40,18 +43,26 @@ def perform(env, rl_agent, imdir, max_n_step, verbose: bool = False):
         if n_step == max_n_step:
             break
 
-def make_png(n_step):
+def make_png(n_step, env_type):
     # transform movie into pngs
-    env = gym.make('LunarLander-v2')
+    name = "LunarLander-v2" if env_type == "lunar" else "CartPole-v0"
+    env = gym.make(name) 
     imdir = os.path.join(os.getcwd(), "im")
-    rl_agent = PG_Agent(n_states = env.observation_space.shape[0], n_actions = env.action_space.n, \
+    if env_type == "lunar":
+        rl_agent = PG_Agent(n_states = env.observation_space.shape[0], n_actions = env.action_space.n, \
                            lr = 0.001, gamma = 0.99, max_n_step = n_step)
-    file_name = os.path.join(os.getcwd(), "models", "model_lunar")
+    else:
+        rl_agent = AgentD(env.observation_space.shape[0], env.action_space.n, \
+                           buffer_size = 1000, epsilon_min = 0.001, epsilon_max = 0.99, \
+                           epsilon_dec = 0.999, lr = 0.001, gamma = 0.99, learn_gran = 1, update_gran = 5, nhid1 = 16, nhid2 = 8)    
+    file_name = os.path.join(os.getcwd(), "models", "model_" + env_type)
     rl_agent.network = tf.keras.models.load_model(file_name, compile = False)
     perform(env, rl_agent, imdir, max_n_step = n_step, verbose = False)
     env.close()
     
 if __name__ == "__main__":
     n_step = 50 
-    make_png(n_step = n_step)
-    save_movie(imdir = os.getcwd()+"/im", movie_name = "lunar", n = n_step)
+    env_type = "lunar"
+#    env_type = "cartpole"
+    make_png(n_step = n_step, env_type = env_type)
+    save_movie(imdir = os.getcwd()+"/im", movie_name = env_type, n = n_step)

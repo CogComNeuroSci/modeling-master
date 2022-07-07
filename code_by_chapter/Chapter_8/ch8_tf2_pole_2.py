@@ -95,11 +95,11 @@ if __name__ == "__main__":
                            buffer_size = 1000, epsilon_min = 0.001, epsilon_max = 0.99, \
                            epsilon_dec = 0.999, lr = 0.001, gamma = 0.99, learn_gran = 1, update_gran = 5, nhid1 = 16, nhid2 = 8)
     if load_model:
-        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_cartpole")
+        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/models/model_cartpole.h5")
     if train_model:
         lc, solved = learn_w(env, n_loop = 150, max_n_step = 200, input_dim = env.observation_space.shape[0])
     if save_model:
-        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_cartpole")
+        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/models/model_cartpole.h5")
     if train_model:
         plt.plot(lc)
     if train_model and solved:
