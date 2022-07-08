@@ -188,15 +188,15 @@ def plot_data(window, reward_vec, lc):
 #%% 
 if __name__ == "__main__":
     env = gym.make("Taxi-v2")
-    load_model, save_model, train_model, performance, plot_results = False, True, True, False, True
+    load_model, save_model, train_model, performance, plot_results = True, False, True, True, False
     rl_agent = Agent(env.observation_space.n, env.action_space.n, \
                            buffer_size = 200, epsilon_min = 0.1, epsilon_max = 1, \
                            epsilon_dec = 0.99, lr = 0.3, gamma = 0.95, learn_gran = 1, update_gran = 5)
     if load_model:
         rl_agent.network = tf.keras.models.load_model(join(os.getcwd(), "models", "model_taxi.h5"))
     if train_model:
-        lc, solved, reward_vec = learn_w(env, rl_agent, n_loop = 1000, 
-                                        max_n_step = 200, input_dim = env.observation_space.n, success_crit = 200)
+        lc, solved, reward_vec = learn_w(env, rl_agent, n_loop = 10, 
+                                        max_n_step = 20, input_dim = env.observation_space.n, success_crit = 200)
     if save_model:
         tf.keras.models.save_model(rl_agent.network, join(os.getcwd(), "models", "model_taxi.h5"))
     if plot_results:

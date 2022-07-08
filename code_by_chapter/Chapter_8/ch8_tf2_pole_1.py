@@ -14,19 +14,7 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-
-def build_network(input_dim: int, action_dim: int, learning_rate, hidlayer1: int, hidlayer2: int):
-    model = tf.keras.Sequential([ 
-            tf.keras.layers.Dense(hidlayer1, input_shape = (input_dim,), activation = "relu", name = "layer0"),
-            tf.keras.layers.Dense(hidlayer2, activation = "relu", name = "layer1"),
-            tf.keras.layers.Dense(action_dim, activation = "linear", name = "layer2")
-			] )
-    model.build()
-    loss = {"layer2": tf.keras.losses.MeanSquaredError()}
-    model.compile(optimizer = \
-         tf.keras.optimizers.Adam(learning_rate = learning_rate), loss = loss)
-    return model
-
+from ch8_tf2_taxi_2 import build_network
 
 
 class Agent(object):
@@ -93,7 +81,14 @@ class Agent(object):
             action = np.argmax(y)
         self.epsilon = np.max([self.epsilon_min, self.epsilon*self.epsilon_dec]) 
         return action
-
+    
+    def sample_soft(self, state):
+        ## softmax sampling
+        y = self.network.predict(np.array(state[np.newaxis,:]))
+        prob = np.exp(y)
+        prob = np.squeeze(prob/np.sum(prob))
+        action = np.random.choice(range(self.n_actions), p = prob)
+        return action
 
 def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
     lc = np.zeros(n_loop)
@@ -143,16 +138,16 @@ def perform(env, rl_agent, verbose: bool = False):
         
 if __name__ == "__main__":
     env = gym.make("CartPole-v0")
-    load_model, save_model, train_model = False, False, True
+    load_model, save_model, train_model = True, True, True
     rl_agent = Agent(env.observation_space.shape[0], env.action_space.n, \
                            buffer_size = 1000, epsilon_min = 0.001, epsilon_max = 0.99, \
                            epsilon_dec = 0.999, lr = 0.001, gamma = 0.9, learn_gran = 1, nhid1 = 8, nhid2 = 4)
     if load_model:
-        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_cartpole")
+        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/models/model_cartpole")
     if train_model:
         lc, solved = learn_w(env, n_loop = 50, max_n_step = 200, input_dim = env.observation_space.shape[0])
     if save_model:
-        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_cartpole")
+        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/models/model_cartpole")
     if train_model:
         plt.plot(lc)
     if train_model and solved:
