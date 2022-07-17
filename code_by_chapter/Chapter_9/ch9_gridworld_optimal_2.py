@@ -17,7 +17,7 @@ But it is worthwhile in case of warp to state 24, bcs that's far aways
 #%% import and initialize
 import numpy as np
 import matplotlib.pyplot as plt
-from ch10_plotting import plot_value
+from ch9_plotting import plot_value
 
 np.set_printoptions(precision=4, suppress = True)
 
