@@ -17,7 +17,12 @@ import os
 from ch8_tf2_pole_1 import Agent, perform, build_network
 
 
-class AgentD(Agent): # a double-Q class
+class AgentD(Agent):
+    """
+    a double-Q class; double as in, one network is used for the policy, the other network
+    provides the targets (network_target). after every update_gran steps, the target network
+    is set to the policy network
+    """
     def __init__(self, n_states, n_actions, buffer_size, epsilon_min, epsilon_max, 
                  epsilon_dec, lr, gamma, learn_gran, update_gran, nhid1, nhid2):
         Agent.__init__(self, n_states, n_actions, buffer_size, epsilon_min, epsilon_max, 

@@ -66,7 +66,6 @@ class Agent(object):
             print("q_next", q_next)
         q_target = q_predict.copy()
         target_indices = np.dot(self.y_buffer[sample], np.arange(self.n_actions)).astype(int)
-#        print(target_indices)
         q_target[list(range(q_target.shape[0])), target_indices] = np.squeeze(self.r_buffer[sample])
         q_target[list(range(q_target.shape[0])), target_indices] += self.gamma*q_max * np.squeeze(include_v)
        	self.network.fit(self.x_buffer[sample], q_target, batch_size = 64, epochs = 2000, verbose = 0)	

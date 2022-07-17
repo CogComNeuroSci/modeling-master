@@ -19,8 +19,7 @@ import os, sys
 from os.path import join
 sys.path.append('/Users/tom/Documents/Modcogproc/modeling-master/code_by_chapter/Chapter_9')
 from ch9_RL_taxi import smoothen
-#from IPython.display import clear_output
-#from time import sleep
+
 
 def build_network(input_dim: int, action_dim: int, learning_rate: float, nhid1: int, nhid2: int, use_bias: bool = True):
     # if-else needed due to issue in keras load_weights() code
