@@ -76,7 +76,7 @@ class TabAgent(object):
 def update(observation, observation1, action, reward):
     return observation , observation1, action, reward
 
-def performance(env, rl_agent: TabAgent, n_steps: int, wait_input: bool = True):
+def performance(env, rl_agent: TabAgent, n_steps: int = 100, wait_input: bool = True):
     """"
     do you want to see the process live, and if so how many steps
     wait_input: press Enter in the console to proceed to the next state
@@ -89,6 +89,19 @@ def performance(env, rl_agent: TabAgent, n_steps: int, wait_input: bool = True):
         observation, reward, done, info = env.step(action)
         if wait_input:
             input() # press Enter in the console to proceed to the next state
+
+def plot_results(tot_reward_epi, tot_finish, algo):
+    color_list = {"rw": "black", "sarsa": "red", "sarsalam": "blue", "ql": "green"}
+    window_conv = 10 # convolution window for smooth curves
+    fig, axs = plt.subplots(1, 2)    
+    v_reward = smoothen(tot_reward_epi, window_conv)
+    axs[0].set_title("average reward obtained")
+    axs[0].plot(v_reward[window_conv:-window_conv], color = color_list[algo])
+    axs[0].set_xlabel("trial number")
+    v_finish = smoothen(tot_finish, window_conv)
+    axs[1].set_title("average number of steps needed to finish")
+    axs[1].plot(v_finish[window_conv:-window_conv], color = color_list[algo])
+    axs[1].set_xlabel("trial number")
 
 #%% main code
 if __name__ == "__main__":
@@ -125,19 +138,7 @@ if __name__ == "__main__":
         tot_finish.append(t)
     
     #%% show results
-    color_list = {"rw": "black", "sarsa": "red", "sarsalam": "blue", "ql": "green"}
-    window_conv = 10 # convolution window for smooth curves
-    fig, axs = plt.subplots(1, 2)    
-    v_reward = smoothen(tot_reward_epi, window_conv)
-    axs[0].set_title("average reward obtained")
-    axs[0].plot(v_reward[window_conv:-window_conv], color = color_list[algo])
-    axs[0].set_xlabel("trial number")
-    
-    v_finish = smoothen(tot_finish, window_conv)
-    axs[1].set_title("average number of steps needed to finish")
-    axs[1].plot(v_finish[window_conv:-window_conv], color = color_list[algo])
-    axs[1].set_xlabel("trial number")
-    
+    plot_results(tot_reward_epi, tot_finish, algo)
     see_live, n_steps = False, 5 
     if see_live:
         performance(env, rl_agent, n_steps)
