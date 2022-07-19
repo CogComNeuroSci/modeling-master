@@ -5,7 +5,7 @@ Created on Wed Jun 22 08:38:02 2022
 
 @author: tom verguts
 solves the lunar lander problem using policy gradient (-like) algorithm
-it works but it's inefficient because it doesn't store old data that can be used for training
+it works but it's inefficient 
 """
 #%% import, initialization, definitions
 import gym
@@ -77,12 +77,11 @@ class PG_Agent(object):
     def sample(self, state):
         state_array = np.array(state)[np.newaxis, :]
         prob = np.squeeze(self.network.predict(state_array))
-#        print(prob)
         action = np.random.choice(self.actions, p = prob) 
         return action
 
     
-def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
+def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4, success_crit: int = 10):
     lc = np.zeros(n_loop)
     stop_crit = False
     loop, success = 0, 0
@@ -112,21 +111,21 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
         success += int(np.max(rewards) >= 200)
         rw = np.max(rewards[:t])
         print("n steps = " + str(n_step) + " , max rew = {:.1f}".format(rw) + "\n" )
-        stop_crit = (loop == n_loop) or (success > 10)
-    return lc, success > 10
+        stop_crit = (loop == n_loop) or (success > success_crit)
+    return lc, success > success_crit
 
 #%% main code
 if __name__ == "__main__":
     env = gym.make('LunarLander-v2')
-    load_model, save_model, train_model, performance = True, True, False, True
+    load_model, save_model, train_model, performance = False, False, True, True
     rl_agent = PG_Agent(n_states = env.observation_space.shape[0], n_actions = env.action_space.n, \
-                           lr = 0.001, gamma = 0.95, max_n_step = 5)
+                           lr = 0.0005, gamma = 0.99, max_n_step = 500)
     if load_model:
-        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_lunar", compile = False)
+        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/models"+"/model_lunar", compile = False)
     if train_model:
-        lc, solved = learn_w(env, n_loop = 10000, input_dim = env.observation_space.shape[0], max_n_step = rl_agent.max_n_step)
+        lc, solved = learn_w(env, n_loop = 2000, input_dim = env.observation_space.shape[0], max_n_step = rl_agent.max_n_step)
     if save_model:
-        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_lunar.h5")
+        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/models"+"/model_lunar.h5")
     if train_model:
         plt.plot(lc)
     if train_model and solved:

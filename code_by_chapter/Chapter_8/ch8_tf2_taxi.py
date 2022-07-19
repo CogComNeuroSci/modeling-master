@@ -5,6 +5,7 @@ Created on Wed Jun 22 08:38:02 2022
 
 @author: tom verguts
 solves the taxi problem using policy gradient (-like) algorithm
+if you want an efficient algorithm for this problem instead... check out chapter 9
 """
 #%% import, initialization, definitions
 import gym
@@ -77,12 +78,11 @@ class PG_Agent(object):
         state_array = np.zeros((1, self.n_states))
         state_array[0, state] = 1
         prob = np.squeeze(self.network.predict(state_array))
-#        print(prob)
         action = np.random.choice(self.actions, p = prob) 
         return action
 
     
-def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
+def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4, success_crit: int = 50):
     lc = np.zeros(n_loop)
     stop_crit = False
     loop, success = 0, 0
@@ -104,7 +104,6 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
             state = next_state
             if done:
                 break
-            print(rl_agent.network.get_weights()[0][0:5])
         rl_agent.empty_buffer()
         rl_agent.update_buffer(n_step, states, actions, rewards)
         rl_agent.learn(verbose = False)
@@ -112,21 +111,21 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
         loop += 1
         success += int(n_step < max_n_step)
         print("n steps = " + str(n_step) + "\n")
-        stop_crit = (loop == n_loop) or (success > 10)
-    return lc, success > 10
+        stop_crit = (loop == n_loop) or (success > success_crit)
+    return lc, success > success_crit
 
 #%% main code
 if __name__ == "__main__":
     env = gym.make('Taxi-v2')
     load_model, save_model, train_model, performance = False, False, True, False
     rl_agent = PG_Agent(n_states = env.observation_space.n, n_actions = env.action_space.n, \
-                           lr = 0.3, gamma = 0.99, max_n_step = 200)
+                           lr = 0.0005, gamma = 0.99, max_n_step = 200)
     if load_model:
-        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_taxi")
+        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/models/model_taxi")
     if train_model:
-        lc, solved = learn_w(env, n_loop = 3000, input_dim = env.observation_space.n, max_n_step = rl_agent.max_n_step)
+        lc, solved = learn_w(env, n_loop = 2000, input_dim = env.observation_space.n, max_n_step = rl_agent.max_n_step)
     if save_model:
-        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_taxi")
+        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/models/model_taxi")
     if train_model:
         plt.plot(lc)
     if train_model and solved:

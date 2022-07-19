@@ -70,7 +70,6 @@ if __name__ == "__main__":
             state1 = space2state(observation1, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
                                               gran = granul)
             cont_action0 = action2space(action0, zmin, zmax, granul_action)
-#            if done and t < max_per_episode-1: reward = 10
             rl_agent.learn(state0, state, state1, action0, action, reward0, reward)
             rl_agent.Q = np.minimum(np.maximum(-100, rl_agent.Q), 100)
             observation0, observation, action0, reward0 = \
