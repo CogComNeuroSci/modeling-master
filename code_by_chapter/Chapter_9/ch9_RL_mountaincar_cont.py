@@ -18,7 +18,7 @@ def action2space(action, zmin, zmax, gran_action):
     epsilon = 0.001 # avoiding the action bounds
     return (zmax - zmin - 2*epsilon)*(action/(gran_action-1)) + zmin + epsilon
 
-def performance(env, rl_agent: TabAgent):
+def performance(env, rl_agent: TabAgent, xmin, xmax, ymin, ymax, zmin, zmax, granul, granul_action):
     """"
     do you want to see the process live
     """
@@ -36,7 +36,7 @@ def performance(env, rl_agent: TabAgent):
 if __name__ == "__main__":
     env = gym.make("MountainCarContinuous-v0")
     algo = "ql" # options are rw, sarsa, sarsalam, or ql
-    n_episodes, max_per_episode = 2000, 1000
+    n_episodes, max_per_episode = 200, 1000
     tot_reward_epi, tot_finish = [], []
     verbose = True # do you want to see intermediate results in optimisation
     granul = 10         # nr of levels per input dimension
@@ -87,5 +87,5 @@ if __name__ == "__main__":
     
     #%% show results
     plot_results(tot_reward_epi, tot_finish, algo)
-    performance(env, rl_agent)
+    performance(env, rl_agent, xmin, xmax, ymin, ymax, zmin, zmax, granul, granul_action)
     env.close()
