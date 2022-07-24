@@ -44,7 +44,7 @@ class TabAgent(object):
         self.gamma = gamma # discount rate 
         self.lambd = lambd # eligibility trace parameter (for TD-lambda)
         if self.algo == "sarsalam":
-            self.trace = np.zeros(env.observation_space.n)
+            self.trace = np.zeros(self.n_states)
             
     def learn(self, observation0, observation, observation1, action0, action, reward0, reward):    
         if self.algo == "rw":
