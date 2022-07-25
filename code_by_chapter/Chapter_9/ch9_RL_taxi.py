@@ -51,10 +51,10 @@ class TabAgent(object):
             backup = reward
             self.Q[observation, action] += self.lr*(backup - self.Q[observation, action])
         elif self.algo == "sarsa":
-            backup = reward0 + self.gamma*self.Q[observation, action]*int(1-done)
+            backup = reward0 + self.gamma*self.Q[observation, action]
             self.Q[observation0, action0] += self.lr*(backup - self.Q[observation0, action0])
         elif self.algo == "sarsalam":
-            backup = reward0 + self.gamma*self.Q[observation, action]*int(1-done)
+            backup = reward0 + self.gamma*self.Q[observation, action]
             self.Q[:, action0] += self.lr*(backup - self.Q[observation0, action0])*self.trace
         else: # q-learning
             backup = reward + self.gamma*np.max(self.Q[observation1, :])*int(1-done)
@@ -107,11 +107,11 @@ def plot_results(tot_reward_epi, tot_finish, algo):
 if __name__ == "__main__":
     env = gym.make('Taxi-v2')
     algo = "ql" # options are rw, sarsa, sarsalam, or ql
-    n_episodes, max_per_episode = 200, 200
+    n_episodes, max_per_episode = 1000, 200
     tot_reward_epi, tot_finish = [], []
     verbose = True # do you want to see intermediate results in optimisation
     rl_agent = TabAgent(n_states = env.observation_space.n, n_actions = env.action_space.n,
-                        algo = algo, lr = 0.7, gamma = 0.95, lambd = 0.4 ) # giant Q matrix for flat RL)
+                        algo = algo, lr = 0.3, gamma = 0.95, lambd = 0.4 ) # giant Q matrix for flat RL)
     for ep in range(n_episodes):
         if verbose:
             print("episode {}".format(ep))
