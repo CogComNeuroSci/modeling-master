@@ -41,7 +41,7 @@ def performance(env, rl_agent: TabAgent):
 if __name__ == "__main__":
     env = gym.make("MountainCar-v0")
     algo = "ql" # options are rw, sarsa, sarsalam, or ql
-    n_episodes, max_per_episode = 500, 200
+    n_episodes, max_per_episode = 2000, 200
     tot_reward_epi, tot_finish = [], []
     verbose = True # do you want to see intermediate results in optimisation
     granul = 10     # nr of levels per input dimension
@@ -73,7 +73,7 @@ if __name__ == "__main__":
             state1 = space2state(observation1, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
                                               gran = granul)
             if done and t < max_per_episode-1: reward = 10
-            rl_agent.learn(state0, state, state1, action0, action, reward0, reward)
+            rl_agent.learn(state0, state, state1, action0, action, reward0, reward, done)
             observation0, observation, action0, reward0 = \
                                 update(observation, observation1, action, reward)
             tot_reward += reward

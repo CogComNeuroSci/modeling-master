@@ -7,7 +7,7 @@ Created on Sun Mar  4 21:03:05 2018
 Taxi!
 This program teaches a taxi driver to pick up a client and drop him/her off
 see the AI gym website for more info
-This program introduces class TabAgent
+This program introduces class TabAgent (tabular agent)
 
 Algorithms are all from the MDP approach (chapter 9 MCP book):
 Rescorla-Wagner (rw); Sarsa (sarsa); Sarsa-lambda (sarsalam); and Q-learning (ql)
