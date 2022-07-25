@@ -34,12 +34,12 @@ if __name__ == "__main__":
         if need_to_register: register_non_slip()
         env = gym.make("FrozenLakeNotSlippery-v0")
 
-    algo = "ql" # options are rw, sarsa, sarsalam, or ql
+    algo = "sarsa" # options are rw, sarsa, sarsalam, or ql
     n_episodes, max_per_episode = 1000, 100
     tot_reward_epi, tot_finish = [], []
     verbose = True # do you want to see intermediate results in optimisation
     rl_agent = TabAgent(n_states = env.observation_space.n, n_actions = env.action_space.n,
-                        algo = algo, lr = 0.2, gamma = 0.9, lambd = 0.2) 
+                        algo = algo, lr = 0.5, gamma = 0.9, lambd = 0.2) 
     for ep in range(n_episodes):
         if verbose:
             print("episode {}".format(ep))
@@ -52,7 +52,8 @@ if __name__ == "__main__":
             action = rl_agent.safe_softmax(env, observation)
             observation1, reward, done, info = env.step(action)
             reward *= 10
-            rl_agent.learn(observation0, observation, observation1, action0, action, reward0, reward)
+            rl_agent.learn(observation0, observation, observation1, 
+                           action0, action, reward0, reward, done)
             observation0, observation, action0, reward0 = \
                                 update(observation, observation1, action, reward)
             tot_reward += reward

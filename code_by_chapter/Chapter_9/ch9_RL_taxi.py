@@ -46,18 +46,18 @@ class TabAgent(object):
         if self.algo == "sarsalam":
             self.trace = np.zeros(self.n_states)
             
-    def learn(self, observation0, observation, observation1, action0, action, reward0, reward):    
+    def learn(self, observation0, observation, observation1, action0, action, reward0, reward, done):    
         if self.algo == "rw":
             backup = reward
             self.Q[observation, action] += self.lr*(backup - self.Q[observation, action])
         elif self.algo == "sarsa":
-            backup = reward0 + self.gamma*self.Q[observation, action]
+            backup = reward0 + self.gamma*self.Q[observation, action]*int(1-done)
             self.Q[observation0, action0] += self.lr*(backup - self.Q[observation0, action0])
         elif self.algo == "sarsalam":
-            backup = reward0 + self.gamma*self.Q[observation, action]
+            backup = reward0 + self.gamma*self.Q[observation, action]*int(1-done)
             self.Q[:, action0] += self.lr*(backup - self.Q[observation0, action0])*self.trace
         else: # q-learning
-            backup = reward + self.gamma*np.max(self.Q[observation1, :])
+            backup = reward + self.gamma*np.max(self.Q[observation1, :])*int(1-done)
             self.Q[observation, action] += self.lr*(backup - self.Q[observation, action])
         if self.algo == "sarsalam": # decaying trace
             v = np.zeros(self.n_states)
@@ -123,7 +123,8 @@ if __name__ == "__main__":
         for t in range(max_per_episode):
             action = rl_agent.safe_softmax(env, observation)
             observation1, reward, done, info = env.step(action)
-            rl_agent.learn(observation0, observation, observation1, action0, action, reward0, reward)
+            rl_agent.learn(observation0, observation, observation1, 
+                           action0, action, reward0, reward, done)
             observation0, observation, action0, reward0 = \
                                 update(observation, observation1, action, reward)
             tot_reward += reward
