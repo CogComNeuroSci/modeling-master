@@ -90,8 +90,7 @@ def performance(env, rl_agent: TabAgent, n_steps: int = 100, wait_input: bool = 
         if wait_input:
             input() # press Enter in the console to proceed to the next state
 
-def plot_results(tot_reward_epi, tot_finish, algo):
-    color_list = {"rw": "black", "sarsa": "red", "sarsalam": "blue", "ql": "green"}
+def plot_results(tot_reward_epi, tot_finish, algo, color_list: dict = {"rw": "black", "sarsa": "red", "sarsalam": "blue", "ql": "green"}):
     window_conv = 10 # convolution window for smooth curves
     fig, axs = plt.subplots(1, 2)    
     v_reward = smoothen(tot_reward_epi, window_conv)
