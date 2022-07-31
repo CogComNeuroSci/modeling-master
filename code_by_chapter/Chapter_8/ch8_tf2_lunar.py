@@ -4,7 +4,7 @@
 Created on Wed Jun 22 08:38:02 2022
 
 @author: tom verguts
-solves the lunar lander problem using policy gradient (-like) algorithm
+solves the lunar lander problem using policy gradient (-like) algorithm (reinforce)
 it works but it's inefficient 
 """
 #%% import, initialization, definitions
@@ -25,6 +25,7 @@ class PG_Agent(object):
         self.lr = lr
         self.gamma = gamma
         self.max_n_step = max_n_step
+        self.n_step = max_n_step
         self.x_buffer = np.zeros((self.max_n_step, n_states))
         self.y_buffer = np.zeros((self.max_n_step, 2))
         self.network = self.build_network()
@@ -35,7 +36,7 @@ class PG_Agent(object):
             advantage =   y_true[:, 1]
             pred = K.clip(y_pred, 1e-8, 1-1e-8)
             sum_total = 0 # clunky workaround bcs direct solution didn't work...
-            for loop in range(self.max_n_step):
+            for loop in range(self.n_step):
                 sum_total +=  advantage[loop]*K.log(pred[loop, action_true[loop]])
             return -sum_total
 #           return -K.log(y_pred[: , action_true] + 1e-5) * advantage
@@ -57,7 +58,7 @@ class PG_Agent(object):
     def update_buffer(self, n_step, states, actions, rewards):
         self.x_buffer = states
         self.y_buffer[:, 0] = np.squeeze(actions).astype(int)
-        #rewards = rewards > 0
+        self.n_step = n_step
         for indx in range(n_step):
             weighted_reward = 0
             gamma_w = 1 # re_initialize
@@ -93,7 +94,7 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4, s
         states  = np.zeros((max_n_step, env.observation_space.shape[0]))
         actions = np.zeros(max_n_step) # to construct y_buffer
         rewards = np.zeros(max_n_step) # to construct y_buffer
-        for t in range(max_n_step):
+        while not done and n_step < max_n_step:
             action = rl_agent.sample(state)
             next_state, reward, done, info = env.step(action)
             states[n_step, :]  = state
@@ -101,15 +102,14 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4, s
             rewards[n_step] = reward
             n_step += 1
             state = next_state
-            if done:
-                break
+        # action done, now learn
         rl_agent.empty_buffer()
         rl_agent.update_buffer(n_step, states, actions, rewards)
         rl_agent.learn(verbose = False)
         lc[loop] = np.max(rewards)
         loop += 1
         success += int(np.max(rewards) >= 200)
-        rw = np.max(rewards[:t])
+        rw = np.max(rewards[:n_step])
         print("n steps = " + str(n_step) + " , max rew = {:.1f}".format(rw) + "\n" )
         stop_crit = (loop == n_loop) or (success > success_crit)
     return lc, success > success_crit
@@ -119,11 +119,11 @@ if __name__ == "__main__":
     env = gym.make('LunarLander-v2')
     load_model, save_model, train_model, performance = False, False, True, True
     rl_agent = PG_Agent(n_states = env.observation_space.shape[0], n_actions = env.action_space.n, \
-                           lr = 0.0005, gamma = 0.99, max_n_step = 500)
+                           lr = 0.0005, gamma = 0.99, max_n_step = 600)
     if load_model:
         rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/models"+"/model_lunar", compile = False)
     if train_model:
-        lc, solved = learn_w(env, n_loop = 2000, input_dim = env.observation_space.shape[0], max_n_step = rl_agent.max_n_step)
+        lc, solved = learn_w(env, n_loop = 1500, input_dim = env.observation_space.shape[0], max_n_step = rl_agent.max_n_step)
     if save_model:
         tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/models"+"/model_lunar.h5")
     if train_model:
