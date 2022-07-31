@@ -13,29 +13,21 @@ import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from ch8_tf2_pole_1 import perform
+from ch8_tf2_lunar import PG_Agent
 import os
 import tensorflow.keras.backend as K
 
 
-class PG_Agent(object):
-    def __init__(self, n_states, n_actions, lr, gamma, max_n_step):
-        self.n_states = n_states
-        self.n_actions = n_actions
-        self.actions = np.arange(n_actions)
-        self.lr = lr
-        self.gamma = gamma
-        self.max_n_step = max_n_step
-        self.x_buffer = np.zeros((self.max_n_step, 1))
-        self.y_buffer = np.zeros((self.max_n_step, 2))
-        self.network = self.build_network()
-
+class PG_Agent_disc(PG_Agent):
+    # PG agent with discrete state input
+  	    
     def build_network(self):
         def PG_loss(y_true, y_pred):
             action_true = K.cast(y_true[:, 0], "int32")
             advantage =   y_true[:, 1]
             pred = K.clip(y_pred, 1e-8, 1-1e-8)
             sum_total = 0 # clunky workaround bcs direct solution didn't work...
-            for loop in range(self.max_n_step):
+            for loop in range(self.n_step):
                 sum_total +=  advantage[loop]*K.log(pred[loop, action_true[loop]])
             return -sum_total
 #           return -K.log(y_pred[: , action_true] + 1e-5) * advantage
@@ -47,26 +39,7 @@ class PG_Agent(object):
         model.compile(optimizer = \
          tf.keras.optimizers.Adam(learning_rate = self.lr), loss = PG_loss)
         return model
- 
-    def empty_buffer(self):
-        self.x_buffer = np.zeros((self.max_n_step, 1))
-        self.y_buffer = np.zeros((self.max_n_step, 2))		
-		
-    def update_buffer(self, n_step, states, actions, rewards):
-        self.x_buffer = states
-        self.y_buffer[:, 0] = np.squeeze(actions).astype(int)
-        #rewards = rewards > 0
-        for indx in range(n_step):
-            weighted_reward = 0
-            gamma_w = 1 # re_initialize
-            for loop in np.arange(indx, n_step):
-                weighted_reward += gamma_w*rewards[loop]
-                gamma_w *= self.gamma # discount
-            self.y_buffer[indx, 1] = weighted_reward
-        avg = np.mean(self.y_buffer[:n_step, 1])
-        std = np.std(self.y_buffer[:n_step, 1])
-        self.y_buffer[:, 1] = (self.y_buffer[:, 1] - avg)/(std + int(std == 0))  	    
-            
+    
     def learn(self, verbose: bool = True):
         state_array = np.zeros((self.max_n_step, self.n_states))
         state_array[list(range(self.max_n_step)), self.x_buffer.astype(int)] = 1
@@ -118,7 +91,7 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4, s
 if __name__ == "__main__":
     env = gym.make('Taxi-v2')
     load_model, save_model, train_model, performance = False, False, True, False
-    rl_agent = PG_Agent(n_states = env.observation_space.n, n_actions = env.action_space.n, \
+    rl_agent = PG_Agent_disc(n_states = env.observation_space.n, n_actions = env.action_space.n, \
                            lr = 0.0005, gamma = 0.99, max_n_step = 200)
     if load_model:
         rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/models/model_taxi")
