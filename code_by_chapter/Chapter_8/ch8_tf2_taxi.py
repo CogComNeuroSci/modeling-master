@@ -20,7 +20,6 @@ import tensorflow.keras.backend as K
 
 class PG_Agent_disc(PG_Agent):
     # PG agent with discrete state input
-  	    
     def build_network(self):
         def PG_loss(y_true, y_pred):
             action_true = K.cast(y_true[:, 0], "int32")
