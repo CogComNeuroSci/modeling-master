@@ -137,16 +137,16 @@ def perform(env, rl_agent, verbose: bool = False):
         
 if __name__ == "__main__":
     env = gym.make("CartPole-v0")
-    load_model, save_model, train_model = True, True, True
+    load_model, save_model, train_model = False, True, True
     rl_agent = Agent(env.observation_space.shape[0], env.action_space.n, \
                            buffer_size = 1000, epsilon_min = 0.001, epsilon_max = 0.99, \
                            epsilon_dec = 0.999, lr = 0.001, gamma = 0.9, learn_gran = 1, nhid1 = 8, nhid2 = 4)
     if load_model:
-        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/models/model_cartpole")
+        rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/models/model_cartpole.h5")
     if train_model:
-        lc, solved = learn_w(env, n_loop = 50, max_n_step = 200, input_dim = env.observation_space.shape[0])
+        lc, solved = learn_w(env, n_loop = 100, max_n_step = 200, input_dim = env.observation_space.shape[0])
     if save_model:
-        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/models/model_cartpole")
+        tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/models/model_cartpole.h5")
     if train_model:
         plt.plot(lc)
     if train_model and solved:

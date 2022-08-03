@@ -27,7 +27,7 @@ def register_non_slip():
 
 if __name__ == "__main__":
     np.set_printoptions(precision=3, suppress=True)
-    slippery, need_to_register = False, False
+    slippery, need_to_register = False, True
     if slippery:
         env = gym.make("FrozenLake-v0")
     else:
@@ -72,6 +72,7 @@ if __name__ == "__main__":
 
     # show results
     plot_results(tot_reward_epi, tot_finish, algo)
-    see_live, n_steps = True, 5 
+    see_live, n_steps = True, 10 
     if see_live:
         performance(env, rl_agent, n_steps, wait_input = False)
+    env.close()	

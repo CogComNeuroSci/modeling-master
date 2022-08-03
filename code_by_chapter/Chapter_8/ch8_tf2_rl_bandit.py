@@ -49,4 +49,5 @@ plt.plot(history.history["loss"], color = "black")
 
 # weights
 print("model weights:")
-print(model.layers[0].weights)
+print(model.layers[0].weights[0])
+# print(model.layers[0].get_weights[0]) # for TF versions < 2.4

@@ -76,7 +76,7 @@ class TabAgent(object):
 def update(observation, observation1, action, reward):
     return observation , observation1, action, reward
 
-def performance(env, rl_agent: TabAgent, n_steps: int = 100, wait_input: bool = True):
+def performance(env, rl_agent: TabAgent, n_steps: int = 100, wait_input: bool = False):
     """"
     do you want to see the process live, and if so how many steps
     wait_input: press Enter in the console to proceed to the next state
@@ -104,7 +104,8 @@ def plot_results(tot_reward_epi, tot_finish, algo, color_list: dict = {"rw": "bl
 
 #%% main code
 if __name__ == "__main__":
-    env = gym.make('Taxi-v2')
+#    env = gym.make('Taxi-v2')
+    env = gym.make('Taxi-v3')
     algo = "ql" # options are rw, sarsa, sarsalam, or ql
     n_episodes, max_per_episode = 1000, 200
     tot_reward_epi, tot_finish = [], []
@@ -139,6 +140,7 @@ if __name__ == "__main__":
     
     #%% show results
     plot_results(tot_reward_epi, tot_finish, algo)
-    see_live, n_steps = False, 5 
+    see_live, n_steps = True, 20 
     if see_live:
         performance(env, rl_agent, n_steps)
+    env.close()

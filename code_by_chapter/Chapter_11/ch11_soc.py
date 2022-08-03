@@ -202,7 +202,6 @@ env = Knowthyself(p_consist = p_consist_process)
 
 T = 10
 
-
 if verbose:
 	print('----------------A')
 	print(A)

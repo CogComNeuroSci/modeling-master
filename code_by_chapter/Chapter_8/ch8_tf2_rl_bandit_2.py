@@ -17,7 +17,7 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
-n_trials = 500
+n_trials = 1000
 learning_rate = 0.1
 epsilon = 0.1
 buffer_size = 10
@@ -59,6 +59,7 @@ for loop in range(n_trials):
 	if np.random.uniform()<epsilon: # explore
 		action = np.random.choice(actions)
 	else:                           # exploit 
+		# action = np.argmax(np.array(model.layers[0].get_weights()[0])) # in TF < 2.4
 		action = np.argmax(np.array(model.layers[0].weights[0]))
 	reward[loop] = (np.random.uniform()<p[action])*1
 	optimal[loop] = (action == optimal_action)*1
@@ -68,12 +69,13 @@ for loop in range(n_trials):
 		learn(x_data, y_data)		
 
 #%% show results
-filter_size = 5
+filter_size = 10
 filt= np.ones(filter_size)/filter_size
 fig, axs = plt.subplots(nrows = 1, ncols = 2)
 axs[0].plot(np.convolve(reward, filt)[filter_size:-filter_size], color = "black")
 axs[1].plot(np.convolve(optimal, filt)[filter_size:-filter_size], color = "black")
 
 # print weights
-#print("model weights:")
-#print(model.layers[0].weights)
+print("model weights:")
+# print(model.layers[0].get_weights()[0]) # in TF < 2.4
+print(model.layers[0].weights[0]) # in TF < 2.4
