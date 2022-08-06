@@ -107,7 +107,7 @@ class Agent(object):
         else:
            v = np.zeros((1, self.n_states))
            v[0, state] = 1
-           y = self.network.predict(np.array(v))
+           y = np.squeeze(self.network(inputs = np.array(v)))
            action = np.argmax(y)
         self.epsilon = np.max([self.epsilon_min, self.epsilon*self.epsilon_dec]) 
         return action

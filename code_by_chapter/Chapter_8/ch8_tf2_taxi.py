@@ -49,7 +49,8 @@ class PG_Agent_disc(PG_Agent):
     def sample(self, state):
         state_array = np.zeros((1, self.n_states))
         state_array[0, state] = 1
-        prob = np.squeeze(self.network.predict(state_array))
+        prob = np.squeeze(self.network(inputs = state_array))
+        #prob = np.squeeze(self.network.predict(state_array))
         action = np.random.choice(self.actions, p = prob) 
         return action
 

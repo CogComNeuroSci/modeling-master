@@ -27,9 +27,9 @@ class TabACAgent(TabAgent):
 
 #%% main code
 if __name__ == "__main__":
-    env = gym.make('Taxi-v2')
+    env = gym.make('Taxi-v3')
     algo = "ac" # options are rw, sarsa, sarsalam, or ql
-    n_episodes, max_per_episode = 1000, 200
+    n_episodes, max_per_episode = 500, 200
     tot_reward_epi, tot_finish = [], []
     verbose = True # do you want to see intermediate results in optimisation
     rl_agent = TabACAgent(n_states = env.observation_space.n, n_actions = env.action_space.n,
@@ -65,3 +65,4 @@ if __name__ == "__main__":
     see_live, n_steps = False, 5 
     if see_live:
         performance(env, rl_agent, n_steps)
+    env.close()	

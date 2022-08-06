@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 from ch8_tf2_pole_1 import perform
 import os
 import tensorflow.keras.backend as K
-
+from ch8_tf2_taxi_2 import plot_data
 
 class PG_Agent(object):
     def __init__(self, n_states, n_actions, lr, gamma, max_n_step):
@@ -39,8 +39,9 @@ class PG_Agent(object):
             for loop in range(self.n_step):
                 sum_total +=  advantage[loop]*K.log(pred[loop, action_true[loop]])
             return -sum_total
-#           return -K.log(y_pred[: , action_true] + 1e-5) * advantage
-
+#            return -K.log(y_pred[: , action_true] + 1e-5) * advantage
+			
+		
         model = tf.keras.Sequential([ 
                 tf.keras.layers.Dense(64, input_shape = (self.n_states,), activation = "relu"),
                 tf.keras.layers.Dense(64, activation = "relu"),
@@ -66,24 +67,25 @@ class PG_Agent(object):
                 weighted_reward += gamma_w*rewards[loop]
                 gamma_w *= self.gamma # discount
             self.y_buffer[indx, 1] = weighted_reward
-        avg = np.mean(self.y_buffer[:n_step, 1])
-        std = np.std(self.y_buffer[:n_step, 1])
-        self.y_buffer[:, 1] = (self.y_buffer[:, 1] - avg)/(std + int(std == 0))  	    
+#        avg = np.mean(self.y_buffer[:n_step, 1])
+#        std = np.std(self.y_buffer[:n_step, 1])
+#        self.y_buffer[:, 1] = (self.y_buffer[:, 1] - avg)/(std + int(std == 0))  	    
             
     def learn(self, verbose: bool = True):
        	self.network.train_on_batch(self.x_buffer, self.y_buffer)	
         if verbose:
             print("what do you want to see?")
- 
+
     def sample(self, state):
-        state_array = np.array(state)[np.newaxis, :]
-        prob = np.squeeze(self.network.predict(state_array))
+        state_array = np.array(state[np.newaxis, :])
+        prob = np.squeeze(self.network(inputs = state_array)) 
         action = np.random.choice(self.actions, p = prob) 
         return action
 
     
 def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4, success_crit: int = 10):
     lc = np.zeros(n_loop)
+    reward_vec = np.zeros(n_loop)
     stop_crit = False
     loop, success = 0, 0
     # learn
@@ -106,30 +108,33 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4, s
         rl_agent.empty_buffer()
         rl_agent.update_buffer(n_step, states, actions, rewards)
         rl_agent.learn(verbose = False)
-        lc[loop] = np.max(rewards)
-        loop += 1
-        success += int(np.max(rewards) >= 200)
+        lc[loop] = n_step
         rw = np.max(rewards[:n_step])
+        reward_vec[loop]= rw
+        success += int(np.max(rewards) >= 200)        
+        loop += 1
         print("n steps = " + str(n_step) + " , max rew = {:.1f}".format(rw) + "\n" )
         stop_crit = (loop == n_loop) or (success > success_crit)
-    return lc, success > success_crit
+    return reward_vec, lc, success > success_crit
 
 #%% main code
 if __name__ == "__main__":
-    env = gym.make('LunarLander-v2')
-    load_model, save_model, train_model, performance = False, False, True, True
+    env = gym.make('LunarLander-v2', new_step_api = False)
+    load_model, save_model, train_model, performance = False, False, True, False
     rl_agent = PG_Agent(n_states = env.observation_space.shape[0], n_actions = env.action_space.n, \
                            lr = 0.0005, gamma = 0.99, max_n_step = 600)
     if load_model:
         rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/models"+"/model_lunar", compile = False)
     if train_model:
-        lc, solved = learn_w(env, n_loop = 1500, input_dim = env.observation_space.shape[0], max_n_step = rl_agent.max_n_step)
+        reward_vec, lc, solved = learn_w(env, n_loop = 1000, input_dim = env.observation_space.shape[0], max_n_step = rl_agent.max_n_step)
     if save_model:
         tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/models"+"/model_lunar.h5")
     if train_model:
-        plt.plot(lc)
+        plot_data(10, reward_vec, lc)
     if train_model and solved:
         print("Problem solved.")
     if performance:
         perform(env, rl_agent, verbose = False)
     env.close()
+	
+	

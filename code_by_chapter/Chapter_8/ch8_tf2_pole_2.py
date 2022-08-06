@@ -56,7 +56,7 @@ class AgentD(Agent):
         self.network_target.set_weights(self.network.get_weights())
 
 
-def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
+def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4, success_crit: int = 10):
     lc = np.zeros(n_loop)
     buffer_count = 0
     stop_crit = False
@@ -89,8 +89,8 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
         loop += 1
         success += (n_step == max_n_step)
         print("n steps = " + str(n_step) + "\n")
-        stop_crit = (loop == n_loop) or (success > 10)
-    return lc, success > 10
+        stop_crit = (loop == n_loop) or (success > success_crit)
+    return lc, success > success_crit
 
 
 if __name__ == "__main__":
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     if load_model:
         rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/models/model_cartpole.h5")
     if train_model:
-        lc, solved = learn_w(env, n_loop = 150, max_n_step = 200, input_dim = env.observation_space.shape[0])
+        lc, solved = learn_w(env, n_loop = 50, max_n_step = 200, input_dim = env.observation_space.shape[0])
     if save_model:
         tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/models/model_cartpole.h5")
     if train_model:

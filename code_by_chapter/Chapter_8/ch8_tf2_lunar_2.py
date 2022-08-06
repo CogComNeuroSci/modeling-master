@@ -124,7 +124,7 @@ if __name__ == "__main__":
     if load_model:
         rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/models"+"/model_lunar", compile = False)
     if train_model:
-        lc, reward_vec, solved = learn_w(env, n_loop = 3000, input_dim = env.observation_space.shape[0], max_n_step = rl_agent.max_n_step)
+        lc, reward_vec, solved = learn_w(env, n_loop = 30, input_dim = env.observation_space.shape[0], max_n_step = rl_agent.max_n_step)
     if save_model:
         tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/models"+"/model_lunar.h5")
     if train_model:

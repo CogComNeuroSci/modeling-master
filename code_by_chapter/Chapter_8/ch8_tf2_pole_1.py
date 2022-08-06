@@ -53,43 +53,46 @@ class Agent(object):
             
     def learn(self, n: int, verbose: bool = True):
         #self.epsilon = self.epsilon_max # in case you want to reset epsilon on each episode
-        sample_size = np.minimum(100, n);
+        sample_size = np.minimum(100, n)
         sample = np.random.choice(n, sample_size)
         q_predict = self.network.predict(self.x_buffer[sample])
         q_next = self.network.predict(self.xn_buffer[sample])
         q_max = np.amax(q_next, axis = 1)
         include_v = 1 - self.d_buffer[sample]
         if verbose:
-            print("x buffer:", self.x_buffer)
+            #print("x buffer:", self.x_buffer)
             print("n: ", n)
-            print("q_predict", q_predict)
-            print("q_next", q_next)
+            #print("q_predict", q_predict)
+            #print("q_next", q_next)
         q_target = q_predict.copy()
         target_indices = np.dot(self.y_buffer[sample], np.arange(self.n_actions)).astype(int)
         q_target[list(range(q_target.shape[0])), target_indices] = np.squeeze(self.r_buffer[sample])
         q_target[list(range(q_target.shape[0])), target_indices] += self.gamma*q_max * np.squeeze(include_v)
        	self.network.fit(self.x_buffer[sample], q_target, batch_size = 64, epochs = 2000, verbose = 0)	
-        if verbose:
-            print("q_target", q_target)
+        #if verbose:
+            #print("q_target", q_target)
            
     def sample(self, state):
         if np.random.uniform() < self.epsilon:
            action = np.random.choice(self.actions)
         else:
-            y = self.network.predict(np.array(state[np.newaxis,:]))
+            state_array = np.array(state[np.newaxis, :])
+            y = np.squeeze(self.network(inputs = state_array)) 
             action = np.argmax(y)
         self.epsilon = np.max([self.epsilon_min, self.epsilon*self.epsilon_dec]) 
         return action
     
     def sample_soft(self, state):
         ## softmax sampling
-        y = self.network.predict(np.array(state[np.newaxis,:]))
+        state_array = np.array(state[np.newaxis, :])
+        y = np.squeeze(self.network(inputs = state_array)) 
+#        y = self.network.predict(np.array(state[np.newaxis,:])) # slower method
         prob = np.exp(y)
         prob = np.squeeze(prob/np.sum(prob))
         action = np.random.choice(range(self.n_actions), p = prob)
         return action
 
-def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
+def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4, success_crit: int = 10):
     lc = np.zeros(n_loop)
     buffer_count = 0
     stop_crit = False
@@ -115,13 +118,13 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4):
             state = next_state
         buffer_count = rl_agent.update_buffer(data, n_step, buffer_count)
         if (not loop % rl_agent.learn_gran) and (buffer_count > 500): # don't learn first 500 trials
-            rl_agent.learn(buffer_count, verbose = False)
+            rl_agent.learn(buffer_count, verbose = True)
         lc[loop] = n_step
         loop += 1
         success += (n_step == max_n_step)
         print("n steps = " + str(n_step) + "\n")
-        stop_crit = (loop == n_loop) or (success > 10)
-    return lc, success > 10
+        stop_crit = (loop == n_loop) or (success > success_crit)
+    return lc, success > success_crit
 
 def perform(env, rl_agent, verbose: bool = False):
     state = env.reset()

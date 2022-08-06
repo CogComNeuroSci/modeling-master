@@ -43,7 +43,9 @@ class PG_Agent_cont(PG_Agent):
         return model
  		 
     def sample(self, state):
-        pars = rl_agent.network.predict(state[np.newaxis,:])
+        state_array = np.array(state[np.newaxis, :])
+        pars = self.network(inputs = state_array)
+        #pars = rl_agent.network.predict(state[np.newaxis,:]) # older (slower) approach
         action = np.random.normal(loc = pars[0, 0], scale = np.exp(pars[0, 1])) 
         return np.minimum( np.maximum(-1+1e-5, action), 1-1e-5)
 

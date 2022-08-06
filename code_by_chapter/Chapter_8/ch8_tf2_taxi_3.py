@@ -87,7 +87,8 @@ class Agent_hier(Agent):
         state_list = decode(state)
         v = self.fillup(state_list)
         v = v[np.newaxis, :]
-        y = self.network.predict(np.array(v))
+        y = self.network(inputs = np.array(v)) 
+#        y = self.network.predict(np.array(v))
         prob = np.exp(y)
         prob = np.squeeze(prob/np.sum(prob))
         action = np.random.choice(range(env.action_space.n), p = prob)
@@ -96,8 +97,8 @@ class Agent_hier(Agent):
 
 #%% 
 if __name__ == "__main__":
-    env = gym.make("Taxi-v2")
-    load_model, save_model, train_model, performance, plot_results = False, False, True, False, True
+    env = gym.make("Taxi-v3")
+    load_model, save_model, train_model, performance, plot_results = False, False, True, True, True
     n_states = 25 + 5 + 4 # from multiplication to addition!
     rl_agent = Agent_hier(n_states, env.action_space.n, \
                            buffer_size = 200, epsilon_min = 0.1, epsilon_max = 1, \
@@ -107,7 +108,7 @@ if __name__ == "__main__":
         rl_agent.network_target = tf.keras.models.load_model(os.getcwd()+"/model_taxi_dqn.h5")
         rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/model_taxi_dqn.h5")
     if train_model:
-        lc, solved, reward_vec = learn_w(env, rl_agent, n_loop = 100, 
+        lc, solved, reward_vec = learn_w(env, rl_agent, n_loop = 30, 
                                         max_n_step = 200, success_crit = 200)
     if save_model:
         tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/model_taxi_dqn.h5")
@@ -115,6 +116,6 @@ if __name__ == "__main__":
         plot_data(window = 10, reward_vec = reward_vec, lc = lc)
     if train_model and solved:
         print("Problem solved.")
-    if performance: # doesn't work here due to different input shape; to be done
+    if performance: # some bugs remaining to be fixed
         perform(env, rl_agent, verbose = True)
     env.close()
