@@ -6,29 +6,15 @@ Created on Wed Sep  2 14:49:49 2020
 @author: tom verguts
 written for TensorFlow 2
 
-digit classification and confabulation
+an auto-encoder compresses the digits in a low-dim space
+digit_show can be used to generate a confabulated digit from the hidden space
 """
 
 # import modules
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-
-
-# import digits dataset
-(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
-
-# downscale to make data set smaller (and training faster) 
-train_size, test_size = 1000, 50
-x_train, y_train, x_test, y_test = x_train[:train_size,:], y_train[:train_size], x_test[:test_size,:], y_test[:test_size]
-
-def digit_plot(x_train, y_train): # print existing digits
-    # plot some images from the data set
-    fig, axes = plt.subplots(1, 4, figsize=(7,3))
-    for img, label, ax in zip(x_train[:4], y_train[:4], axes):
-          ax.set_title(label)
-          ax.imshow(img)
-          ax.axis("off")
+from ch5_tf2_digit_classif import test_digits
 
 def digit_show(model):# confabulate new digits
     W    = model.get_weights()[2]
@@ -38,13 +24,21 @@ def digit_show(model):# confabulate new digits
     new_digit = np.reshape(new_digit, (int(np.sqrt(x_train.shape[1])), int(np.sqrt(x_train.shape[1]))) )
     plt.imshow(new_digit, cmap = "Greys")
 
+
+# import digits dataset
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+
+# downscale to make data set smaller (and training faster) 
+train_size, test_size = 1000, 50
+x_train, y_train, x_test, y_test = x_train[:train_size,:], y_train[:train_size], x_test[:test_size,:], y_test[:test_size]
+
 # pre-processing
 n_labels = int(np.max(y_train)+1)
 image_size = x_train.shape[1]*x_train.shape[2]
 x_train = x_train.reshape(x_train.shape[0], image_size)  / 255   # from 3D to 2D input data
 x_test  = x_test.reshape(x_test.shape[0], image_size)    / 255   # same here
-y_train = x_train
-y_test  = x_test
+y_train = np.copy(x_train)
+y_test  = np.copy(x_test)
 
 # estimation parameters
 learning_rate = 0.001
@@ -77,11 +71,8 @@ ax.plot(history.history["loss"], color = "black")
 
 # print test data results
 to_test_x, to_test_y = [x_train, x_test], [y_train, y_test]
-labels =  ["train", "test"] # we plot results separately for training data and for testing data
-print("\n")
+test_digits(model, x_train, x_test, y_train, y_test)
 
-for loop in range(2):
-    y_pred = model.predict(to_test_x[loop])
-    testdata_loss = loss(to_test_y[loop], y_pred)
-    testdata_loss_summary = np.mean(testdata_loss.numpy())
-    print("mean {} data performance: {:.2f}".format(labels[loop], testdata_loss_summary))
+# confabulate a digit	
+digit_show(model)	
+	
