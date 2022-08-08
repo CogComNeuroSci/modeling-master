@@ -13,23 +13,27 @@ image classification; could a standard three-layer network solve this task...?
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
+from ch5_tf2_digit_classif import test_performance
+
+def plot_pics(x_train, y_train):
+    # plot some pictures from the data base
+    fig, axes = plt.subplots(1, 4, figsize=(7,3))
+    for img, label, ax in zip(x_train[:4], y_train[:4], axes):
+        ax.set_title(label)
+        ax.imshow(img)
+        ax.axis("off")
+    plt.show()
 
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
 
-# plot some pictures from the data base
-#fig, axes = plt.subplots(1, 4, figsize=(7,3))
-#for img, label, ax in zip(x_train[:4], y_train[:4], axes):
-#    ax.set_title(label)
-#    ax.imshow(img)
-#    ax.axis("off")
-#plt.show()
+plot_pics(x_train, y_train)
 
 # for piloting, make a smaller data set
 n_train_stim, n_test_stim = 1000, 100
 x_train, y_train, x_test, y_test = x_train[:n_train_stim,:], y_train[:n_train_stim], x_test[:n_test_stim,:], y_test[:n_test_stim]
 
 learning_rate = 0.0001
-epochs = 3000
+epochs = 2000
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 stdev = 0.001
@@ -45,11 +49,12 @@ y_test  = y_test[:,0]
 y_train = tf.one_hot(y_train, n_labels)
 y_test  = tf.one_hot(y_test, n_labels)
 
-#%% model definition
+	
+# #%% model definition
 model = tf.keras.Sequential([
-			tf.keras.Input(shape=(image_size,)),
-			tf.keras.layers.Dense(n_hid, activation = "relu"),
-			tf.keras.layers.Dense(n_labels, activation = "softmax")])
+ 			tf.keras.Input(shape=(image_size,)),
+ 			tf.keras.layers.Dense(n_hid, activation = "relu"),
+ 			tf.keras.layers.Dense(n_labels, activation = "softmax")])
 model.build()
 
 loss = tf.keras.losses.CategoricalCrossentropy()
@@ -62,14 +67,8 @@ model.summary()
 
 #%% show results
 # error curve
-plt.plot(history.history["loss"], color = "black")
+fig, ax = plt.subplots()
+ax.plot(history.history["loss"], color = "black")
 
 # print test data results
-to_test_x, to_test_y = [x_train, x_test], [y_train, y_test]
-labels =  ["train", "test"]
-print("\n")
-for loop in range(2):
-    y_pred = model.predict(to_test_x[loop])
-    testdata_loss = tf.keras.losses.categorical_crossentropy(to_test_y[loop], y_pred)
-    testdata_loss_summary = np.mean(testdata_loss.numpy())
-    print("mean {} data error: {:.2f}".format(labels[loop], testdata_loss_summary))	
+test_performance(model, x_train, x_test, y_train, y_test)

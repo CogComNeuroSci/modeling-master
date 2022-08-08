@@ -13,7 +13,7 @@ MNIST digit classification with a convolutional network (convnet)
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-from ch5_tf2_digit_classif import plot_digits, test_digits
+from ch5_tf2_digit_classif import plot_digits, test_performance
 
 # import digits dataset
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
@@ -62,4 +62,4 @@ model.summary()
 fig = plt.figure()
 plt.plot(history.history["loss"], color = "black")
 
-test_digits(model, x_train, x_test, y_train, y_test)
+test_performance(model, x_train, x_test, y_train, y_test)

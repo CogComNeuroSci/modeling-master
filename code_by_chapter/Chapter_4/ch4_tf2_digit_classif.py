@@ -13,7 +13,9 @@ digit classification; could a two-layer network solve this task...?
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-
+import sys
+sys.path.append('/Users/tom/Documents/Modcogproc/modeling-master/code_by_chapter/Chapter_5')
+from ch5_tf2_digit_classif import test_performance, preprocess_digits
 
 # import digits dataset
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
@@ -38,11 +40,8 @@ for img, label, ax in zip(x_train[:4], y_train[:4], axes):
 #%% pre-processing
 n_labels = int(np.max(y_train)+1)
 image_size = x_train.shape[1]*x_train.shape[2]
-x_train = x_train.reshape(x_train.shape[0], image_size)  / 255   # from 3D to 2D input data
-x_test  = x_test.reshape(x_test.shape[0], image_size)    / 255   # same here
-y_train = tf.one_hot(y_train, n_labels)
-y_test  = tf.one_hot(y_test, n_labels)
-
+x_train, y_train, x_test, y_test = preprocess_digits(
+		                                  x_train, y_train, train_size, x_test, y_test, test_size, image_size = image_size, n_labels = n_labels)
 #%% model construction
 model = tf.keras.Sequential([
 			tf.keras.Input(shape=(image_size,)),
@@ -64,13 +63,4 @@ model.summary()
 # error curve
 fig, ax = plt.subplots(1, figsize=(7,3))
 ax.plot(history.history["loss"], color = "black")
-
-# print test data results
-to_test_x, to_test_y = [x_train, x_test], [y_train, y_test]
-labels =  ["train", "test"] # we plot results separately for training data and for testing data
-print("\n")
-for loop in range(2):
-    y_pred = model.predict(to_test_x[loop])
-    testdata_loss = tf.keras.losses.categorical_crossentropy(to_test_y[loop], y_pred)
-    testdata_loss_summary = np.mean(testdata_loss.numpy())
-    print("mean {} data performance: {:.2f}".format(labels[loop], testdata_loss_summary))	
+test_performance(model, x_train, x_test, y_train, y_test)

@@ -14,7 +14,7 @@ digit_show can be used to generate a confabulated digit from the hidden space
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-from ch5_tf2_digit_classif import test_digits
+from ch5_tf2_digit_classif import test_performance
 
 def digit_show(model):# confabulate new digits
     W    = model.get_weights()[2]
@@ -71,7 +71,7 @@ ax.plot(history.history["loss"], color = "black")
 
 # print test data results
 to_test_x, to_test_y = [x_train, x_test], [y_train, y_test]
-test_digits(model, x_train, x_test, y_train, y_test)
+test_performance(model, x_train, x_test, y_train, y_test)
 
 # confabulate a digit	
 digit_show(model)	

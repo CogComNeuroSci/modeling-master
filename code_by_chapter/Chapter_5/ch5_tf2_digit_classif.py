@@ -21,8 +21,7 @@ def plot_digits(x, y):
         ax.imshow(img)
         ax.axis("off")
 
-def test_digits(model, x_train, x_test, y_train, y_test):
-    # print test data results
+def test_performance(model, x_train, x_test, y_train, y_test):
     to_test_x, to_test_y = [x_train, x_test], [y_train, y_test]
     testdata_loss = tf.keras.metrics.CategoricalAccuracy()
     labels =  ["train", "test"]
@@ -32,7 +31,7 @@ def test_digits(model, x_train, x_test, y_train, y_test):
         testdata_loss.update_state(to_test_y[loop], y_pred)
         testdata_loss_summary = np.mean(testdata_loss.result().numpy())*100
         print("mean {} data performance: {:.2f}%".format(labels[loop], testdata_loss_summary))		
-
+	
 def preprocess_digits(x_train, y_train,
 					        train_size, x_test, y_test, test_size, image_size, n_labels):
     x_train, y_train, x_test, y_test = x_train[:train_size,:], y_train[:train_size], x_test[:test_size,:], y_test[:test_size]
@@ -82,7 +81,7 @@ if __name__ == "__main__":
     # output
     fig = plt.figure()
     plt.plot(history.history["loss"], color = "black")
-    test_digits(model, x_train, x_test, y_train, y_test)
+    test_performance(model, x_train, x_test, y_train, y_test)
 
 
 
