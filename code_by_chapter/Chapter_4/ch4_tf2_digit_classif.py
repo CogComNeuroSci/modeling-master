@@ -15,27 +15,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 sys.path.append('/Users/tom/Documents/Modcogproc/modeling-master/code_by_chapter/Chapter_5')
-from ch5_tf2_digit_classif import test_performance, preprocess_digits
+from ch5_tf2_digit_classif import test_performance, preprocess_digits, plot_digits
 
 # import digits dataset
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
 # downscale to make data set smaller (and training faster)
-train_size, test_size = 1000, 50
+train_size, test_size = 1000, 1000
 x_train, y_train, x_test, y_test = x_train[:train_size,:], y_train[:train_size], x_test[:test_size,:], y_test[:test_size]
 
 # estimation parameters
 learning_rate = 0.001
-epochs = 50
+epochs = 100
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 
-# plot some images from the data set
-fig, axes = plt.subplots(1, 4, figsize=(7,3))
-for img, label, ax in zip(x_train[:4], y_train[:4], axes):
-      ax.set_title(label)
-      ax.imshow(img)
-      ax.axis("off")
+plot_digits(x_train[:4], y_train[:4])
 
 #%% pre-processing
 n_labels = int(np.max(y_train)+1)

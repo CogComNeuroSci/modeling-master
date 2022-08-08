@@ -13,6 +13,10 @@ image classification; could a two-layer network solve this task...?
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+sys.path.append('/Users/tom/Documents/Modcogproc/modeling-master/code_by_chapter/Chapter_5')
+from ch5_tf2_digit_classif import test_performance
+from ch5_tf2_image_classif import plot_pics
 
 # images dataset
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
@@ -22,16 +26,11 @@ x_train, y_train, x_test, y_test = x_train[:500,:], y_train[:500], x_test[:500,:
 
 # estimation parameters
 learning_rate = 0.001
-epochs = 50 # how often to go through the whole data set
+epochs = 5000 # how often to go through the whole data set
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 
-#%% plot some images from the data set
-fig, axes = plt.subplots(1, 4, figsize=(7,3))
-for img, label, ax in zip(x_train[28:32], y_train[28:32], axes):
-    ax.set_title(label)
-    ax.imshow(img)
-    ax.axis("off")
+plot_pics(x_train, y_train)
 
 #%% pre-processing
 n_labels = int(np.max(y_train)+1)
@@ -64,11 +63,4 @@ fig, ax = plt.subplots(1, figsize=(7,3))
 ax.plot(history.history["loss"], color = "black")
 
 # print test data results
-to_test_x, to_test_y = [x_train, x_test], [y_train, y_test]
-labels =  ["train", "test"]
-print("\n")
-for loop in range(2):
-    y_pred = model.predict(to_test_x[loop])
-    testdata_loss = tf.keras.losses.categorical_crossentropy(to_test_y[loop], y_pred)
-    testdata_loss_summary = np.mean(testdata_loss.numpy())
-    print("mean {} data performance: {:.2f}".format(labels[loop], testdata_loss_summary))	
+test_performance(model, x_train, x_test, y_train, y_test)

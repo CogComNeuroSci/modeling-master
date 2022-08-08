@@ -21,9 +21,10 @@ def plot_digits(x, y):
         ax.imshow(img)
         ax.axis("off")
 
-def test_performance(model, x_train, x_test, y_train, y_test):
+def test_performance(model, x_train, x_test, y_train, y_test, metric = tf.keras.metrics.CategoricalAccuracy()):
+    # you can change the metric, but output is formatted for CategoricalAccuracy
     to_test_x, to_test_y = [x_train, x_test], [y_train, y_test]
-    testdata_loss = tf.keras.metrics.CategoricalAccuracy()
+    testdata_loss = metric
     labels =  ["train", "test"]
     print("\n")
     for loop in range(2):
