@@ -33,7 +33,7 @@ ys = np.linspace(0, 10, n_unitsteps)
 X, Y = np.meshgrid(xs, ys)
 
 # the weight between the cat and dog units
-w = -.15
+w = -0.25
 # the energy function
 Z = - X - Y - w*X*Y
 

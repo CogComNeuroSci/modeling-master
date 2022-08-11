@@ -16,24 +16,24 @@ import matplotlib.pyplot as plt
 
 # initialize variables
 #x_cat = np.array([1, 1, 0]) # prototypical cat
-overlap = 0.8
+overlap = 0.01
 x_dog = np.array([overlap, 1, 1, overlap, 1, 1, overlap, 1, 1]) # prototypical dog
-x = x_dog #/np.linalg.norm(x_dog) # in case you want to normalize the input vector
-W = np.array([[2, 1, 0, 2, 1, 0, 2, 1, 0], [0, 1, 2, 0, 1, 2, 0, 1, 2]]).astype(np.float32)
-net = np.matmul(W, x).reshape(2,1).astype(np.float32) # net input to the cat and dog output units
-w_inh = -0.2    # lateral inhibition between cat and dog
+x = x_dog/np.linalg.norm(x_dog) # in case you want to normalize the input vector
+W = np.array([[2, 1, 0, 2, 1, 0, 2, 1, 0], [0, 1, 2, 0, 1, 2, 0, 1, 2]])
+net = np.matmul(W, x).reshape(2,1) # net input to the cat and dog output units
+w_inh = -1    # lateral inhibition between cat and dog
 W_inh = w_inh*np.array([[0, 1], [1, 0]])
-W_inh = W_inh.astype(np.float32)
-step_size = 0.05
+step_size = 0.01
 max_n_steps = 200
-threshold = 50
+threshold = 20
 ntrials = 200
-noise = 2
+noise = 0.5
+xmin, xmax = 0, 150 # for easy comparison, always use the same x-range
 RT = np.ndarray(ntrials)
 accuracy = np.ndarray(ntrials)
 
 # define TensorFlow components
-Y  = tf.Variable(np.random.randn(1, 2).astype(np.float32), name="Y")
+Y  = tf.Variable(initial_value = np.random.randn(1, 2))
 
 
 def cost():
@@ -46,7 +46,7 @@ for trial_loop in range(ntrials):
 	while (step < max_n_steps) and (np.max(y[step-(step>0)]) < threshold):
 		Y.assign(Y + np.random.rand(1,2)*noise)
 		y[step] = Y.numpy()
-		opt = gradient_descent.GradientDescentOptimizer(step_size).minimize(cost)
+		gradient_descent.GradientDescentOptimizer(step_size).minimize(cost)
 		Y.assign(tf.math.maximum(0, Y))
 		step += 1
 	RT[trial_loop] = step
@@ -54,7 +54,7 @@ for trial_loop in range(ntrials):
 	Y.assign([[0, 0]])
 
 # plot the  RT distribution
-plt.hist(RT, color = "black")
+plt.hist(RT, density = True, color = "black", range = [xmin, xmax])
 
 print("mean RT is {:.2f}".format(np.mean(RT)))
 print("mean accuracy is {:.2%}".format(np.mean(accuracy)))
