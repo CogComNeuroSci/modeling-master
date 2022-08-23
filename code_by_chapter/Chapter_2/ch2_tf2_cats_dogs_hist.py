@@ -15,8 +15,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # initialize variables
-#x_cat = np.array([1, 1, 0]) # prototypical cat
-overlap = 0.01
+#x_cat = np.array([1, 1, 0, 1, 1, 0, 1, 1, 0]) # prototypical cat
+overlap = 0.9
 x_dog = np.array([overlap, 1, 1, overlap, 1, 1, overlap, 1, 1]) # prototypical dog
 x = x_dog/np.linalg.norm(x_dog) # in case you want to normalize the input vector
 W = np.array([[2, 1, 0, 2, 1, 0, 2, 1, 0], [0, 1, 2, 0, 1, 2, 0, 1, 2]])
@@ -25,10 +25,10 @@ w_inh = -1    # lateral inhibition between cat and dog
 W_inh = w_inh*np.array([[0, 1], [1, 0]])
 step_size = 0.01
 max_n_steps = 200
-threshold = 20
-ntrials = 200
+threshold = 5
+ntrials = 1000
 noise = 0.5
-xmin, xmax = 0, 150 # for easy comparison, always use the same x-range
+xmin, xmax = 0, max_n_steps # for easy comparison, always use the same x-range
 RT = np.ndarray(ntrials)
 accuracy = np.ndarray(ntrials)
 

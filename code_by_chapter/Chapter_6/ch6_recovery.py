@@ -26,10 +26,11 @@ from ch6_estimation import estimate_learnR
 
 learning_rate, temperature = 0.6, 1
 
-ntrials = [50, 100]
-n_sim = 5 
+ntrials = [500]
+n_sim = 1 
 #algorithm = "Powell" # non gradient based
-algorithm = "CG"      # gradient based
+#algorithm = "CG"      # gradient based
+algorithm = "L-BFGS-B" # use this if you want to use the hessian
 data_filename = "simulation_data.csv"
 extra_label = algorithm + "_bayes_small" # extra label you can give to the output file name 
 results_filename = "simulation_results_" + str(n_sim) + "_" + extra_label
@@ -47,6 +48,8 @@ for n_loop in range(len(ntrials)):
         est_par[sim_loop, n_loop, 1] = res.x[1]
         est_par[sim_loop, n_loop, 2] = res.fun
         est_par[sim_loop, n_loop, 3] = res.success*1
+        print("inverse hessian (to check estimation reliability):")
+        print(res.hess_inv.todense())
         if verbose:
             print(res)
 #%% the result

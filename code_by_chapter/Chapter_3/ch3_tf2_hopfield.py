@@ -13,7 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #%% initialize and define data and functions
-dim = 1 # 1: 1-dim vectors; 2: 2-dim MNIST numbers
+dim = 2 # 1: 1-dim vectors; 2: 2-dim MNIST numbers
 def define_length(pattern):
 	length = 1
 	for loop in pattern.shape[1:]:

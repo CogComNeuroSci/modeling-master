@@ -5,8 +5,10 @@ Created on Sun Dec 15 11:29:27 2019
 
 @author: tom verguts
 goodness of recovery study for alpha-beta model
-note: gradient-based algorithms don't work! use nelder-mead (or solve the problem)
+note: gradient-based algorithms don't work-- use nelder-mead
+   (or define more robust version of likelihood function)
 """
+
 #%% import and initialize
 import numpy as np
 from numpy import save
