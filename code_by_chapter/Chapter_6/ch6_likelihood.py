@@ -4,14 +4,15 @@
 Created on Mon Jun 25 10:32:55 2018
 
 @author: tom verguts
-defines the log-likelihoods of the alpha-beta (ie, loglinear) and learning models
+defines the log-likelihoods of the alpha-beta (ie, loglinear) and learning models (Rescorla-Wagner, with 1 or 2 learning rates)
+
+the learning model formulation logL_learn was used in the MCP book reported simulations;
+the formulation logL_learnR is an improved formulation: It's more Robust because it avoids exponentiation as much as possible
 
 TBD:
 the alpha-beta formulation can be improved by coding alpha and beta as parameters from min to plus infinity
-(instead of in range (0,1), as is done now, which leads to instability
+(instead of in range (0,1), as is done now, which leads to instability)
  
-the learning model formulation logL_learn was used in the MCP book reported simulations;
-the formulation logL_learnR is an improved formulation: It's more Robust because it avoids exponentiation as much as possible
 """
 
 import pandas as pd
@@ -23,7 +24,12 @@ def logit(beta_in,x1, x2):
 
 
 def logL_ab(parameter, nstim, file_name): 
-    """ likelihood for the alpha-beta model"""
+    """ likelihood for the alpha-beta model, a toy model to check your understanding
+	formulation is Pr(Y = 1) = alpha*(beta**X) 
+	Y = dependent variable (data.iloc[:,2])
+	X = independent variable, indicates whether an item is difficult or not (data.iloc[:,1])
+	alpha = overall easiness factor (or Y = 1 proneness more generally)
+	beta  = extra easiness factor for difficult items """
     data = pd.read_csv(file_name)
     ntrials = data.shape[0]
     # calculate log-likelihood

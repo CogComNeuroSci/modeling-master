@@ -24,8 +24,8 @@ if model == "ab":
 else:   # learning model
     nstim = 4    
 
-alpha_list = [0.3, 0.7] #  in ab model, this is overall difficulty   ; in learning model, this is learning rate
-beta_list =  [0.3, 0.5] #  in ab model, this is hard-trial difficulty; in learning model, this is slope (inv temperature)
+alpha_list = [0.3, 0.7] #  in ab model, this is overall easiness (or difficulty)   ; in learning model, this is learning rate
+beta_list =  [0.3, 0.5] #  in ab model, this is an extra easiness (or difficulty) factor for hard trials; in learning model, this is slope (inv temperature)
 param_list = []              #  list of real and estimated parameters (one column for each)
 np.set_printoptions(precision = 2, suppress = True)
 

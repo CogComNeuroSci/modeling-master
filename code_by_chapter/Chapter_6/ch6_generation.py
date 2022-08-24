@@ -5,7 +5,7 @@ Created on Sat Jun 23 17:53:58 2018
 
 @author: tom verguts
 file contains functions for data generation for three models;
-- ab     = the alpha-beta model, which is essentially a log-linear model
+- ab     = the alpha-beta model, which is essentially a log-linear model (see ch6_likelihood.py for explanation)
 - learn  = a rescorla-wagner learning model
 - learn2 = a rescorla-wagner learning model with two learning rates
 print help(function) to see the info (docstring) attached to a function
