@@ -1,5 +1,5 @@
 # installation
-Steps to reproduced our environment:
+Steps to reproduce our environment:
 1. Install Anaconda (anaconda.com)
 2. Download your yml file (for Mac or for Windows)
 3. Navigate to the location where your yml file is downloaded
