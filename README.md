@@ -4,7 +4,7 @@
 [![Commits](https://img.shields.io/github/last-commit/CogComNeuroSci/modeling-master?style=plastic)](https://img.shields.io/github/last-commit/CogComNeuroSci/modeling-master?style=plastic)
 [![Contributors](https://img.shields.io/github/contributors/CogComNeuroSci/modeling-master?style=plastic)](https://img.shields.io/github/contributors/CogComNeuroSci/modeling-master?style=plastic)
 
-<img src="/images/cover_extract.png" alt="MCP book cover" max-width="30%" height="auto" align="center" hspace="10" vspace="10">
+<img src="CogComNeurosci/CogComNeuroSci.github.io/images/cover_extract.png" alt="MCP book cover" max-width="30%" height="auto" align="center" hspace="10" vspace="10">
 
 ## Overview
 
