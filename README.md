@@ -4,6 +4,8 @@
 [![Commits](https://img.shields.io/github/last-commit/CogComNeuroSci/modeling-master?style=plastic)](https://img.shields.io/github/last-commit/CogComNeuroSci/modeling-master?style=plastic)
 [![Contributors](https://img.shields.io/github/contributors/CogComNeuroSci/modeling-master?style=plastic)](https://img.shields.io/github/contributors/CogComNeuroSci/modeling-master?style=plastic)
 
+<img src="/images/MCP_excerpt.jpg" alt="MCP book cover" max-width="30%" height="auto" align="center" hspace="10" vspace="10">
+
 ## Overview
 
 This folder contains the code attached to the MCP handbook. The book is written by Tom Verguts; he thanks Esther De Loof, Mehdi Senoussi, and Pieter Huycke for lots of coding inspiration.
