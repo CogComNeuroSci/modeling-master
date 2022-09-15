@@ -6,5 +6,9 @@ Steps to reproduce our environment:
 4. On the anaconda prompt (terminal prompt on Mac), type
 conda env create --file [name of yml file]
 
-After installation, a new virtual environment should now have been created. You can activate this environment by typing conda activate [name of env] at the prompt.
+After installation, a new virtual environment should now have been created.
+
+You can check the list of available environments by typing conda env list at the prompt.
+
+You can activate the environment you want by typing conda activate [name of env] at the prompt.
 Learn how to navigate Anaconda with its [cheat sheet](https://docs.conda.io/projects/conda/en/4.6.0/_downloads/52a95608c49671267e40c689e0bc00ca/conda-cheatsheet.pdf)
