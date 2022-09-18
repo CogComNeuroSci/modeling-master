@@ -7,6 +7,7 @@ Created on Sun Aug 28 15:16:21 2022
 try out recurrent models on posture data; 
 specifically the Human Activity Recognition dataset on kaggle
 """
+
 import numpy as np
 import os
 import tensorflow as tf
@@ -57,7 +58,7 @@ def preprocess_pose(x_train, y_train, train_size,
 					x_test, y_test, test_size):
     n_labels = int(np.max(y_train)+1)
     stim_size = x_train.shape[1]
-    x_train, y_train, x_test, y_test = x_train[:train_size,:], y_train[:train_size], x_test[:test_size,:], y_test[:test_size]
+    x_train, y_train, x_test, y_test = x_train[:train_size], y_train[:train_size], x_test[:test_size], y_test[:test_size]
     x_train_preproc, y_train_preproc = cut_in_pieces2(x_train, y_train)
     x_test_preproc, y_test_preproc   = cut_in_pieces2(x_test, y_test)
     y_train = tf.one_hot(y_train_preproc, n_labels)
@@ -71,7 +72,7 @@ def build_network(image_size: int, output_dim: int, n_hid1: int, n_hid2: int, le
     model.add(tf.keras.layers.LSTM(n_hid1, return_sequences = True, activation = "tanh"))
     model.add(tf.keras.layers.LSTM(n_hid2, return_sequences = False, activation = "tanh"))
     model.add(tf.keras.layers.Dense(output_dim, activation = "sigmoid", name = "outputlayer"))
-    loss = {"outputlayer": tf.keras.losses.MeanSquaredError()}
+    loss = {"outputlayer": tf.keras.losses.CategoricalCrossentropy()}
     model.compile(optimizer = \
          tf.keras.optimizers.Adam(learning_rate = learning_rate, decay = 1e-6), loss = loss, metrics = ["accuracy"])	
     return model	
@@ -87,10 +88,10 @@ def test_model(X, y):
 
 
 # main program
-X_train, y_train, X_test, y_test = read_data("UCI HAR Dataset")
+X_train, y_train, X_test, y_test = read_data("HAR_data")
 n_time = 10 # how many time steps do we use to predict the movement
 train_size, test_size = X_train.shape[0], X_test.shape[0] # can downscale to make data set smaller (and training faster)
-#train_size, test_size = 40, 10 # can downscale to make data set smaller (and training faster)
+train_size, test_size = 40, 10 # can downscale to make data set smaller (and training faster)
 image_size, n_labels, X_train, y_train, X_test, y_test = preprocess_pose(
                                   X_train, y_train, train_size, X_test, y_test, test_size)
 print(X_train.shape)
