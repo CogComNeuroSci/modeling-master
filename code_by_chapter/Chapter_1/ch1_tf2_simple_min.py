@@ -19,7 +19,7 @@ if plot_results:
     mpl.use("Qt5Agg")     # this should plot the figure outside the console
     norm = mpl.colors.Normalize(vmin = 0, vmax = 1)
     col = cm.ScalarMappable(norm = norm, cmap = cm.afmhot).to_rgba(0)
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(nrows = 1, ncols = 1)
 
 step_size, n_steps = 0.1, 10
 x = tf.Variable(initial_value = 10.0, trainable = True)
@@ -36,6 +36,8 @@ for step in range(n_steps):
     if plot_results:
         col = cm.ScalarMappable(norm = norm, cmap = cm.afmhot).to_rgba((step+2)/float(n_steps+2))
         a = ax.plot(x.numpy(), func_to_use().numpy(), 'o', mec = 'k', color = col)
+        ax.set_xlim([-20, +20])
+        ax.set_ylim([0, +20])
         ax.set_xlabel("x")
         ax.set_ylabel("f(x)")
         fig.canvas.draw()
