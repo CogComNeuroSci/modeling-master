@@ -25,7 +25,7 @@ W_inh = w_inh*np.array([[0, 1], [1, 0]])
 step_size = 0.05
 n_steps = 100
 y = np.ndarray((n_steps, 2))
-noise = 5
+noise = 0.5
 
 # define TensorFlow components
 Y  = tf.Variable(initial_value = np.random.randn(1, 2))
@@ -44,9 +44,9 @@ def plot_activation():
 
 # start the optimization	
 for step in range(n_steps):
-	Y.assign(Y + np.random.rand(1,2)*noise) # add some noise
+    Y.assign(Y + np.random.rand(1,2)*noise) # add some noise
     y[step] = Y.numpy()                     # store it as numpy array for plotting purposes
-	opt = gradient_descent.GradientDescentOptimizer(step_size).minimize(cost) # core of the code
-	Y.assign(tf.math.maximum(0, Y))     # clip it at zero
+    opt = gradient_descent.GradientDescentOptimizer(step_size).minimize(cost) # core of the code
+    Y.assign(tf.math.maximum(0, Y))     # clip it at zero
 
 plot_activation()
