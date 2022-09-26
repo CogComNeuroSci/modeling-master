@@ -2,7 +2,7 @@
 Steps to reproduce our environment:
 1. Install Anaconda (anaconda.com)
 2. Download your yml file (for Mac or for Windows)
-3. On the anaconda prompt (terminal prompt on Mac), navigate to the location where your yml file is downloaded
+3. On the anaconda prompt (terminal prompt on Mac), navigate to the location where your yml file is downloaded. You can navigate to a location by typing at the prompt (e.g.) cd /Users/tom/Downloads (on Mac) or cd C:\Users\tom\Downloads (on Windows).
 4. On the anaconda prompt (terminal prompt on Mac), type
 conda env create --file [name of yml file]
 
