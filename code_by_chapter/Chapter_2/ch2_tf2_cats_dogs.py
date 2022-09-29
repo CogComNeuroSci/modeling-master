@@ -5,6 +5,7 @@ Created on Mon Aug 31 09:51:11 2020
 
 @author: tom verguts
 Does cats-dogs network updating via minimization of cost function (2.3)
+it thus implements the model defined in (2.4) and (2.5)
 """
 
 import tensorflow as tf
@@ -33,6 +34,7 @@ Y  = tf.Variable(initial_value = np.random.randn(1, 2))
 
 # define functions
 def cost():
+    # this is just the cost function 2.3 in matmul notation
 	return -tf.matmul(Y,net) - tf.matmul(tf.matmul(Y,W_inh), tf.transpose(Y)) 
 
 def plot_activation():
