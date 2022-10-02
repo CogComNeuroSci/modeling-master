@@ -26,18 +26,19 @@ W_inh = w_inh*np.array([[0, 1], [1, 0]])
 step_size = 0.01
 max_n_steps = 200
 threshold = 5
-ntrials = 1000
+ntrials = 100
 noise = 0.5
 xmin, xmax = 0, max_n_steps # for easy comparison, always use the same x-range
 RT = np.ndarray(ntrials)
 accuracy = np.ndarray(ntrials)
+
 
 # define TensorFlow components
 Y  = tf.Variable(initial_value = np.random.randn(1, 2))
 
 
 def cost():
-	return -tf.matmul(Y,net) - tf.matmul(tf.matmul(Y,W_inh), tf.transpose(Y)) 
+	return -tf.matmul(Y,net) - tf.matmul(tf.matmul(Y,W_inh), tf.transpose(Y))
 
 
 for trial_loop in range(ntrials):

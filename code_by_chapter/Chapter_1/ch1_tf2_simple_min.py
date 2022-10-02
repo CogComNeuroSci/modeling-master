@@ -5,6 +5,7 @@ Created on Mon Jun 28 15:38:59 2021
 
 @author: tom verguts
 1-dimensional function minimization with TensorFlow2
+a**x means a raised to the power x
 """
 
 import tensorflow as tf
@@ -31,7 +32,7 @@ def f_x():
 def f2_x():
 	return 2*(x**4) -0.3*(x**3) - 2.5*(x**2)  
 
-func_to_use = f2_x
+func_to_use = f_x
 
 for step in range(n_steps):
     print("x = {:.2f}, f(x) = {:.2f}".format(x.numpy(), func_to_use().numpy()))
@@ -39,8 +40,8 @@ for step in range(n_steps):
     if plot_results:
         col = cm.ScalarMappable(norm = norm, cmap = cm.afmhot).to_rgba((step+2)/float(n_steps+2))
         a = ax.plot(x.numpy(), func_to_use().numpy(), 'o', mec = 'k', color = col)
-        ax.set_xlim([0, +10])
-        ax.set_ylim([0, +10])
+        ax.set_xlim([-1.3, +1.3])
+        ax.set_ylim([-2, +6])
         ax.set_xlabel("x")
         ax.set_ylabel("f(x)")
         fig.canvas.draw()
