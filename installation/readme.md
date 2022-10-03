@@ -9,7 +9,7 @@ For example, if your file is called modelling_mac.yml, then you should do conda 
 
 After installation, a new virtual environment should now have been created. On windows, this newly created environment is called modelling; on mac, this environment is called tf2.
 
-You can check the list of available environments by typing conda env list at the prompt.
+You can check the list of available environments by typing conda env list at the prompt. If installation went well, you should see modelling in that list (on windows) or tf2 (on mac).
 
-You can activate the environment you want by typing conda activate [name of env] at the prompt.
+You can activate the environment you want by typing conda activate [name of env] at the prompt. For example, to activate environment tf2, type conda activate tf2. You can then start Spyder, and you're ready to go.  
 Learn how to navigate Anaconda with its [cheat sheet](https://docs.conda.io/projects/conda/en/4.6.0/_downloads/52a95608c49671267e40c689e0bc00ca/conda-cheatsheet.pdf)
