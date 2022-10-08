@@ -22,6 +22,7 @@ x = x_dog
 
 W = np.array([[1, 0.5, 0.1], [0.1, 0.5, 1]])
 net = np.matmul(W, x).reshape(2,1) # net input to the cat and dog output units
+
 w_inh = -0.4    # lateral inhibition between cat and dog
 W_inh = w_inh*np.array([[0, 1], [1, 0]])
 step_size = 0.05

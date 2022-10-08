@@ -22,17 +22,25 @@ if plot_results:
     col = cm.ScalarMappable(norm = norm, cmap = cm.afmhot).to_rgba(0)
     fig, ax = plt.subplots(nrows = 1, ncols = 1)
 
-step_size, n_steps = 0.1, 10
-x = tf.Variable(initial_value = -0.1, trainable = True)
+step_size, n_steps = 0.1, 100
+x = tf.Variable(initial_value = +0.001, trainable = True)
 
 
 def f_x():
     return (x - 5)**2
 
+def my_function_x():
+    return x**2 +7
+
+def my_function_x():
+    return - (-x**2 +7)
+
 def f2_x():
 	return 2*(x**4) -0.3*(x**3) - 2.5*(x**2)  
 
-func_to_use = f_x
+
+
+func_to_use = f2_x
 
 for step in range(n_steps):
     print("x = {:.2f}, f(x) = {:.2f}".format(x.numpy(), func_to_use().numpy()))
