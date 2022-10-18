@@ -175,13 +175,16 @@ def run_active_inference_loop(my_agent, my_env, T = 5):
     qs = my_agent.infer_states(obs)
     #print("***", qs[0], qs[1])
     ent[t,:] = entropy(qs)
-    #print(ent[t,:])
-    # if t == T-1:
-    #     fig, ax = plt.subplots()
-    #     ax.bar([0, 1], qs[0])
-    #plot_beliefs(qs[0], title_str = f"Beliefs about the context at time {t}")
+    print(ent[t,:])
+    if t == T-1:
+        fig, ax = plt.subplots()
+        ax.bar([0, 1], qs[0])
+#    plot_beliefs(qs[0], title_str = f"Beliefs about the context at time {t}")
+
+
 
     q_pi, efe = my_agent.infer_policies()
+    print(q_pi)
     chosen_action_id = my_agent.sample_action()
 
     movement_id = int(chosen_action_id[1])

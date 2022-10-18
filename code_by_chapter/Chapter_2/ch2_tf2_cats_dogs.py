@@ -18,17 +18,17 @@ fig, ax = plt.subplots()
 # initialize variables
 x_cat = np.array([1, 1, 0]) # prototypical cat
 x_dog = np.array([0, 1, 1]) # prototypical dog
-x = x_dog
+x = x_cat
 
 W = np.array([[1, 0.5, 0.1], [0.1, 0.5, 1]])
 net = np.matmul(W, x).reshape(2,1) # net input to the cat and dog output units
 
 w_inh = -0.4    # lateral inhibition between cat and dog
-W_inh = w_inh*np.array([[0, 1], [1, 0]])
+W_inh = w_inh * np.array([[0, 1], [1, 0]])
 step_size = 0.05
 n_steps = 100
 y = np.ndarray((n_steps, 2))
-noise = 1
+noise = 5
 
 # define TensorFlow components
 Y  = tf.Variable(initial_value = np.random.randn(1, 2))
