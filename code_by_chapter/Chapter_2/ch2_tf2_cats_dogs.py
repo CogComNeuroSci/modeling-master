@@ -15,6 +15,8 @@ import matplotlib.pyplot as plt
 
 fig, ax = plt.subplots()
 
+np.random.seed(2021)
+
 # initialize variables
 x_cat = np.array([1, 1, 0]) # prototypical cat
 x_dog = np.array([0, 1, 1]) # prototypical dog
@@ -32,6 +34,7 @@ noise = 5
 
 # define TensorFlow components
 Y  = tf.Variable(initial_value = np.random.randn(1, 2))
+
 
 # define functions
 def cost():
