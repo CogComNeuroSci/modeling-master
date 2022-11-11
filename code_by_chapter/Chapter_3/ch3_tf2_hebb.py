@@ -34,7 +34,3 @@ for epoch in range(epochs):
         if not epoch%10: # plot output only every 10 epochs
             w = W.numpy()
             print(w, '\n')
-	w11[epoch] = W.numpy()
-		
-plot(all the w11's)			
-			

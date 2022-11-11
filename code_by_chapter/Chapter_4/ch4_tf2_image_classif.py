@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import sys
 sys.path.append('/Users/tom/Documents/Modcogproc/modeling-master/code_by_chapter/Chapter_5')
 from ch5_tf2_digit_classif import test_performance
-from ch5_tf2_image_classif import plot_pics
+from ch5_tf2_image_classif import plot_imgs
 
 # images dataset
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
@@ -25,12 +25,12 @@ from ch5_tf2_image_classif import plot_pics
 x_train, y_train, x_test, y_test = x_train[:500,:], y_train[:500], x_test[:500,:], y_test[:500]
 
 # estimation parameters
-learning_rate = 0.001
-epochs = 5000 # how often to go through the whole data set
+learning_rate = 0.0001
+epochs = 1000 # how often to go through the whole data set
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 
-plot_pics(x_train, y_train)
+plot_imgs(x_train, y_train)
 
 #%% pre-processing
 n_labels = int(np.max(y_train)+1)

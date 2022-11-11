@@ -48,7 +48,7 @@ if __name__ == "__main__":
     (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()   
     train_size, test_size = 10000, 50 # downscale to make data set smaller (and training faster)
     learning_rate = 0.0001
-    epochs = 10
+    epochs = 200
     batch_size = 100
     batches = int(x_train.shape[0] / batch_size)
     stdev = 0.001
