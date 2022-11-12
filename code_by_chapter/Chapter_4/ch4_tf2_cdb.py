@@ -31,7 +31,8 @@ train_x = np.ndarray((tot_n_train, stim_dim))
 
 test_x = prototype                           # patterns to test the model after training
 train_y = np.array((np.zeros(n_train), np.zeros(n_train) + 1, np.zeros(n_train) + 2))
-train_y = train_y.reshape(tot_n_train, 1)            # from a (2,) vector to a (2,1) matrix 
+train_y = train_y.reshape(tot_n_train, 1)            # from a (tot_n_train,) vector to a (tot_n_train,1) matrix 
+print(train_y.shape)
 train_y = tf.one_hot(train_y, 3)
 
 #%% helper functions
