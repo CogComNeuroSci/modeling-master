@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 
 # initialize
 learning_rate = 0.005
-epochs = 5 # how often to go through the whole training data set
+epochs = 50 # how often to go through the whole training data set
 
 np.set_printoptions(precision = 2, suppress = True)
 filename = "cdb.npy"
