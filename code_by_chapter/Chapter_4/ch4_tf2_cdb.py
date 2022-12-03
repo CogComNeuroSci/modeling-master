@@ -18,13 +18,13 @@ import matplotlib.pyplot as plt
 
 # initialize
 learning_rate = 0.005
-epochs = 50 # how often to go through the whole training data set
+n_epochs = 5 # how often to go through the whole training data set
 
 np.set_printoptions(precision = 2, suppress = True)
 filename = "cdb.npy"
 prototype = np.load(filename)
 
-n_train = 10
+n_train = 10 
 stim_dim = prototype.shape[1]
 tot_n_train = prototype.shape[0]*n_train
 train_x = np.ndarray((tot_n_train, stim_dim))
@@ -63,7 +63,7 @@ model.build()
 #%% train & test the model
 opt = tf.keras.optimizers.Adam(learning_rate = learning_rate)           # Adam is a kind of gradient descent
 model.compile(optimizer = opt, loss=tf.keras.losses.MeanSquaredError()) # loss is what we called energy
-history = model.fit(train_x, train_y, batch_size = 1, epochs = epochs)
+history = model.fit(train_x, train_y, batch_size = 1, epochs = n_epochs)
 model.summary()
 test_data = model.predict(test_x)
 

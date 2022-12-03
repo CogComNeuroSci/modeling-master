@@ -27,14 +27,14 @@ x_train, y_train, x_test, y_test = x_train[:train_size,:], y_train[:train_size],
 # estimation parameters
 learning_rate = 0.3
 epochs = 10
-batch_size = 100
+batch_size = 20
 batches = int(x_train.shape[0] / batch_size)
 
 plot_digits(x_train[:4], y_train[:4])
 
 #%% pre-processing
 n_labels = int(np.max(y_train)+1)
-image_size = x_train.shape[1]*x_train.shape[2]
+image_size = x_train.shape[1]*x_train.shape[2] # 798
 x_train, y_train, x_test, y_test = preprocess_digits(
 		                                  x_train, y_train, train_size, x_test, y_test, test_size, image_size = image_size, n_labels = n_labels)
 #%% model construction
@@ -44,9 +44,9 @@ model = tf.keras.Sequential([
 			] )
 model.build()
 
-loss = tf.keras.losses.CategoricalCrossentropy() # don't worry about the details; it's another error function for multi-category, binary data
+loss_CE = tf.keras.losses.CategoricalCrossentropy() # don't worry about the details; it's another error function for multi-category, binary data
 opt = tf.keras.optimizers.Adam(learning_rate = learning_rate)
-model.compile(optimizer = opt, loss = loss)
+model.compile(optimizer = opt, loss = loss_CE)
 
 #%% model fitting; this part typically takes the longest time
 history = model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs)

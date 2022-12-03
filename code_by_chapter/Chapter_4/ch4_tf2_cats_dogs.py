@@ -3,7 +3,7 @@
 """
 
 @author: tom verguts
-does 2-layer network weight optimization via MSE minimization
+does 1-layer network weight optimization via MSE minimization
 in TF2
 for the cats vs dogs example (see MCP book for details of the example)
 by default, activation = linear
@@ -18,9 +18,10 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 # initialize
-learning_rate = 0.1
-epochs = 100 # how often to go through the whole data set
+learning_rate = -1
+n_epochs = 100 # how often to go through the whole data set
 train_x = np.array([[1, 1, 0], [0, 1, 1]]) # a cat and a dog input pattern
 test_x = np.copy(train_x)                  # patterns to test the model after training
 train_y = np.array([0, 1])                 # a single output unit suffices for 2 categories
@@ -36,7 +37,7 @@ model.build()
 #%% train & test the model
 opt = tf.keras.optimizers.Adam(learning_rate = learning_rate)           # Adam is a kind of gradient descent
 model.compile(optimizer = opt, loss=tf.keras.losses.MeanSquaredError()) # loss is what we called energy
-history = model.fit(train_x, train_y, batch_size = 1, epochs = epochs)
+history = model.fit(train_x, train_y, batch_size = 1, epochs = n_epochs)
 model.summary()
 test_data = model.predict(test_x)
 print(model.get_weights()) # train_x.shape[1] + 1 parameters are given; can you see why?
