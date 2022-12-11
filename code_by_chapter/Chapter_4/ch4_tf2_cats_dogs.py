@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 
 
 # initialize
-learning_rate = -1
+learning_rate = 0.5
 n_epochs = 100 # how often to go through the whole data set
 train_x = np.array([[1, 1, 0], [0, 1, 1]]) # a cat and a dog input pattern
 test_x = np.copy(train_x)                  # patterns to test the model after training
