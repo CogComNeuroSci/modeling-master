@@ -13,12 +13,12 @@ import matplotlib.pyplot as plt
 # the function that I'm going to plot
 def z_func(x, y):
     #return (1 - (x ** 2 + y ** 3)) * exp(-(x ** 2 + y ** 2) / 2)
-	#return x**2 + y**2
-	return (x-y)**2
+    return -1.2*x -1.9*y + 0.23
+#    return (x-y)**2
+	
 
-
-x = arange(-3.0, 3.0, 0.1)
-y = arange(-3.0, 3.0, 0.1)
+x = arange(-10.0, 10.0, 0.1)
+y = arange(-10.0, 10.0, 0.1)
 
 # grid of point
 X, Y = meshgrid(x, y)
@@ -31,10 +31,10 @@ fig = plt.figure()
 
 ax1 = fig.add_subplot(1, 2, 1)
 # a plot from above 
-im = ax1.imshow(Z, cmap = cm.RdBu)
+im = ax1.imshow(Z, cmap = cm.RdBu, extent = [-10, 10, 10, -10])
 # adding the contour lines with labels
-cset = ax1.contour(Z, arange(-1, 1.5, 0.2), linewidths=2, cmap=cm.Set2)
-ax1.clabel(cset, inline=True, fmt='%1.1f', fontsize=10)
+#cset = ax1.contour(X, Y, Z, arange(-10, 10, 0.2), linewidths=2, cmap=cm.Set2) 
+#ax1.clabel(cset, inline=True, fmt='%1.1f', fontsize=10)
 
 # adding the colobar on the right
 fig.colorbar(im, ax = ax1)
