@@ -17,6 +17,7 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, Concatenate
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.losses import categorical_crossentropy
+from itertools import product
 
 def build_model(n_in, n_shared, n_unique, n_out):
     input1  = Input((n_in,), name = "input1") 
@@ -64,8 +65,11 @@ epochs = 1000
 n_hid = 4
 n_shared = int(n_hid*unit_overlap)
 n_unique = int((n_hid - n_shared)/2)
-train_x = np.array([[0, 0, 0], [0, 1, 0], [0, 0, 1], [0, 1, 1], [1, 0, 0], [1, 1, 0], [1, 0, 1], [1, 1, 1]])
-stim_dim = train_x.shape[1]
+stim_dim = 3
+train_x = []
+for row in product([0, 1], repeat = stim_dim):
+    train_x.append(row)
+train_x = np.array(train_x)
 n = int(train_x.shape[0]/2)
 
 n_sim = 2
