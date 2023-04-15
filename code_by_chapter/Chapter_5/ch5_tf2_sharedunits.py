@@ -96,7 +96,7 @@ for sim_loop in range(n_sim):
         x_shuffle = extend(task_idx, x_shuffle)
         step(model, x_shuffle, t_shuffle)
         dict_x = array_to_dict(x_shuffle)
-        (error_function[epoch], acc) = model.evaluate(dict_x, t_shuffle, verbose = 0)
+#        (error_function[epoch], acc) = model.evaluate(dict_x, t_shuffle, verbose = 0)
 
     total_acc = 0
     plt.plot(range(epochs), error_function)
