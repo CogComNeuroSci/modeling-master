@@ -6,6 +6,8 @@ Created on Mon Aug 31 09:51:11 2020
 @author: tom verguts
 Does cats-dogs network updating via minimization of cost function (2.3)
 it thus implements the model defined in (2.4) and (2.5)
+cat = response 0
+dog = response 1
 """
 
 import tensorflow as tf
@@ -21,7 +23,8 @@ x_cat = np.array([1, 1, 0]) # prototypical cat
 x_dog = np.array([0, 1, 1]) # prototypical dog
 x = x_cat
 
-W = np.array([[1, 0.5, 0.1], [0.1, 0.5, 1]])
+W = np.array([[1, 0.5, 0.1],   # weights to the cat response
+			  [0.1, 0.5, 1]])  # weights to the dog response
 net = np.matmul(W, x).reshape(2,1) # net input to the cat and dog output units
 
 w_inh = -0.4    # lateral inhibition between cat and dog
@@ -37,11 +40,11 @@ Y  = tf.Variable(initial_value = np.random.randn(1, 2))
 
 # define functions
 def cost():
-    # this is just the cost function 2.3 in matmul notation
+	"""this is just the cost function 2.3 in matmul notation"""
 	return -tf.matmul(Y,net) - tf.matmul(tf.matmul(Y,W_inh), tf.transpose(Y)) 
 
 def plot_activation():
-    # plot the cat / dog competition
+    """plot the cat / dog competition"""
     ax.plot(range(n_steps), y[:,0], color = "red", label = "cat")
     ax.plot(range(n_steps), y[:,1], color = "black", label = "dog")        
     ax.set_xlabel("time")

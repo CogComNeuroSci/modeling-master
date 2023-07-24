@@ -24,7 +24,7 @@ X = np.ndarray((n_units, n_stimuli))
 for stimulus_loop in range(n_stimuli):
 	X[:,stimulus_loop] = 2*(np.random.random(n_units)>0.5)-1 # +1 / -1 coding
 
-# construct weight matrix
+# construct weight matrix via hebb-like learning rule
 w = np.zeros((n_units, n_units))
 for stimulus_loop in range(n_stimuli):
 	w    = w + learning_rate*np.matmul(X[:, stimulus_loop][:,np.newaxis], X[:, stimulus_loop][:,np.newaxis].T)
@@ -40,8 +40,9 @@ distance = np.zeros((n_sample, n_stimuli))
 max_distance = np.sqrt(4*n_units)
 
 # %% main program
-# a function to sample the network iteratively
+
 def hopfield(start_pattern = None, n_sample = 0):
+	""""a function to sample the network iteratively"""
 	pattern = tf.cast(start_pattern, dtype = tf.double)
 	for loop in range(n_sample):
 		for stimulus_loop in range(n_stimuli):
@@ -63,8 +64,10 @@ fig, ax = plt.subplots(nrows = 2, ncols = 1)
 ax[0].set_title("distance to stored stimuli across time") 
 for stim_loop in range(n_stimuli):
 	  ax[0].plot(distance[:, stim_loop], color = "black")
+ax[0].set_xlabel("time")
+ax[0].set_ylabel("distance")
 
 # row 1 is the initial, random pattern; rows 2, 3 are the stored patterns; row 4 is the stimulus reached at the final time step
-ax[1].set_title("start pattern, stored patterns, final pattern")  
+ax[1].set_title("start pattern (row 0), stored patterns, final pattern (row -1)")  
 data_to_plot = np.column_stack((start_pattern, X, pattern.numpy()))
 ax[1].imshow(data_to_plot.T)

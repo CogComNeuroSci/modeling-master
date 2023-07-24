@@ -32,7 +32,7 @@ def f_x():
 def my_function_x():
     return x**2 +7
 
-def my_function_x():
+def my_other_function_x():
     return - (-x**2 +7)
 
 def f2_x():
@@ -47,8 +47,8 @@ for step in range(n_steps):
     if plot_results:
         col = cm.ScalarMappable(norm = norm, cmap = cm.afmhot).to_rgba((step+2)/float(n_steps+2))
         a = ax.plot(x.numpy(), func_to_use().numpy(), 'o', mec = 'k', color = col)
-        ax.set_xlim([-1.3, +1.3])
-        ax.set_ylim([-2, +6])
+        ax.set_xlim([0, 10]) # make these limits appropriate for your function if you want to see something happening
+        ax.set_ylim([-2, +6])     # same here
         ax.set_xlabel("x")
         ax.set_ylabel("f(x)")
         fig.canvas.draw()

@@ -4,7 +4,7 @@
 Created on Mon Aug 31 09:51:11 2020
 
 @author: tom verguts
-Does activation updating via minimization of a cost function (equation 2.3)
+This script does activation updating via minimization of a cost function (equation 2.3)
 It's also possible to change Y explicitly, rather than implicitly via a cost function, as done here
 In particular, one can explicitly code equations like (2.4) and (2.5)
 """
@@ -26,7 +26,7 @@ activation = np.ndarray((n_steps,2))
 step_size = 0.1
 fig, ax = plt.subplots()
 
-Y  = tf.Variable(np.random.randn(1, 2)/10, name="Y") # this will be optimized to minimize cost
+Y  = tf.Variable(np.random.randn(1, 2)/10) # this will be optimized to minimize cost
 
 def cost(): # this is the cost function (2.3) (in slightly more general notation than in the MCP book)
 	return -tf.matmul(Y,net) - tf.matmul(tf.matmul(Y,W_inh), tf.transpose(Y)) 

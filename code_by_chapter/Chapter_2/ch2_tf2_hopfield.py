@@ -19,18 +19,23 @@ w    = np.array((row1, row1, row1, row2, row2, row2)).astype(np.float32)
 threshold = -1
 b    = np.array(row1.size*[threshold])
 b    = b[:, np.newaxis]
-start_pattern = np.array([1, 1, 1, 1, 0, 0])
+start_pattern = np.array([1, 1, 1, 1, 1, 0])
 start_pattern = start_pattern[:, np.newaxis]
+dim = start_pattern.size
 
-# a function to sample the network iteratively
-def hopfield(start_pattern = None, n_sample = 0):
+
+def hopfield(start_pattern = None, n_sample = 0, verbose = False):
+	"""a function to sample the network iteratively"""
 	pattern = tf.cast(start_pattern, dtype = tf.float32)
 	for loop in range(n_sample):
 		net_input = tf.matmul(w, pattern) + tf.multiply(pattern, b)
 		clipped   = tf.cast(tf.math.greater(net_input, 0), tf.float32)
 		pattern   = clipped
-		print(pattern)
+		if verbose:
+			print(pattern.numpy().reshape(1, dim))
 	return pattern
 
-pattern = hopfield(start_pattern = start_pattern, n_sample = 10)
-print(pattern.numpy())
+print("start pattern:\n",start_pattern.reshape(1, dim))
+pattern = hopfield(start_pattern = start_pattern, n_sample = 10, verbose = True)
+print("final pattern:\n",pattern.numpy().reshape(1, dim))
+

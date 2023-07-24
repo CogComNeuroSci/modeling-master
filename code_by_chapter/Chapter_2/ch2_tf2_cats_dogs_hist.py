@@ -7,6 +7,8 @@ Created on Mon Aug 31 09:51:11 2020
 Does cats-dogs network updating via minimization of cost function (2.3)
 the output is a histogram of the model response times
 more features makes the prototypicality effect (in accuracy and RT) more pronounced
+cat = response 0
+dog = response 1
 """
 
 import tensorflow as tf
@@ -16,18 +18,19 @@ import matplotlib.pyplot as plt
 
 # initialize variables
 #x_cat = np.array([1, 1, 0, 1, 1, 0, 1, 1, 0]) # prototypical cat
-overlap = 0.9
+overlap = 0.9 # between the cat and the dog
 x_dog = np.array([overlap, 1, 1, overlap, 1, 1, overlap, 1, 1]) # prototypical dog
 x = x_dog/np.linalg.norm(x_dog) # in case you want to normalize the input vector
-W = np.array([[2, 1, 0, 2, 1, 0, 2, 1, 0], [0, 1, 2, 0, 1, 2, 0, 1, 2]])
+W = np.array([[2, 1, 0, 2, 1, 0, 2, 1, 0],     # weights to the cat response 
+			  [0, 1, 2, 0, 1, 2, 0, 1, 2]])    # weights to the dog response
 net = np.matmul(W, x).reshape(2,1) # net input to the cat and dog output units
 w_inh = -1    # lateral inhibition between cat and dog
 W_inh = w_inh*np.array([[0, 1], [1, 0]])
 step_size = 0.01
-max_n_steps = 200
+max_n_steps = 200 # response time deadline
 threshold = 5
 ntrials = 100
-noise = 0.5
+noise = 0.1
 xmin, xmax = 0, max_n_steps # for easy comparison, always use the same x-range
 RT = np.ndarray(ntrials)
 accuracy = np.ndarray(ntrials)
@@ -51,11 +54,13 @@ for trial_loop in range(ntrials):
 		Y.assign(tf.math.maximum(0, Y))
 		step += 1
 	RT[trial_loop] = step
-	accuracy[trial_loop] = int(y[step-1, 0] < y[step-1, 1])
+	accuracy[trial_loop] = int(y[step-1, 0] < y[step-1, 1]) # this assumes dog is the correct response
 	Y.assign([[0, 0]])
 
 # plot the  RT distribution
 plt.hist(RT, density = True, color = "black", range = [xmin, xmax])
+plt.xlabel("RT")
+plt.ylabel("RT density")
 
 print("mean RT is {:.2f}".format(np.mean(RT)))
 print("mean accuracy is {:.2%}".format(np.mean(accuracy)))

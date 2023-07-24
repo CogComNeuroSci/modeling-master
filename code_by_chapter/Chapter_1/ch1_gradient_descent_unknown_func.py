@@ -5,11 +5,12 @@ Created on Thu Sep 20 13:34:00 2018
 
 @author: mehdisenoussi
 gradient descent where the gradient is approximated with finite differences (see line der = ...)
+based on the last two updates
+alternatively, you can use only the last update and a small excursion from that update
 """
 
 import matplotlib as mpl
-#mpl.use('TkAgg')
-#mpl.get_backend()
+mpl.use('Qt5Agg') # use this backend to make sure plots are not generated in the console
 from matplotlib import cm
 import pylab as pl
 import numpy as np
@@ -54,17 +55,18 @@ col = cm.ScalarMappable(norm = norm, cmap = cm.afmhot).to_rgba(1/float(n_steps+2
 axes.plot(x_desc[-1], y_desc[-1], 'o', mec = 'k', color = col)
 
 for i in np.arange(n_steps):
-    pl.title('step: %i/%i' % (i+2, n_steps+1))
     der = (y_desc[-1] - y_desc[-2]) / (x_desc[-1] - x_desc[-2])
     x_desc.append(x_desc[-1] + -alpha * der)
     y_desc.append(func_to_use(x_desc[-1]))
+
+	# the plotting
+    pl.title('step: %i/%i' % (i+2, n_steps+1))
     col = cm.ScalarMappable(norm = norm, cmap = cm.afmhot).to_rgba((i+2)/float(n_steps+2))
     a = axes.plot(x_desc[-1], y_desc[-1], 'o', mec = 'k', color = col)
     axes.set_xlabel('alph * der = x_step\n%.2f * %.2f = %.2f' % (alpha, der, der*alpha))
     fig.canvas.draw()
-#    fig.waitforbuttonpress(0) # if you want to step through the function
+#   fig.waitforbuttonpress(0) # if you want to step through the function; make sure you don't plot in console then!
     
-
 pl.title('THE END\nstep: %i/%i' % (i+2, n_steps+1))
 
 
