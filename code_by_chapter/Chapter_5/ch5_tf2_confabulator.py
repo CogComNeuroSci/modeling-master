@@ -2,15 +2,16 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Feb 18 10:25:11 2023
-confabulate characters based on shakespeare oeuvre
-(or any other text you want)
-using a network with two (GRU) recurrent layers
 @author: tom verguts
-inspired by similar code by Cedric De Boom and Tim Verbelen
-note that processed data must be stored as well bcs set is unordered
-put train_it and save_it to False if you want to test an existing model
-Can you predict what is different if you sample deterministically instead of 
-probabilistically? Try it afterwards.
+- confabulate characters based on shakespeare oeuvre
+(or any other text you want)
+- using a network with two recurrent (GRU) layers
+- inspired by similar code by Cedric De Boom and Tim Verbelen
+- note that processed data must be stored as well bcs set is unordered
+- put train_it and save_it to False if you want to test an existing model
+- you can make the path deterministic (always the same) by setting the random seed;
+- you can make sure you sample the same word in the same situation by sampling via argmax;
+try it out and try to predict what will be different
 """
 
 import numpy as np
@@ -54,7 +55,7 @@ def test_model(n_cont = 50):
         batch_nr, stim_nr = row//stim_depth, row%stim_depth
         probs = np.ndarray.flatten(out[batch_nr, stim_nr, :].numpy())
         y = np.random.choice(np.arange(len(chars)), p = probs)
-#        y = np.argmax(probs)		# sample deterministically
+#        y = np.argmax(probs)		# sample the highest prob word
         seed_char += itos[y]
         batch_nr, stim_nr = (row+1)//stim_depth, (row+1)%stim_depth
         x[batch_nr, stim_nr, y] = 1        
@@ -62,15 +63,21 @@ def test_model(n_cont = 50):
 
 def text2vec(text_file, verbose = False):
     """preprocessing of the data"""
+#    start_line = "PLAYS\n"
+    start_line = None
+    include = False
     chars = set()
     data_length = 0
     banned_chars = set(['}', '<', '\\ufeff', '$'])
     with open(text_file, 'r') as infile:
-      for line in infile:
-        for char in line:
-          if char not in banned_chars:
-            chars.add(char)
-            data_length += 1
+        for line in infile:
+            if (line == start_line) or not start_line:
+	            include = True 
+            if include:
+                for char in line:
+                    if char not in banned_chars:
+                        chars.add(char)
+                        data_length += 1
     if verbose:
         print(f'Length of dataset: {data_length} chars')
         print(f'No. of unique chars: {len(chars)}')
@@ -78,12 +85,16 @@ def text2vec(text_file, verbose = False):
     itos = {i:c for c, i in stoi.items()}
     data = np.zeros(data_length, dtype=np.int)
     i = 0
+    include = False
     with open(text_file, 'r') as infile:
-      for line in infile:
-        for char in line:
-          if char not in banned_chars:
-            data[i] = stoi[char]
-            i += 1
+        for line in infile:
+            if (line == start_line) or not start_line:
+                include = True
+            if include:
+                for char in line:
+                    if char not in banned_chars:
+                        data[i] = stoi[char]
+                        i += 1
     return data, chars, stoi, itos
 
 def make_data(data, n_stim, stim_depth, stim_dim):
@@ -98,21 +109,21 @@ def make_data(data, n_stim, stim_depth, stim_dim):
 
 # start main code here
 text = "shakespeare.txt"
-train_it, save_it, model_nr = False, False, 1
+train_it, save_it, model_nr = True, True, 2
 
 
-if train_it:
+if train_it: # train the model
     batch_size = 128
     data_size  = batch_size*20 # data for one model.fit()
     stim_depth = 100
-    data, chars, stoi, itos = text2vec(text)
+    data, chars, stoi, itos = text2vec(text, verbose = True)
     stim_dim = len(chars)
     model = build_network(batch_size = batch_size, input_dim = stim_dim, output_dim = stim_dim, n_hid = 128)
     print("pre training:")
     test_model(n_cont = 20)
-    res = train_model(n_times = 50, test_it = True)
+    res = train_model(n_times = 1, test_it = True) # the length of this training determines execution time
     plt.plot(res.history["loss"])
-else: # load model + processed data
+else: # load the model + processed data
     savedir = join(os.getcwd(), "models")
     model = tf.keras.models.load_model(
 	  join(savedir,"model_shake"+str(model_nr)+".keras"))
@@ -121,12 +132,15 @@ else: # load model + processed data
     with open(join(savedir, "texts"+str(model_nr)+".pkl"), 'rb') as f:  
         data, chars, stoi, itos = pickle.load(f)
     stim_dim = len(chars)
-		
+	
 if save_it:
     savedir = join(os.getcwd(), "models")
+    if not os.path.isdir(savedir):
+        os.mkdir(savedir)
     tf.keras.models.save_model(model, os.path.join(savedir,"model_shake"+str(model_nr)+".keras"), save_format = "keras")
     with open(join(savedir, "texts"+str(model_nr)+".pkl"), 'wb') as f:  
         pickle.dump([data, chars, stoi, itos], f)
 
-print("post training:")
+print("post training:") # a walk in character space
+#np.random.seed(2002)
 test_model(n_cont = 100)

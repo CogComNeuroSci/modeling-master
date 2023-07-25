@@ -9,7 +9,6 @@ Stimuli from different categories do not overlap in output space
 """
 
 import numpy as np
-from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as pl
 
@@ -36,6 +35,7 @@ axs.append(fig.add_subplot(1, 2, 2))
 axs[0].plot3D(x1_1, x2_1, x3_1, 'ro', label='cat')
 axs[0].plot3D(x1_2, x2_2, x3_2, 'bo', label='dog')
 axs[0].legend()
+axs[0].set_title("input space")
 
 axs[0].zaxis.set_major_locator(LinearLocator(10))
 axs[0].zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
@@ -57,6 +57,7 @@ for index in np.arange(n_samples):
 
 axs[1].set_xlabel('$y_{1}:$ cat detector')
 axs[1].set_ylabel('$y_{2}:$ dog detector')
+axs[1].set_title("output space")
 
 x1_new = [1]
 x2_new = [0]

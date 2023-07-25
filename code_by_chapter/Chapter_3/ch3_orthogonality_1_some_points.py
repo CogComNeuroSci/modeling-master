@@ -9,7 +9,6 @@ right plot: 2D output space after one training step, with two novel animals
 
 import numpy as np
 
-from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as pl
 

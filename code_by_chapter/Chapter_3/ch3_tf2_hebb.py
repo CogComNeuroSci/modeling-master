@@ -11,8 +11,10 @@ import numpy as np
 
 np.set_printoptions(precision = 2)
 # initialize  variables
-train_x = np.array([[1, 1, 0], [0, 1, 1]])
-train_t = np.array([[1, 0], [0, 1]]) # t for target
+train_x = np.array([[1, 1, 0],
+				    [0, 1, 1]])
+train_t = np.array([[1, 0],
+					[0, 1]]) # t for target
 epochs = 30
 learning_rate = 0.1
 
@@ -22,9 +24,10 @@ T = tf.Variable(initial_value = np.random.randn(1, train_t.shape[1]).astype(np.f
 W = tf.Variable(initial_value = (np.random.randn(train_x.shape[1], train_t.shape[1])/100).astype(np.float32), name = "weights")
 
 def cost():
-    return tf.matmul(-tf.matmul(X, W), tf.transpose(T)) # this cost function (eq (3.1) in MCP book) will be optimized
+    """ this cost function (eq (3.1) in MCP book) will be optimized"""
+    return tf.matmul(-tf.matmul(X, W), tf.transpose(T)) 
 
-opt  = tf.keras.optimizers.SGD(learning_rate = learning_rate)
+opt  = tf.keras.optimizers.SGD(learning_rate = learning_rate) # SGD = stochastic gradient descent
 
 for epoch in range(epochs):
     for (x, t) in zip(train_x, train_t):
@@ -34,3 +37,4 @@ for epoch in range(epochs):
         if not epoch%10: # plot output only every 10 epochs
             w = W.numpy()
             print(w, '\n')
+			

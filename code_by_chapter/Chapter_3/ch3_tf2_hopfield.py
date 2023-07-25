@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 
 #%% initialize and define data and functions
 dim = 2 # 1: 1-dim vectors; 2: 2-dim MNIST numbers
+
 def define_length(pattern):
 	length = 1
 	for loop in pattern.shape[1:]:
@@ -48,8 +49,9 @@ update_b = tf.Variable(np.random.randn(1, length).astype(np.float32)/10)
 weights  = np.ndarray((n_train//5, length, length))
 bias     = np.ndarray((n_train//5, length))
 
-# a function to sample the network iteratively
+
 def hopfield_sample(start_pattern = None, n_sample = 10):
+	""""a function to sample the network iteratively"""
 	pattern = start_pattern
 	pattern= tf.convert_to_tensor(pattern, dtype = tf.float32)
 	pattern = tf.reshape(pattern, [1, length])
@@ -77,7 +79,7 @@ for loop in range(n_train):
 	update_w, update_b = hopfield_train(pattern = train_pattern[nr])
 	w.assign(w + update_w)
 	b.assign(b + update_b)
-	if not loop%(n_train//4): # check out the weight matrix
+	if not loop%(n_train//4): # print the weight matrix every n_train//4 steps
 		indx = loop//(n_train//4)
 		weights[indx] = w.numpy()
 		bias[indx]   = b.numpy()
@@ -95,12 +97,14 @@ if dim == 1:
 
 if dim == 2:
     # plot intermediate weight matrices
+    plot_labels = ["start", "early", "late", "end"]
     fig, ax = plt.subplots(nrows = 2, ncols = 2)
     fig.suptitle("weight matrices during training")
-    for loop in range(n_train//(n_train//4)):
+    for loop in range(4):
         row, col = loop//2, loop%2
-        ax[row, col].imshow(weights[loop])
-
+        ax[row, col].imshow(weights[loop])	
+        ax[row, col].set_title(plot_labels[loop])
+	
     # plot intermediate patterns, for the final weight matrix
     fig, ax = plt.subplots(nrows = 1, ncols = 4)
     fig.suptitle("what does a random pattern drift toward?")
