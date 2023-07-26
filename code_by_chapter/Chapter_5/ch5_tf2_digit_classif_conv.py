@@ -6,7 +6,8 @@ Created on Wed Sep  2 14:49:49 2020
 @author: tom verguts
 written for TF2
 
-MNIST digit classification with a convolutional network (convnet)
+MNIST digit classification
+with a convolutional network (convnet)
 """
 
 #%% imports and initializations

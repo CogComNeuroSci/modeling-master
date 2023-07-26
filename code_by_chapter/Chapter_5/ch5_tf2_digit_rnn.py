@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 """
 @author: tom verguts
-try out recurrent model (RNN or LSTM or ...) on mnist data
+try out recurrent model (RNN or LSTM or ...) on the MNIST digits data
 every row is treated as if it were a time point (so 28 time points)
+and also 28 input features (n columns of a MNIST digit)
+return_sequences = False meaning that only at the very last time step, feedback is expected
 """
 import numpy as np
-import os
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
@@ -42,8 +43,9 @@ def test_model(X, y):
     y_pred_label= np.argmax(y_pred, axis = 1) + 1
     return np.mean(y_pred_label == y)
 
-def show_res():
-    print(res.history)
+def show_res(res, verbose: bool = False):
+    if verbose:
+        print(res.history)
     fig, axs = plt.subplots(2,2)
     axs[0, 0].set_title("training loss")
     axs[0, 0].plot(res.history["loss"])
@@ -54,16 +56,15 @@ def show_res():
     axs[1, 1].set_title("test accuracy")
     axs[1, 1].plot(res.history["val_accuracy"])
     plt.show()
-    print("shape sanity checks: ", X_train.shape, y_train.shape, X_test.shape, y_test.shape)
 
 # main program
-(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()   
-
-# pre-processing
-train_size, test_size = 10000, 50 # downscale to make data set smaller (and training faster)
-image_size, n_labels, X_train, y_train, X_test, y_test = preprocess_digits(
+if __name__ == "__main__":
+    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()   
+    # pre-processing
+    train_size, test_size = 10000, 50 # downscale to make data set smaller (and training faster)
+    image_size, n_labels, X_train, y_train, X_test, y_test = preprocess_digits(
                                   x_train, y_train, train_size, x_test, y_test, test_size)
 
-model = build_network(input_dim = X_train.shape[1], output_dim = n_labels, n_hid1 = 20, n_hid2 = 10)
-res = train_model()
-show_res()
+    model = build_network(input_dim = X_train.shape[1], output_dim = n_labels, n_hid1 = 20, n_hid2 = 10)
+    res = train_model()
+    show_res()

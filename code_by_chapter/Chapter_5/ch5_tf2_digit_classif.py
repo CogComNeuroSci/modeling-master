@@ -5,7 +5,8 @@
 @author: tom verguts
 written for TF2
 
-MNIST digit classification; could a standard N-layer network solve this task...?
+Classification on the MNIST dataset;
+could a standard N-layer network solve this task...?
 """
 
 #%% imports and initializations
@@ -14,7 +15,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def plot_digits(x, y):
-    # plot some images from the data set
+    """plot some images from the data set"""
     fig, axes = plt.subplots(1, 4, figsize=(7,3))
     for img, label, ax in zip(x, y, axes):
         ax.set_title(label)

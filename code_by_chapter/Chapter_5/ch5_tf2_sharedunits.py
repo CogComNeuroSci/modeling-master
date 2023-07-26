@@ -4,8 +4,8 @@
 Created on Sun Aug 30 21:37:36 2020
 
 @author: tom verguts
-mixing two tasks;
-applies backprop with both shared and unique units across the two tasks
+mixing two tasks (first sent to input1, second sent to input2)
+applies backprop with both shared and unique hidden units across the two tasks
 illustrates Keras functional API
 """
 
@@ -32,7 +32,9 @@ def build_model(n_in, n_shared, n_unique, n_out):
     return model
 
 def task2(v, overlap):
-    # define task 2 mapping
+    """define task 2 mapping, as a function of task 1 (argument v)
+	and as a function of required overlap btw the tasks (argument overlap)
+    returns a random task 2 mapping consistent with the constraints (argument w)"""
     n_diff = int((1-overlap)*train_x.shape[0])
     ix = np.random.permutation(range(train_x.shape[0]))
     w = np.copy(v)
@@ -43,7 +45,7 @@ def array_to_dict(x):
     return {"input1": x[:,:stim_dim], "input2": x[:,stim_dim:]}
 	
 def step(model, X, y):
-	# keep track of our gradients
+    """keep track of our gradients"""
     with tf.GradientTape() as tape:
      # make a prediction using the model and then calculate the loss
         dict_X = array_to_dict(X)
@@ -58,16 +60,18 @@ def extend(idx, x):
     vec = [1 - idx, idx]
     x_extended = np.kron(vec, x) 
     return x_extended
-	
-task_overlap, unit_overlap = 1, .0
+
+#%% start main code	
+task_overlap = 1    # overlap in outputs between the two tasks (1 means identical tasks)
+unit_overlap  = .0  # proportion shared hidden units btw the two tasks (1 means all hidden units shared)
 learning_rate = 0.1
 epochs = 1000
-n_hid = 4
+n_hid = 4           # total nr of hidden units (nhid = n_shared + n_unique)
 n_shared = int(n_hid*unit_overlap)
 n_unique = int((n_hid - n_shared)/2)
 stim_dim = 3
 train_x = []
-for row in product([0, 1], repeat = stim_dim):
+for row in product([0, 1], repeat = stim_dim): # generate input patterns
     train_x.append(row)
 train_x = np.array(train_x)
 n = int(train_x.shape[0]/2)
@@ -76,32 +80,36 @@ n_sim = 2
 total_acc_overall = 0
 
 for sim_loop in range(n_sim):
+    # generate output patterns
     task1 = np.array([0]*n + [1]*n)
     np.random.shuffle(task1)
     train_t = np.array([task1, task2(task1, overlap = task_overlap)])
     train_t = np.transpose(train_t)
     train_t = np.array([to_categorical(train_t[:, 0], 2), to_categorical(train_t[:, 1], 2)]) 
+
     error_function = np.zeros(epochs)
     opt  = tf.keras.optimizers.SGD(learning_rate = learning_rate)
-
     model = build_model(n_in = stim_dim, n_shared = n_shared, n_unique = n_unique, n_out = 2)
     model.compile(optimizer=opt, loss=categorical_crossentropy, metrics=["acc"])
 
     for epoch in range(epochs):
-        task_idx = int(np.random.randn()>0)
+        task_idx = int(np.random.randn()>0) # choose task 1 or 2
+        # do a random shuffle of the stimuli (+ outputs)
         ix = np.random.permutation(range(train_x.shape[0]))
         x_shuffle = train_x[ix]
         t_shuffle = train_t[task_idx]
         t_shuffle = t_shuffle[ix]
         x_shuffle = extend(task_idx, x_shuffle)
+        # take a step in weight space
         step(model, x_shuffle, t_shuffle)
-        dict_x = array_to_dict(x_shuffle)
+        # to store intermediate results: bcs we don't use model.fit(), must explicitly calculate error for plotting
+#        dict_x = array_to_dict(x_shuffle)
 #        (error_function[epoch], acc) = model.evaluate(dict_x, t_shuffle, verbose = 0)
 
     total_acc = 0
     plt.plot(range(epochs), error_function)
-    print("\n")
-    for indx in range(2):
+    print(f"\nsim nr {sim_loop}")
+    for indx in range(2): # for the two tasks
         x = extend(indx, train_x)
         dict_x = array_to_dict(x)
         y = train_t[indx]
@@ -114,5 +122,5 @@ for sim_loop in range(n_sim):
     total_acc_overall += total_acc
 
 total_acc_overall /= n_sim
-print(f"test accuracy over sims {total_acc_overall:.2f}")	
+print(f"\ntest accuracy over sims {total_acc_overall:.2f}")	
 	

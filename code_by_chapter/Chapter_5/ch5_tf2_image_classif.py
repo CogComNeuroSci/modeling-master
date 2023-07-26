@@ -6,7 +6,8 @@ Created on Wed Sep  2 14:49:49 2020
 @author: tom verguts
 written for TF2
 
-image classification; could a standard three-layer network solve this task...?
+image classification on the CIFAR-10 data;
+could a standard three-layer network solve this task...?
 """
 
 #%% imports and initializations
@@ -16,7 +17,7 @@ import matplotlib.pyplot as plt
 from ch5_tf2_digit_classif import test_performance
 
 def plot_imgs(x_train, y_train):
-    # plot some pictures from the data base
+    """plot some pictures from the data base"""
     fig, axes = plt.subplots(1, 4, figsize=(7,3))
     for img, label, ax in zip(x_train[:4], y_train[:4], axes):
         ax.set_title(label)
@@ -35,6 +36,7 @@ def preprocess_imgs(x_train, y_train, train_size, x_test, y_test, test_size,
     y_test  = tf.one_hot(y_test, n_labels)
     return x_train, y_train, x_test, y_test
 
+# %% main code
 if __name__ == "__main__":
     (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
     plot_imgs(x_train, y_train)
@@ -47,13 +49,13 @@ if __name__ == "__main__":
     stdev = 0.001
     n_hid = 20
 
-    #%% pre-processing
+    # pre-processing
     n_labels = int(np.max(y_train)+1)
     image_size = x_train.shape[1]*x_train.shape[2]*x_train.shape[3]
     x_train, y_train, x_test, y_test = preprocess_imgs(
 		                                  x_train, y_train, n_train_stim, x_test, y_test, n_test_stim, image_size = image_size, n_labels = n_labels)
 	
-    # #%% model definition
+    # model definition
     model = tf.keras.Sequential([
  			tf.keras.Input(shape=(image_size,)),
  			tf.keras.layers.Dense(n_hid, activation = "relu"),
@@ -64,11 +66,11 @@ if __name__ == "__main__":
     opt = tf.keras.optimizers.Adam(learning_rate = learning_rate)
     model.compile(optimizer = opt, loss = loss)
 
-    #%% run the model and show a summary of the results
+    # run the model and show a summary of the results
     history = model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs)
     model.summary()
 
-    #%% show results
+    # show results
     # error curve
     fig, ax = plt.subplots()
     ax.plot(history.history["loss"], color = "black")

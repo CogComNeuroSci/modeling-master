@@ -16,7 +16,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # initialize
-np.set_printoptions(precision = 1)
+np.set_printoptions(precision = 1, suppress = True)
 learning_rate = 0.5
 epochs    = 100 # how often to go through the whole data set
 train_x   = np.array([[0, 0], [0, 1], [1, 0], [1, 1]]) # a cat and a dog input pattern
