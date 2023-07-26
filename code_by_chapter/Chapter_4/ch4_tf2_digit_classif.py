@@ -6,7 +6,11 @@ Created on Wed Sep  2 14:49:49 2020
 @author: tom verguts
 written for TensorFlow 2
 
-digit classification; could a two-layer network solve this task...?
+digit classification on the MNIST dataset;
+could a two-layer network solve this task...?
+note that this file uses some functions from ch5_tf2_digit_classif,
+so you must put that file in the working directory (or in directory X and
+and point sys.path.append to that directory X, as done here)
 """
 
 #%% imports and initializations
@@ -24,7 +28,7 @@ from ch5_tf2_digit_classif import test_performance, preprocess_digits, plot_digi
 train_size, test_size = 1000, 1000
 x_train, y_train, x_test, y_test = x_train[:train_size,:], y_train[:train_size], x_test[:test_size,:], y_test[:test_size]
 
-# estimation parameters
+# hyperparameters of the estimation process
 learning_rate = 0.3
 epochs = 10
 batch_size = 20

@@ -8,7 +8,9 @@ in TF2
 for the cats vs dogs vs bagels example (example from a paper by James McClelland on prototype extraction;
 example discussed more fully in McLeod, Plunkett, & Rolls, 1998)
 by default, activation function = linear
-
+this file imports the file cdb.npy storing the numpy array
+that contains the prototypes, so the file cdb.npy must be in
+your working directory
 """
 
 #%% imports and initializations

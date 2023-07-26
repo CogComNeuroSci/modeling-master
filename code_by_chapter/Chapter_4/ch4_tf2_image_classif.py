@@ -6,7 +6,12 @@ Created on Wed Sep  2 14:49:49 2020
 @author: tom verguts
 written for TensorFlow 2
 
-image classification; could a two-layer network solve this task...?
+image classification on the CIFAR-10 data set;
+could a two-layer network solve this task...?
+note that this file uses some functions from ch5_tf2_digit_classif,
+and from ch5_tf2_image_classif, so you must put those files in the 
+working directory (or in directory X and and point sys.path.append
+to that directory X, as done here)
 """
 
 #%% imports and initializations
