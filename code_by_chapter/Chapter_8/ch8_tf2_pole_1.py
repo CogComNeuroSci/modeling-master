@@ -4,9 +4,10 @@
 Created on Tue May  3 14:43:48 2022
 
 @author: tom verguts
-solves the cart pole problem with deep q learning and episode replay
-as described in mnih et al
-i was inspired by machine learning with phil for this implementation
+solves the cart pole problem with deep q learning (DQN) and episode replay
+as described in Mnih et al (2015)
+there is however just a single network here (unlike in other some other code)
+I was inspired by machine learning with phil for this implementation
 """
 
 import gym
@@ -23,21 +24,21 @@ class Agent(object):
         self.n_actions = n_actions
         self.actions = np.arange(n_actions)
         self.buffer_size = buffer_size
-        self.epsilon_min = epsilon_min
+        self.epsilon_min = epsilon_min      # epsilon parameters (only) used in agent.sample()
         self.epsilon_max = epsilon_max
         self.epsilon_dec = epsilon_dec
         self.epsilon     = epsilon_max
         self.lr = lr
         self.gamma = gamma
-        self.learn_gran = learn_gran
+        self.learn_gran = learn_gran    # granularity of learning; how often are weights updated?
         self.nhid1 = nhid1
         self.nhid2 = nhid2
         self.network = build_network(self.n_states, self.n_actions, self.lr, self.nhid1, self.nhid2)
-        self.x_buffer = np.zeros((self.buffer_size, self.n_states))
-        self.xn_buffer = np.zeros((self.buffer_size, self.n_states))
-        self.y_buffer = np.zeros((self.buffer_size, self.n_actions))
-        self.r_buffer = np.zeros((self.buffer_size, 1))
-        self.d_buffer = np.zeros((self.buffer_size, 1))
+        self.x_buffer = np.zeros((self.buffer_size, self.n_states))   # current state
+        self.xn_buffer = np.zeros((self.buffer_size, self.n_states))  # next state
+        self.y_buffer = np.zeros((self.buffer_size, self.n_actions))  # action
+        self.r_buffer = np.zeros((self.buffer_size, 1))               # reward
+        self.d_buffer = np.zeros((self.buffer_size, 1))               # done flag
 
 
     def update_buffer(self, data, n_step, location):        
@@ -52,27 +53,30 @@ class Agent(object):
         return np.minimum(location + n_step, self.buffer_size)                    
             
     def learn(self, n: int, verbose: bool = True):
+        """create a random sample from the buffer (min size = 100) and model.fit() the sample
+		this implements a TD-like algorithm (DQN) with discount gamma
+		n is how far into the buffer you can sample (eg, from elements 0, 1, ..., n-1)"""
         #self.epsilon = self.epsilon_max # in case you want to reset epsilon on each episode
         sample_size = np.minimum(100, n)
         sample = np.random.choice(n, sample_size)
-        q_predict = self.network.predict(self.x_buffer[sample])
-        q_next = self.network.predict(self.xn_buffer[sample])
-        q_max = np.amax(q_next, axis = 1)
-        include_v = 1 - self.d_buffer[sample]
+        q_predict = self.network.predict(self.x_buffer[sample]) # calculate the values
+        q_next = self.network.predict(self.xn_buffer[sample])   # calculate the values of the next state
+        q_max = np.amax(q_next, axis = 1)                       # calculate the best next state value 
+        include_v = 1 - self.d_buffer[sample]                   # no next-state value when done
         if verbose:
             #print("x buffer:", self.x_buffer)
-            print("n: ", n)
+            print("n rows to sample from: ", n)
             #print("q_predict", q_predict)
             #print("q_next", q_next)
-        q_target = q_predict.copy()
+        q_target = q_predict.copy()                             # everything stays the same, except what follows... 
         target_indices = np.dot(self.y_buffer[sample], np.arange(self.n_actions)).astype(int)
         q_target[list(range(q_target.shape[0])), target_indices] = np.squeeze(self.r_buffer[sample])
         q_target[list(range(q_target.shape[0])), target_indices] += self.gamma*q_max * np.squeeze(include_v)
        	self.network.fit(self.x_buffer[sample], q_target, batch_size = 64, epochs = 2000, verbose = 0)	
-        #if verbose:
-            #print("q_target", q_target)
+
            
     def sample(self, state):
+        """epsilon-greedy sampling from the network"""
         if np.random.uniform() < self.epsilon:
            action = np.random.choice(self.actions)
         else:
@@ -83,7 +87,7 @@ class Agent(object):
         return action
     
     def sample_soft(self, state):
-        ## softmax sampling
+        """softmax sampling from the network"""
         state_array = np.array(state[np.newaxis, :])
         y = np.squeeze(self.network(inputs = state_array)) 
 #        y = self.network.predict(np.array(state[np.newaxis,:])) # slower method
@@ -93,7 +97,8 @@ class Agent(object):
         return action
 
 def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4, success_crit: int = 10):
-    lc = np.zeros(n_loop)
+    """learn the weights of the network"""
+    lc = np.zeros(n_loop) # number of steps taken per try (before falling)
     buffer_count = 0
     stop_crit = False
     loop, success = 0, 0
@@ -116,8 +121,8 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4, s
             data[n_step, -1] = int(done)
             n_step += 1
             state = next_state
-        buffer_count = rl_agent.update_buffer(data, n_step, buffer_count)
-        if (not loop % rl_agent.learn_gran) and (buffer_count > 500): # don't learn first 500 trials
+        buffer_count = rl_agent.update_buffer(data, n_step, buffer_count) # transfer current data to the buffer for later training
+        if (not loop % rl_agent.learn_gran) and (buffer_count > 500):     # don't learn first 500 trials
             rl_agent.learn(buffer_count, verbose = True)
         lc[loop] = n_step
         loop += 1
@@ -127,6 +132,7 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4, s
     return lc, success > success_crit
 
 def perform(env, rl_agent, verbose: bool = False):
+    """after training, show how the model performs on the task"""
     state = env.reset()
     n_step, done = 0, False
     while not done:

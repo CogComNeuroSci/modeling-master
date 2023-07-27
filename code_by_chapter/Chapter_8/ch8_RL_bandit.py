@@ -4,7 +4,7 @@
 Created on Mon Jul 16 14:28:40 2018
 
 @author: tom verguts
-n-armed bandit
+n-armed bandit (n = len(p))
 solved with 
 - gradient ascent (chap 8)
 - epsilon-greedy algorithm (chap 9)
@@ -24,7 +24,7 @@ w = np.random.random(len(p)) # can be interpreted as weights or Q-values
 if algo == "optimist": # optimistic starts (implemented via initial weights w)
     w += 5
     epsilon = 0.0
-elif algo=="epsilon": # completely random choice with probability epsilon
+elif algo=="epsilon": # make a completely random choice with probability epsilon
     epsilon = 0.1
 r= []            # reward list
 window = 30      # window for reward calculation
@@ -45,10 +45,10 @@ for loop in range(n_trials):
             choice = np.random.choice(range(len(w)))
     r.append(np.random.choice([0, 1], p =  [1 - p[choice], p[choice]])) # reward with prob p[choice]
     if algo == "gradient":
-		# apply gradient asccent algorithm (REINFORCE)
+		# apply gradient asccent algorithm (REINFORCE) (chap 8)
         w += np.asarray((range(len(p))==choice)-prob)*beta*r[-1]
     else:
-		# calculate average reward for option choice;
+		# calculate average reward for option choice; (chap 9)
 		# strictly speaking, update rate 1/(loop+1) should be tracked for each choice separately
 		# alternative, one could put update rate a constant (and thus take an exponentially weighted average)
         w[choice] += 1/(loop+1)*(r[-1]-w[choice]) 
