@@ -6,7 +6,7 @@ Created on Tue May  3 14:43:48 2022
 @author: tom verguts
 solves the cart pole problem with deep q learning (DQN) and episode replay
 as described in Mnih et al (2015)
-there is however just a single network here (unlike in other some other code)
+there is however just a single network here (unlike in ch8_tf2_pole_2)
 I was inspired by machine learning with phil for this implementation
 """
 

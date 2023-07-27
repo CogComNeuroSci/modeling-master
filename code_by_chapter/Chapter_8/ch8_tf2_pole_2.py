@@ -5,8 +5,10 @@ Created on Tue May  3 14:43:48 2022
 
 @author: tom verguts
 solves the cart pole problem with deep q learning and episode replay
-this version addditionally uses the target network trick, also described by mnih et al
-i was inspired by machine learning with phil for this implementation
+this version addditionally uses the target network trick, also described by Mnih et al
+by having a separate network that evaluates the actions (and uses this evaluation to compute
+targets for learning), one avoids too greedily following (acting upon) one's noisy estimates.
+I was inspired by machine learning with phil for this implementation
 """
 
 import gym
@@ -27,8 +29,8 @@ class AgentD(Agent):
                  epsilon_dec, lr, gamma, learn_gran, update_gran, nhid1, nhid2):
         Agent.__init__(self, n_states, n_actions, buffer_size, epsilon_min, epsilon_max, 
                  epsilon_dec, lr, gamma, learn_gran, nhid1, nhid2)
-        self.update_gran = update_gran
-        self.network_target = build_network(self.n_states, self.n_actions, self.lr, self.nhid1, self.nhid2) # a second (double, target) network needed        
+        self.update_gran = update_gran # granularity of updating the target network based on the online network (target network must remain stable for a while)
+        self.network_target = build_network(self.n_states, self.n_actions, self.lr, self.nhid1, self.nhid2) # a second (double, target) network needed (it calculates the targets)       
 
     def learn(self, n: int, verbose: bool = True): # this method is overwritten from Agent
         #self.epsilon = self.epsilon_max # in case you want to reset epsilon on each episode
@@ -53,6 +55,7 @@ class AgentD(Agent):
             print("q_target", q_target)
 
     def update_q(self):
+        """from time to time (%update_gran), update the target-providing network"""
         self.network_target.set_weights(self.network.get_weights())
 
 

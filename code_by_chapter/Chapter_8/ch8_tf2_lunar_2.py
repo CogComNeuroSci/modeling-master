@@ -4,7 +4,8 @@
 Created on Wed Jun 22 08:38:02 2022
 
 @author: tom verguts
-solves the lunar lander problem using actor-critic 
+solves the lunar lander problem using actor-critic
+and policy gradient for the actor 
 """
 #%% import, initialization, definitions
 import gym
@@ -32,7 +33,7 @@ class PG_Agent_AC(PG_Agent):
         self.critic = self.build_network(n_out = 1, loss = tf.keras.losses.MeanSquaredError())
 
     def PG_loss(self, y_true, y_pred):
-        # TD-like loss function
+        """TD-like loss function for the actor (network)"""
         action_true = K.cast(y_true[:, 0], "int32")
         pred = K.clip(y_pred, 1e-8, 1-1e-8)
         advantage =   y_true[:, 1]

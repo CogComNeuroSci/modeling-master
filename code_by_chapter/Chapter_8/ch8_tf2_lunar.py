@@ -11,7 +11,6 @@ it works but it's inefficient
 import gym
 import numpy as np
 import tensorflow as tf
-import matplotlib.pyplot as plt
 from ch8_tf2_pole_1 import perform
 import os
 import tensorflow.keras.backend as K
@@ -32,6 +31,8 @@ class PG_Agent(object):
 
     def build_network(self):
         def PG_loss(y_true, y_pred):
+            """PG loss function requires action, reward, and probabilities, but a keras
+			loss function only accepts (y_true, y_pred), so the reward must be 'sneaked in' via y_true """
             action_true = K.cast(y_true[:, 0], "int32")
             advantage =   y_true[:, 1]
             pred = K.clip(y_pred, 1e-8, 1-1e-8)
@@ -105,6 +106,7 @@ def learn_w(env, n_loop: int = 100, max_n_step: int = 200, input_dim: int = 4, s
             n_step += 1
             state = next_state
         # action done, now learn
+        print(done)
         rl_agent.empty_buffer()
         rl_agent.update_buffer(n_step, states, actions, rewards)
         rl_agent.learn(verbose = False)
@@ -122,7 +124,7 @@ if __name__ == "__main__":
     env = gym.make('LunarLander-v2', new_step_api = False)
     load_model, save_model, train_model, performance = False, False, True, False
     rl_agent = PG_Agent(n_states = env.observation_space.shape[0], n_actions = env.action_space.n, \
-                           lr = 0.0005, gamma = 0.99, max_n_step = 600)
+                           lr = 0.005, gamma = 0.99, max_n_step = 600)
     if load_model:
         rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/models"+"/model_lunar", compile = False)
     if train_model:

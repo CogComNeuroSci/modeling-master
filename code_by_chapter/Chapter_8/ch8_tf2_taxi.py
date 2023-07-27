@@ -19,7 +19,7 @@ import tensorflow.keras.backend as K
 
 
 class PG_Agent_disc(PG_Agent):
-    # PG agent with discrete state input
+    """PG agent with discrete state input"""
     def build_network(self):
         def PG_loss(y_true, y_pred):
             action_true = K.cast(y_true[:, 0], "int32")
@@ -92,11 +92,11 @@ if __name__ == "__main__":
     env = gym.make('Taxi-v3')
     load_model, save_model, train_model, performance = False, False, True, False
     rl_agent = PG_Agent_disc(n_states = env.observation_space.n, n_actions = env.action_space.n, \
-                           lr = 0.0005, gamma = 0.99, max_n_step = 200)
+                           lr = 0.1, gamma = 0.9, max_n_step = 200)
     if load_model:
         rl_agent.network = tf.keras.models.load_model(os.getcwd()+"/models/model_taxi")
     if train_model:
-        lc, solved = learn_w(env, n_loop = 100, input_dim = env.observation_space.n, max_n_step = rl_agent.max_n_step)
+        lc, solved = learn_w(env, n_loop = 1000, input_dim = env.observation_space.n, max_n_step = rl_agent.max_n_step)
     if save_model:
         tf.keras.models.save_model(rl_agent.network, os.getcwd()+"/models/model_taxi")
     if train_model:
