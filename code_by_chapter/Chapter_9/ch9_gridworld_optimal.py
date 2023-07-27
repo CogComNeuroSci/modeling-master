@@ -5,7 +5,7 @@ Created on Tue Jul 24 12:11:57 2018
 
 @author: tom verguts
 estimate the optimal V value function for S & B's gridworld using dynamic programming
-in particular, equation (3.19) from S & B
+in particular, equation (3.19) from Sutton & Barto
 note: all successor mappings p(s', r / s, a) are deterministic in this case
 compare this result to the values of the random policy calculated in ch9_figs.py;
 note that values are much higher with this code, because it's for the optimal policy							   

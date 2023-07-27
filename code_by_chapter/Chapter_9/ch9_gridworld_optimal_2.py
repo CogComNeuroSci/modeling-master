@@ -12,7 +12,7 @@ instead of to state 13, as in the standard case.
 This is to illustrate that the approach can find out whether it's worthwhile to
 go around state B or not: it is (typically, but depending on gamma) not worthwhile 
 in case of warp to state 13, bcs state 13 is relatively closeby.
-But it is worthwhile in case of warp to state 24, bcs that's far aways
+But it is worthwhile in case of warp to state 24, bcs that's far away
 """
 #%% import and initialize
 import numpy as np

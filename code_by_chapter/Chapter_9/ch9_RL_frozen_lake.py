@@ -16,7 +16,7 @@ import numpy as np
 from ch9_RL_taxi import TabAgent, update, plot_results, performance
 
 def register_non_slip():
-    # register the non-slippery version (only do it once)
+    # register the non-slippery version (only do it once; use variable need_to_register)
     from gym.envs.registration import register
     register(
     id='FrozenLakeNotSlippery-v0',

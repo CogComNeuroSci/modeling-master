@@ -5,6 +5,7 @@ Created on Wed Jun 22 08:38:02 2022
 
 @author: tom verguts
 solves the lunar lander problem using policy gradient (-like) algorithm (reinforce)
+but a single network (ie, no actor-critic)
 it works but it's inefficient 
 """
 #%% import, initialization, definitions

@@ -5,7 +5,6 @@ Created on Sun Jun 26 11:09:15 2022
 
 @author: tom verguts
 run an agent for some (n_step) steps, and then make a movie of it
-doesn't work for taxi env... suggestions welcome if you know how to do that
 """
 
 import os
