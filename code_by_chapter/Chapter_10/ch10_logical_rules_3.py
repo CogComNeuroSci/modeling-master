@@ -21,7 +21,6 @@ X_or  = np.array( [[0, 0, 0], [1, 0, 1], [0, 1, 1], [1, 1, 1]] )
 X_101 = np.array( [[0, 0, 0], [1, 0, 1], [0, 1, 0], [1, 1, 0]] )
 X_xor = np.array( [[0, 0, 0], [1, 0, 1], [0, 1, 1], [1, 1, 0]] )
 X = X_or
-#X = np.array([[1, 1, 1]])
 p = np.zeros((2**X.shape[1],))
 p_tot = np.copy(p)
 n_samples = 10

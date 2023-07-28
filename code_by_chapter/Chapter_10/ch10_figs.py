@@ -77,7 +77,7 @@ for index, label in enumerate(labels):
 alpha0 = 1 # initial learning rate
 beta = 1   # competition toughness (beta = inf means winner-take-all)
 n_in = 3   # number of input units
-n_d1, n_s2 = 5, 5 # size of the output grid
+n_d1, n_d2 = 5, 5 # size of the output grid
 speed = 0.01 # scale the shrink speed of the learning rate
 n_trials = 500
 w = np.random.uniform(0,1,(n_d1,n_d2,n_in))
@@ -104,4 +104,5 @@ for loop in range(n_trials):
                lrate*np.exp(-beta*distance(y_max,d1loop,d2loop))*(x-w[d1loop,d2loop,:]))
 
 # plotting			
+plt.figure()
 plt.imshow(w) 

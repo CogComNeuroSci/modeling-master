@@ -4,7 +4,8 @@
 Created on Fri Feb  4 16:44:15 2022
 
 @author: tom verguts
-bayes optimization of the example described by Smith et al, 2021, PsychRxiv
+bayes optimization of the example described by Smith et al, 2021, J Math Psych
+about how light falling on an object suggests concavity c.q. convexity of the object
 illustrates how the log joint density can be used to optimize both Z and the parameters
 see MCP book, figure 11.3b and accompanying text
 """

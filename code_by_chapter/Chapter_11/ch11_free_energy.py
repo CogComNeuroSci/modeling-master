@@ -53,7 +53,7 @@ axes[0].set_title("Perception")
 
 #%% part 2: maximizing ksi is learning; it gives you the best parameter estimate that generates states of the world
 F = np.zeros(len(v_ksi))
-for idx, ksi in v_ksi:
+for idx, ksi in enumerate(v_ksi):
     F[idx] = jointprob(x, theta_value, ksi)             
      
 axes[1].set_xlabel("\u03BE")

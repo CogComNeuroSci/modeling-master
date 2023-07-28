@@ -4,7 +4,10 @@
 Created on Sat Jul 28 10:03:12 2018
 
 @author: tom verguts
-chapter 11: basic bayes
+chapter 11: illustration of the basic bayesian principle
+that posterior distribution gradually sharpens as data accumulate;
+the prior strength (informativeness) determines how quickly one can 'escape'
+from the prior
 """
 
 #%% import and initialize

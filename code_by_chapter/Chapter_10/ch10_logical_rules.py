@@ -5,9 +5,15 @@ Created on Thu Dec 27 15:24:48 2018
 
 @author: tom verguts
 Chapter 10, unsupervised learning: boltzmann machine for implementing logical rules
+the goal is to make p_free as close to as possible to p_fixed
+
 nothing is clamped in the free phase (and everything in the fixed phase)
+'fixed' is what would be called 'target' in the supervised learning chapters,
+again blurring the distinction between supervised and unsupervised learning...
 first unit is a bias unit
 approach here is almost literal implementation of Ackley et al (1985, Cog Sci, appendix)
+an important variable is e, a small (non-zero) number to exclude the unwanted patterns;
+it is not exactly zero to avoid pushing weights to zero
 """
 #%% import and initialize
 import numpy as np
@@ -18,7 +24,7 @@ np.set_printoptions(suppress = True, precision = 2)
 verbose = 0
 n_train_trials = 10000
 beta = 0.1 # learning rate
-e = 0.01 # small (non-zero) number; to avoid pushing weights to zero
+e = 0.01   # see above 
 N = 4 # number of units in the network
 w = np.zeros((N, N)) # weight matrix; intercept (bias) unit is included
 patterns = np.array(   [[1,0,0,0], [1,1,0,0], [1,0,1,0], [1,1,1,0],     # patterns = all POSSIBLE patterns
@@ -55,7 +61,7 @@ def energy(pattern):
 
 #%% determine p_fixed
 t1 = time.time() # start estimation time
-# calculate probability that i and j are jointly active in the required distribution (based on prob_fixed)
+# calculate probability p_fixed that i and j are jointly active in the required distribution (based on prob_fixed)
 p_fixed = p_from_prob(prob_fixed)
        
 #%% main weight estimation loop
@@ -64,9 +70,9 @@ x = np.ndarray(N)
 for loop in range(n_train_trials):
     T = 4*np.exp(-0.00001*loop) # temperature set via simulated annealing
     for p_index, pattern in enumerate(patterns):
-        prob_free[p_index] = np.exp(-(1/T)*energy(pattern))
+        prob_free[p_index] = np.exp(-(1/T)*energy(pattern)) # the Boltzmann probabilities
     prob_free = prob_free/np.sum(prob_free)      
-    p_free = p_from_prob(prob_free)
+    p_free = p_from_prob(prob_free)          # p_ij based on the Boltzmann probabilities
     w_previous = np.copy(w)
     w = w_previous + beta*(p_fixed - p_free)
     dev = np.sum((p_fixed-p_free)**2, axis = (0,1))
