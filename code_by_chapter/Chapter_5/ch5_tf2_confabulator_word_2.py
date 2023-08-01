@@ -22,6 +22,9 @@ import matplotlib.pyplot as plt
 import os
 from os.path import join
 import pickle
+import sys
+sys.path.append("Users/tom/Documents/Modcogproc/modeling-master/code-by-chapter/Chapter_5/")
+from ch5_tf2_confabulator_word import text2vec
 
 def build_network(batch_size: int, input_dim: int, output_dim: int, n_hid: int, learning_rate: float = 0.001):
     embedding_dim = 40
@@ -64,57 +67,6 @@ def test_model(n_cont = 50):
         x[batch_nr, stim_nr] = y        
     print(" ".join(words_generated[n_seed:]), "\n")
 
-def text2vec(text_file, verbose = False, start_line = None, max_line = None):
-    """preprocessing of the data"""
-    line_nr = 0
-    include = False
-    words = set()
-    data_length = 0
-    banned_chars = set(['}', '<', '\\ufeff', '$'])
-    with open(text_file, 'r') as infile:
-        for line in infile:
-            if (line == start_line) or not start_line:
-	            include = True 
-            if include:
-                line_nr += 1
-                if line_nr == max_line:
-                    break
-                for word in line.split():
-                    banned = False
-                    for char in banned_chars:
-                        if char in word:
-                            banned = True
-                            break
-                    if not banned:
-                        words.add(word)
-                        data_length += 1
-    if verbose:
-        print(f'Length of dataset: {data_length} words')
-        print(f'No. of unique words: {len(words)}')
-    stoi = {c:i for i, c in enumerate(words)}
-    itos = {i:c for c, i in stoi.items()}
-    data = np.zeros(data_length, dtype=np.int)
-    i = 0
-    include = False
-    line_nr = 0
-    with open(text_file, 'r') as infile:
-        for line in infile:
-            if (line == start_line) or not start_line:
-                include = True
-            if include:
-                line_nr += 1
-                if line_nr == max_line:
-                    break
-                for word in line.split():
-                    banned = False
-                    for char in banned_chars:
-                        if char in word:
-                            banned = True
-                            break
-                    if not banned:
-                        data[i] = stoi[word]
-                        i += 1
-    return data, words, stoi, itos
 
 def make_data(data, n_stim, stim_depth, stim_dim):
    X = np.zeros((n_stim, stim_depth))
@@ -140,7 +92,7 @@ if train_it: # train the model
     model = build_network(batch_size = batch_size, input_dim = stim_dim, output_dim = stim_dim, n_hid = 128)
     print("pre training:")
     test_model(n_cont = 20)
-    res = train_model(n_times = 10, test_it = True) # the length of this training determines execution time
+    res = train_model(n_times = 2, test_it = True) # the length of this training determines execution time
     plt.plot(res.history["loss"])
 else: # load the model + processed data
     savedir = join(os.getcwd(), "models_word")
