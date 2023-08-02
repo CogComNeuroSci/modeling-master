@@ -12,6 +12,7 @@ Created on Sat Feb 18 10:25:11 2023
 - you can make the path deterministic (always the same) by setting the random seed;
 - you can make sure you sample the same word in the same situation by sampling via argmax;
 try it out and try to predict what will be different
+- variable max_line is handy to make sure you don't use too large texts (and clog memory)
 """
 
 import numpy as np
@@ -61,8 +62,9 @@ def test_model(n_cont = 50):
         x[batch_nr, stim_nr, y] = 1        
     print(" ".join(words_generated[n_seed:]), "\n")
 
-def text2vec(text_file, verbose = False, start_line = None):
+def text2vec(text_file, verbose = False, start_line = None, max_line = None):
     """preprocessing of the data"""
+    line_nr = 0
     include = False
     words = set()
     data_length = 0
@@ -72,6 +74,9 @@ def text2vec(text_file, verbose = False, start_line = None):
             if (line == start_line) or not start_line:
 	            include = True 
             if include:
+                line_nr += 1
+                if line_nr == max_line:
+                    break
                 for word in line.split():
                     banned = False
                     for char in banned_chars:
@@ -89,11 +94,15 @@ def text2vec(text_file, verbose = False, start_line = None):
     data = np.zeros(data_length, dtype=np.int)
     i = 0
     include = False
+    line_nr = 0
     with open(text_file, 'r') as infile:
         for line in infile:
             if (line == start_line) or not start_line:
                 include = True
             if include:
+                line_nr += 1
+                if line_nr == max_line:
+                    break
                 for word in line.split():
                     banned = False
                     for char in banned_chars:
@@ -115,40 +124,40 @@ def make_data(data, n_stim, stim_depth, stim_dim):
             Y[loop, small_loop, data[k + small_loop + 1]] = 1
    return X, Y
 
-# start main code here
-text = "shakespeare_digest.txt"
-train_it, save_it, model_nr = True, True, 3
-
-
-if train_it: # train the model
-    batch_size = 128
-    data_size  = batch_size*20 # data for one model.fit()
-    stim_depth = 10
-    data, words, stoi, itos = text2vec(text, verbose = True)
-    stim_dim = len(words)
-    model = build_network(batch_size = batch_size, input_dim = stim_dim, output_dim = stim_dim, n_hid = 128)
-    print("pre training:")
-    test_model(n_cont = 20)
-    res = train_model(n_times = 5, test_it = True) # the length of this training determines execution time
-    plt.plot(res.history["loss"])
-else: # load the model + processed data
-    savedir = join(os.getcwd(), "models_word")
-    model = tf.keras.models.load_model(
-	  join(savedir,"model_shake"+str(model_nr)+".keras"))
-    batch_size = model.input.shape[0]
-    stim_depth = model.input.shape[1]
-    with open(join(savedir, "texts"+str(model_nr)+".pkl"), 'rb') as f:  
-        data, words, stoi, itos = pickle.load(f)
-    stim_dim = len(words)
+if __name__ == "__main__":
+	# start main code here
+	text = "shakespeare.txt"
+	train_it, save_it, model_nr = True, True, 1
 	
-if save_it:
-    savedir = join(os.getcwd(), "models_word")
-    if not os.path.isdir(savedir):
-        os.mkdir(savedir)
-    tf.keras.models.save_model(model, os.path.join(savedir,"model_shake"+str(model_nr)+".keras"), save_format = "keras")
-    with open(join(savedir, "texts"+str(model_nr)+".pkl"), 'wb') as f:  
-        pickle.dump([data, words, stoi, itos], f)
-
-print("post training:") # a walk in word space
-#np.random.seed(2002)
-test_model(n_cont = 100)
+	if train_it: # train the model
+	    batch_size = 128
+	    data_size  = batch_size*20 # data for one model.fit()
+	    stim_depth = 10
+	    data, words, stoi, itos = text2vec(text, verbose = True, max_line = 100)
+	    stim_dim = len(words)
+	    model = build_network(batch_size = batch_size, input_dim = stim_dim, output_dim = stim_dim, n_hid = 128)
+	    print("pre training:")
+	    test_model(n_cont = 20)
+	    res = train_model(n_times = 10, test_it = True) # the length of this training determines execution time
+	    plt.plot(res.history["loss"])
+	else: # load the model + processed data
+	    savedir = join(os.getcwd(), "models_word")
+	    model = tf.keras.models.load_model(
+		  join(savedir,"model_shake"+str(model_nr)+".keras"))
+	    batch_size = model.input.shape[0]
+	    stim_depth = model.input.shape[1]
+	    with open(join(savedir, "texts"+str(model_nr)+".pkl"), 'rb') as f:  
+	        data, words, stoi, itos = pickle.load(f)
+	    stim_dim = len(words)
+		
+	if save_it:
+	    savedir = join(os.getcwd(), "models_word")
+	    if not os.path.isdir(savedir):
+	        os.mkdir(savedir)
+	    tf.keras.models.save_model(model, os.path.join(savedir,"model_shake"+str(model_nr)+".keras"), save_format = "keras")
+	    with open(join(savedir, "texts"+str(model_nr)+".pkl"), 'wb') as f:  
+	        pickle.dump([data, words, stoi, itos], f)
+	
+	print("post training:") # a walk in word space
+	#np.random.seed(2002)
+	test_model(n_cont = 100)
