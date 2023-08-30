@@ -25,6 +25,7 @@ def save_movie(imdir, movie_name, n):
 
 
 def perform(env, rl_agent, imdir, max_n_step, verbose: bool = False):
+    """let the model perform and generate pngs while doing so"""
     if not os.path.isdir(imdir):
         os.mkdir(imdir)
     state = env.reset()
@@ -43,14 +44,17 @@ def perform(env, rl_agent, imdir, max_n_step, verbose: bool = False):
             break
 
 def make_png(n_step, env_type):
-    # transform movie into pngs
-    name = "LunarLander-v2" if env_type == "lunar" else "CartPole-v0"
+    """prepare the env, agent, and run it afterwards"""
+    if env_type == "lunar":
+        name = "LunarLander-v2"
+    elif env_type == "cartpole":
+        name = "CartPole-v0"
     env = gym.make(name) 
     imdir = os.path.join(os.getcwd(), "im")
     if env_type == "lunar":
         rl_agent = PG_Agent(n_states = env.observation_space.shape[0], n_actions = env.action_space.n, \
                            lr = 0.001, gamma = 0.99, max_n_step = n_step)
-    else:
+    elif env_type == "cartpole":
         rl_agent = AgentD(env.observation_space.shape[0], env.action_space.n, \
                            buffer_size = 1000, epsilon_min = 0.001, epsilon_max = 0.99, \
                            epsilon_dec = 0.999, lr = 0.001, gamma = 0.99, learn_gran = 1, update_gran = 5, nhid1 = 16, nhid2 = 8)    
