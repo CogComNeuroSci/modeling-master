@@ -25,6 +25,9 @@ Rendering:
 import gym
 import numpy as np
 import matplotlib.pyplot as plt
+import imageio
+from save_to_movie import save_movie
+import os
 
 def smoothen(vector, window):
     return np.convolve(vector, np.ones(window)/window)
@@ -76,11 +79,15 @@ class TabAgent(object):
 def update(observation, observation1, action, reward):
     return observation , observation1, action, reward
 
-def performance(env, rl_agent: TabAgent, n_steps: int = 100, wait_input: bool = False):
+def performance(env, rl_agent: TabAgent, n_steps: int = 100, wait_input: bool = False, make_png: bool = False):
     """"
     do you want to see the process live, and if so how many steps
     wait_input: press Enter in the console to proceed to the next state
     """
+    if make_png:
+        imdir = os.getcwd()+"/im"
+        if not os.path.isdir(imdir):
+            os.mkdir(imdir)
     observation = env.reset()
     for t in range(n_steps):
         t += 1
@@ -89,6 +96,11 @@ def performance(env, rl_agent: TabAgent, n_steps: int = 100, wait_input: bool = 
         observation, reward, done, info = env.step(action)
         if wait_input:
             input() # press Enter in the console to proceed to the next state
+        if make_png:
+            img = env.render(mode = "rgb_array")
+            filename = imdir + "/img" + f"{t:03d}" + ".png"
+            imageio.imwrite(filename, img)
+
 
 def plot_results(tot_reward_epi, tot_finish, algo, color_list: dict = {"rw": "black", "sarsa": "red", "sarsalam": "blue", "ql": "green", "ac": "yellow"}):
     window_conv = 10 # convolution window for smooth curves
@@ -107,7 +119,7 @@ if __name__ == "__main__":
 #    env = gym.make('Taxi-v2')
     env = gym.make('Taxi-v3')
     algo = "ql" # options are rw, sarsa, sarsalam, or ql
-    n_episodes, max_per_episode = 1000, 200
+    n_episodes, max_per_episode = 2000, 200
     tot_reward_epi, tot_finish = [], []
     verbose = True # do you want to see intermediate results in optimisation
     rl_agent = TabAgent(n_states = env.observation_space.n, n_actions = env.action_space.n,
@@ -140,7 +152,11 @@ if __name__ == "__main__":
     
     #%% show results
     plot_results(tot_reward_epi, tot_finish, algo)
-    see_live, n_steps = True, 20 
+    make_movie, see_live, n_steps = True, True, 25
     if see_live:
-        performance(env, rl_agent, n_steps)
+        performance(env, rl_agent, n_steps, make_png = make_movie)
     env.close()
+    if make_movie:
+        save_movie(imdir = os.getcwd()+"/im", movie_name = "taxi", n = n_steps)
+		
+		
