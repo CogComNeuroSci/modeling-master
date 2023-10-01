@@ -39,7 +39,8 @@ Z = - X - Y - w*X*Y
 
 # plot the energy as a function of all the x and y combinations
 fig = plt.figure()
-ax = fig.gca(projection='3d')
+#ax = fig.gca()    # in older matplotlib versions, use this instead of next line
+ax = fig.add_subplot(111, projection = "3d")
 surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
                       cmap=cm.RdBu,linewidth=0, antialiased=False)
 
