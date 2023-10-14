@@ -16,15 +16,14 @@ import matplotlib.pyplot as plt
 
 plot_results = True # plot the process: later points in the process (higher values of step) are lighter
 if plot_results:
-    wait_for_press = True # warning: if set to True, and waitforbuttonpress == 0, then don't plot to console
-    mpl.use("Qt5Agg")     # this should plot the figure outside the console
-    norm = mpl.colors.Normalize(vmin = 0, vmax = 1)
-    col = cm.ScalarMappable(norm = norm, cmap = cm.afmhot).to_rgba(0)
-    fig, ax = plt.subplots(nrows = 1, ncols = 1)
+	wait_for_press = True # warning: if set to True, and waitforbuttonpress == 0, then don't plot to console
+	mpl.use("Qt5Agg")     # this should plot the figure outside the console
+	norm = mpl.colors.Normalize(vmin = 0, vmax = 1)
+	col = cm.ScalarMappable(norm = norm, cmap = cm.afmhot).to_rgba(0)
+	fig, ax = plt.subplots(nrows = 1, ncols = 1)
 
 step_size, n_steps = 0.1, 100
 x = tf.Variable(initial_value = +0.001, trainable = True)
-
 
 def f_x():
     return (x - 5)**2
@@ -39,7 +38,7 @@ def f2_x():
 	return 2*(x**4) -0.3*(x**3) - 2.5*(x**2)  
 
 
-func_to_use = f2_x
+func_to_use = f_x
 
 for step in range(n_steps):
     print("x = {:.2f}, f(x) = {:.2f}".format(x.numpy(), func_to_use().numpy()))
