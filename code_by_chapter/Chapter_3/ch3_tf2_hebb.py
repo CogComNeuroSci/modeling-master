@@ -15,8 +15,8 @@ train_x = np.array([[1, 1, 0],
 				    [0, 1, 1]])
 train_t = np.array([[1, 0],
 					[0, 1]]) # t for target
-epochs = 30
-learning_rate = 0.1
+epochs = 10
+learning_rate = 0.05
 
 # define TensorFlow components
 X = tf.Variable(initial_value = np.random.randn(1, train_x.shape[1]).astype(np.float32), name = "input")
@@ -34,7 +34,7 @@ for epoch in range(epochs):
         X.assign(x[np.newaxis,:])
         T.assign(t[np.newaxis,:])
         opt.minimize(cost, [W])
-        if not epoch%10: # plot output only every 10 epochs
+        if not epoch%1: # plot output only every 10 epochs
             w = W.numpy()
             print(w, '\n')
 			

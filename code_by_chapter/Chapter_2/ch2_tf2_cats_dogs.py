@@ -51,7 +51,7 @@ def plot_activation():
     ax.set_ylabel("activation")
     ax.legend()
 
-# start the optimization	
+#%% start the optimization	
 for step in range(n_steps):
     Y.assign(Y + np.random.rand(1,2)*noise) # add some noise
     y[step] = Y.numpy()                     # store it as numpy array for plotting purposes

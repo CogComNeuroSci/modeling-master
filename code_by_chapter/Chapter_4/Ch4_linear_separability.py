@@ -15,7 +15,8 @@ from itertools import product, combinations
 
 fig = plt.figure()
 fig.suptitle("rotate to see that the task switch stroop taks is not lin separable")
-ax = fig.gca(projection='3d')
+#ax = fig.gca(projection='3d')
+ax = fig.add_subplot(111, projection = "3d")
 #ax.set_aspect("equal")
 r = [-1, 1]
 product_set = list(product(r, r, r))

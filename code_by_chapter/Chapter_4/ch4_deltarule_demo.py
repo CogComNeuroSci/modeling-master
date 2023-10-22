@@ -30,9 +30,9 @@ def error(w):
 
 #%% initialisations
 timesleep = 0.01
-beta = 0.2
+beta = 2
 xmin, xmax, ymin, ymax = -10, 10, -10, 10
-n_trials, n_patterns = 50, 10
+n_trials, n_patterns = 100, 10
 mu1, mu2, s1, s2 = np.array([-2, -1]), np.array([1, 1]), 1, 1 # s1 and s2 are noise parameters
 xrange = np.linspace(xmin, xmax)
 x1 = s1*np.random.randn(n_patterns, 2) + ml.repmat(mu1,n_patterns,1) # 'cats'
