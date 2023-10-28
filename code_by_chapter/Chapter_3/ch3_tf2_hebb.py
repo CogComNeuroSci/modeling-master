@@ -34,7 +34,7 @@ for epoch in range(epochs):
         X.assign(x[np.newaxis,:])
         T.assign(t[np.newaxis,:])
         opt.minimize(cost, [W])
-        if not epoch%1: # plot output only every 10 epochs
+        if not epoch%10: # plot output only every 10 epochs
             w = W.numpy()
             print(w, '\n')
 			
