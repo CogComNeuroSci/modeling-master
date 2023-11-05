@@ -33,7 +33,7 @@ fig, ax = plt.subplots()
 n_distributions = 2
 colors = ["red", "green", "blue", "yellow"]
 timesleep = 0.001
-beta = 0.2
+beta = 0.1
 xmin, xmax, ymin, ymax = -10, 10, -10, 10
 n_trials, n_patterns = 100, 5
 xrange = np.linspace(xmin, xmax)
@@ -72,6 +72,7 @@ for distribution_loop in range(n_distributions):
         delta = beta*x*prediction_error
         w += delta
         ax.plot(xrange, -w[0]/w[1]*xrange - w[2]/w[1], color = "black")
+        ax.plot([0, w[0]], [-w[2]/w[1], w[1] - w[2]/w[1]], color = "red")
         fig.canvas.draw()
         plt.show()
         plt.waitforbuttonpress(timesleep)
