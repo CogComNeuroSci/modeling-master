@@ -45,7 +45,7 @@ learning_rate = 0.001
 epochs        = 100
 batch_size    = 100
 batches       = int(x_train.shape[0] / batch_size)
-n_hidden      = 1
+n_hidden      = 3
 
 # model construction
 model = tf.keras.Sequential([

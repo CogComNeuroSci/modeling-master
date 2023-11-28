@@ -27,31 +27,53 @@ from tensorflow.keras.models import Model
 from tensorflow.keras import metrics
 from tensorflow.keras.datasets import mnist
 
-def plot_digits(generator, n: int = 15, digit_row: int = 28, digit_col: int = 28):
+def plot_digits(generator, n: int = 15, digit_row: int = 28, digit_col: int = 28, show: bool = True):
 	# display a 2D manifold of the stimulu (e.g., digits)
-	n = 15  # figure with 15x15 digits
-	figure = np.zeros((digit_row * n, digit_col * n))
+	input_dim = generator.inputs[0].shape[1]
+	n = 15
+	if input_dim > 1:
+		n1 = n  # figure with 15x15 digits
+	else:
+		n1 = 1
+	figure = np.zeros((digit_row * n1, digit_col * n))
 	# linearly spaced coordinates on the unit square were transformed through the inverse CDF (ppf) of the Gaussian
 	# to produce values of the latent variables z, since the prior of the latent space is Gaussian
 	grid_x = norm.ppf(np.linspace(0.05, 0.95, n))
-	grid_y = norm.ppf(np.linspace(0.05, 0.95, n))
-	for i, yi in enumerate(grid_x):
-		for j, xi in enumerate(grid_y):
-			z_sample = np.array([[xi, yi]])
+	if input_dim > 1:
+		grid_y = norm.ppf(np.linspace(0.05, 0.95, n))
+	if input_dim > 1:
+		for i, yi in enumerate(grid_x):
+			for j, xi in enumerate(grid_y):
+				z_sample = np.array([[xi, yi]])
+				if input_dim > 2: 
+					z_sample = np.column_stack((z_sample, np.zeros((1, input_dim-2))))
+				x_decoded = generator.predict(z_sample)
+				digit = x_decoded[0].reshape(digit_row, digit_col)
+				figure[i * digit_row: (i + 1) * digit_row,
+		               j * digit_col: (j + 1) * digit_col] = digit
+						
+	else:
+		for i, yi in enumerate(grid_x):
+			z_sample = np.array([[yi]])
+			if input_dim > 1: 
+				z_sample = np.column_stack((z_sample, np.zeros((1, input_dim-1))))
 			x_decoded = generator.predict(z_sample)
 			digit = x_decoded[0].reshape(digit_row, digit_col)
-			figure[i * digit_row: (i + 1) * digit_row,
-                j * digit_col: (j + 1) * digit_col] = digit
-	plt.figure(figsize=(10, 10))
-	plt.imshow(figure, cmap='Greys_r')
-	plt.show()
+			figure[0: digit_row,
+                i * digit_col: (i + 1) * digit_col] = digit
+	if show:
+		plt.figure(figsize=(10, 10))
+		plt.imshow(figure, cmap='Greys_r')
+		plt.show()
+	return figure	
+
 
 if __name__ == "__main__":
-	batch_size = 100
+	batch_size = 50
 	original_dim = 784
 	latent_dim = 2
 	intermediate_dim = 256
-	epochs = 50
+	epochs = 20
 	epsilon_std = 1
 	use_vae = True
 	
@@ -87,29 +109,37 @@ if __name__ == "__main__":
 	
 	# train the VAE on MNIST digits
 	(x_train, y_train), (x_test, y_test) = mnist.load_data()
-	
+	subset = np.arange(10)
+#	subset = np.array([0, 1])
+	x_train= x_train[np.isin(y_train, subset)]
+	nrem =   x_train.shape[0]%batch_size
 	x_train = x_train.astype('float32') / 255.
+	x_test  = x_test[np.isin(y_test, subset)]	
 	x_test = x_test.astype('float32') / 255.
+	if nrem>0:
+		x_train = x_train[:-nrem]
+		x_test  = x_test[:-nrem]
 	x_train = x_train.reshape((len(x_train), np.prod(x_train.shape[1:])))
 	x_test = x_test.reshape((len(x_test), np.prod(x_test.shape[1:])))
 	
 	#%% actual model fitting
+	print(x_train.shape, x_test.shape)
 	vae.fit(x_train, x_train,
 	        shuffle=True,
 	        epochs=epochs,
-	        batch_size=batch_size,
-	        validation_data=(x_test, x_test))
+	        batch_size=batch_size
+	        ) # validation_data=(x_test, x_test)
 	
 	
 	# build a model to project inputs on the latent space
 	encoder = Model(x, z_mean)
 	
-	# display a 2D plot of the digit classes in the latent space
-	x_test_encoded = encoder.predict(x_test, batch_size=batch_size)
-	plt.figure(figsize=(6, 6))
-	plt.scatter(x_test_encoded[:, 0], x_test_encoded[:, 1], c=y_test)
-	plt.colorbar()
-	plt.show()
+#  	# display a 2D plot of the digit classes in the latent space
+# 	x_test_encoded = encoder.predict(x_test, batch_size=batch_size)
+# 	plt.figure(figsize=(6, 6))
+# 	plt.scatter(x_test_encoded[:, 0], x_test_encoded[:, 1], c=y_test)
+# 	plt.colorbar()
+# 	plt.show()
 	
 	# build a digit generator that can sample from the learned distribution
 	decoder_input = Input(shape=(latent_dim,))
@@ -119,4 +149,3 @@ if __name__ == "__main__":
 	
 	#%% print and plot results
 	plot_digits(generator)
-
