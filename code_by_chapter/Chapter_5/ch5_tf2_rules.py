@@ -45,7 +45,8 @@ test_data = model.predict(test_x)
 #%% report data
 print(model.get_weights())
 # train data: error curve
-plt.plot(history.history["loss"], color = "black")
+fig, ax = plt.subplots(1)
+ax.plot(history.history["loss"], color = "black")
 
 # train and test data mean error
 to_test_x, to_test_y = [train_x, test_x], [train_y, test_y]
