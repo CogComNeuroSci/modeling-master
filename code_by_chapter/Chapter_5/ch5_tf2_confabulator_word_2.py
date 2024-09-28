@@ -40,7 +40,7 @@ def train_model(n_times: int = 2, test_it: bool = False):
             test_model(n_cont = 100)
     return res
 
-def test_model(n_cont = 50):
+def test_model(n_cont = 50, batch_size = 128, stim_depth = 10):
     n_seed = stim_depth
     x = np.zeros((batch_size, stim_depth))
     r = np.random.randint(0, len(data)- n_seed)
@@ -72,35 +72,47 @@ def make_data(data, n_stim, stim_depth, stim_dim):
 
 if __name__ == "__main__":
 	# start main code here
-	text = "shakespeare.txt"
+	os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+	data_base = "trump"
+	if data_base == "beatles":
+		text       = "beatles.txt"
+		models_dir = "models_beatles"
+		suffix     = "beat"
+	elif data_base == "shakespeare":
+		text       = "shakespeare.txt"
+		models_dir = "models_shakespeare"		
+		suffix     = "shake"
+	else:
+		text       = "trump.txt"
+		models_dir = "models_trump"
+		suffix     = "trump"
 	train_it, save_it, model_nr = True, True, 1
 	
 	if train_it: # train the model
 	    batch_size = 128           # how many stimuli (of length (stim_depth, stim_dim)) per batch
 	    data_size  = batch_size*20 # data for one model.fit()
 	    stim_depth = 10            # during training, how far into the past do you go to predict the next word
-	    data, words, stoi, itos = text2vec(text, verbose = True, start_line = "PLAYS\n", max_line = 100)
+	    data, words, stoi, itos = text2vec(text, verbose = True,  max_line = None) # start_line = "PLAYS\n",
 	    stim_dim = len(words)
 	    model = build_network(batch_size = batch_size, input_dim = stim_dim, output_dim = stim_dim, n_hid = 128)
 	    print("pre training:")
-	    test_model(n_cont = 20)
-	    res = train_model(n_times = 10, test_it = True) # the length of this training determines execution time
+	    test_model(n_cont = 100)
+	    res = train_model(n_times = 5, test_it = True) # the length of this training determines execution time
 	    plt.plot(res.history["loss"])
 	else: # load the model + processed data
-	    savedir = join(os.getcwd(), "models_word")
-	    model = tf.keras.models.load_model(
-		  join(savedir,"model_shake"+str(model_nr)+".keras"))
-	    batch_size = model.input.shape[0]
-	    stim_depth = model.input.shape[1]
-	    with open(join(savedir, "texts"+str(model_nr)+".pkl"), 'rb') as f:  
-	        data, words, stoi, itos = pickle.load(f)
-	    stim_dim = len(words)
-		
+		savedir = join(os.getcwd(), models_dir)
+		model = tf.keras.models.load_model(
+		  join(savedir,"model_"+suffix+str(model_nr)+".keras"))
+		batch_size = model.input.shape[0]
+		stim_depth = model.input.shape[1]
+		with open(join(savedir, "texts"+str(model_nr)+".pkl"), 'rb') as f:  
+			data, words, stoi, itos = pickle.load(f)
+		stim_dim = len(words)
 	if save_it:
-	    savedir = join(os.getcwd(), "models_word")
+	    savedir = join(os.getcwd(), models_dir)
 	    if not os.path.isdir(savedir):
 	        os.mkdir(savedir)
-	    tf.keras.models.save_model(model, os.path.join(savedir,"model_shake"+str(model_nr)+".keras"), save_format = "keras")
+	    tf.keras.models.save_model(model, os.path.join(savedir,"model_"+suffix+str(model_nr)+".keras"), save_format = "keras")
 	    with open(join(savedir, "texts"+str(model_nr)+".pkl"), 'wb') as f:  
 	        pickle.dump([data, words, stoi, itos], f)
 	

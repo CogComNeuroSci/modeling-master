@@ -22,7 +22,7 @@ if plot_results:
 	col = cm.ScalarMappable(norm = norm, cmap = cm.afmhot).to_rgba(0)
 	fig, ax = plt.subplots(nrows = 1, ncols = 1)
 
-step_size, n_steps = 0.1, 100
+step_size, n_steps = 0.01, 100
 x = tf.Variable(initial_value = +0.001, trainable = True)
 
 def f_x():
