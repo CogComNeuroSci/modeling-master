@@ -23,10 +23,13 @@ if plot_results:
 	fig, ax = plt.subplots(nrows = 1, ncols = 1)
 
 step_size, n_steps = 0.01, 100
-x = tf.Variable(initial_value = +0.001, trainable = True)
-
+x = tf.Variable(initial_value = 0.0, trainable = True)
+ 
 def f_x():
     return (x - 5)**2
+
+def f_x_inverse(): # minus the function i'm actually interested in
+    return -(x - 5)**2
 
 def my_function_x():
     return x**2 +7
@@ -38,7 +41,7 @@ def f2_x():
 	return 2*(x**4) -0.3*(x**3) - 2.5*(x**2)  
 
 
-func_to_use = f_x
+func_to_use = f2_x
 
 for step in range(n_steps):
     print("x = {:.2f}, f(x) = {:.2f}".format(x.numpy(), func_to_use().numpy()))
@@ -46,7 +49,7 @@ for step in range(n_steps):
     if plot_results:
         col = cm.ScalarMappable(norm = norm, cmap = cm.afmhot).to_rgba((step+2)/float(n_steps+2))
         a = ax.plot(x.numpy(), func_to_use().numpy(), 'o', mec = 'k', color = col)
-        ax.set_xlim([0, 10]) # make these limits appropriate for your function if you want to see something happening
+        ax.set_xlim([-1.3, 1.3]) # make these limits appropriate for your function if you want to see something happening
         ax.set_ylim([-2, +6])     # same here
         ax.set_xlabel("x")
         ax.set_ylabel("f(x)")

@@ -32,7 +32,7 @@ W_inh = w_inh * np.array([[0, 1], [1, 0]])
 step_size = 0.05
 n_steps = 100
 y = np.ndarray((n_steps, 2))
-noise = 5
+noise = 10
 
 # define TensorFlow components
 Y  = tf.Variable(initial_value = np.random.randn(1, 2))
