@@ -31,8 +31,8 @@ w_inh = -0.4    # lateral inhibition between cat and dog
 W_inh = w_inh * np.array([[0, 1], [1, 0]])
 step_size = 0.05
 n_steps = 100
-y = np.ndarray((n_steps, 2))
-noise = 10
+y = np.zeros((n_steps, 2))
+noise = 1
 
 # define TensorFlow components
 Y  = tf.Variable(initial_value = np.random.randn(1, 2))

@@ -15,8 +15,8 @@ train_x = np.array([[1, 1, 0],
 				    [0, 1, 1]])
 train_t = np.array([[1, 0],
 					[0, 1]]) # t for target
-epochs = 10
-learning_rate = 0.05
+epochs = 100
+learning_rate = 0.01
 
 # define TensorFlow components
 X = tf.Variable(initial_value = np.random.randn(1, train_x.shape[1]).astype(np.float32), name = "input")
