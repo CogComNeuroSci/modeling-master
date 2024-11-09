@@ -32,7 +32,7 @@ def error(w):
 fig, ax = plt.subplots()
 n_distributions = 2
 colors = ["red", "green", "blue", "yellow"]
-timesleep = 0.001
+timesleep = 0.01
 beta = 0.1
 xmin, xmax, ymin, ymax = -10, 10, -10, 10
 n_trials, n_patterns = 100, 5

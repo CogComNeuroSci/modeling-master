@@ -39,8 +39,7 @@ def my_other_function_x():
 
 def f2_x():
 	return 2*(x**4) -0.3*(x**3) - 2.5*(x**2)  
-
-
+	
 func_to_use = f2_x
 
 for step in range(n_steps):

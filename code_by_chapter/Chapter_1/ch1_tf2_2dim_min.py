@@ -11,7 +11,7 @@ import tensorflow as tf
 from tensorflow.python.training import gradient_descent
 import numpy as np
 
-n_steps = 10
+n_steps = 100
 update_rate = 0.01
 offsets = [2, -2]
 

@@ -27,7 +27,7 @@ def build_network(batch_size: int, input_dim: int, output_dim: int, n_hid: int, 
     model.add(tf.keras.layers.Dense(output_dim, activation = "softmax"))
     loss = tf.keras.losses.CategoricalCrossentropy()
     model.compile(optimizer = \
-         tf.keras.optimizers.Adam(learning_rate = learning_rate), loss = loss, metrics = ["accuracy"])	
+         tf.keras.optimizers.legacy.Adam(learning_rate = learning_rate), loss = loss, metrics = ["accuracy"])	
     return model
 
 def train_model(n_times: int = 2, test_it: bool = False):
@@ -73,7 +73,7 @@ def make_data(data, n_stim, stim_depth, stim_dim):
 if __name__ == "__main__":
 	# start main code here
 	os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-	data_base = "trump"
+	data_base = "beatles"
 	if data_base == "beatles":
 		text       = "beatles.txt"
 		models_dir = "models_beatles"
@@ -86,7 +86,7 @@ if __name__ == "__main__":
 		text       = "trump.txt"
 		models_dir = "models_trump"
 		suffix     = "trump"
-	train_it, save_it, model_nr = True, True, 1
+	train_it, save_it, model_nr = False, False, 3
 	
 	if train_it: # train the model
 	    batch_size = 128           # how many stimuli (of length (stim_depth, stim_dim)) per batch
@@ -97,7 +97,7 @@ if __name__ == "__main__":
 	    model = build_network(batch_size = batch_size, input_dim = stim_dim, output_dim = stim_dim, n_hid = 128)
 	    print("pre training:")
 	    test_model(n_cont = 100)
-	    res = train_model(n_times = 5, test_it = True) # the length of this training determines execution time
+	    res = train_model(n_times = 0, test_it = True) # the length of this training determines execution time
 	    plt.plot(res.history["loss"])
 	else: # load the model + processed data
 		savedir = join(os.getcwd(), models_dir)

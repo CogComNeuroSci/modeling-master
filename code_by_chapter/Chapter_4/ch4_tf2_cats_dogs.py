@@ -46,6 +46,7 @@ print(model.get_weights()) # train_x.shape[1] + 1 parameters are given; can you 
 #%% report data
 # train data: error curve
 plt.plot(history.history["loss"], color = "black")
+plt.show()
 
 # test data
 print("predictions on the test data:")

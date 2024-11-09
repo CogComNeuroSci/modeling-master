@@ -17,14 +17,13 @@ import matplotlib.pyplot as plt
 
 fig, ax = plt.subplots()
 
-
 # initialize variables
 x_cat = np.array([1, 1, 0]) # prototypical cat
 x_dog = np.array([0, 1, 1]) # prototypical dog
 x = x_cat
 
-W = np.array([[1, 0.5, 0.1],   # weights to the cat response
-			  [0.1, 0.5, 1]])  # weights to the dog response
+W = np.array([[20, 0.5, 0.1],   # weights to the cat response
+			  [0.1, 0.5, 0.8]])  # weights to the dog response
 net = np.matmul(W, x).reshape(2,1) # net input to the cat and dog output units
 
 w_inh = -0.4    # lateral inhibition between cat and dog
