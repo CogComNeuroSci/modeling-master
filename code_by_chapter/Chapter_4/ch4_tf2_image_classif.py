@@ -27,10 +27,10 @@ from ch5_tf2_image_classif import plot_imgs
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
 
 # to make data set smaller (and training faster)
-x_train, y_train, x_test, y_test = x_train[:500,:], y_train[:500], x_test[:500,:], y_test[:500]
+x_train, y_train, x_test, y_test = x_train[:1000,:], y_train[:1000], x_test[:500,:], y_test[:500]
 
 # estimation parameters
-learning_rate = 0.0001
+learning_rate = 0.001
 epochs = 1000 # how often to go through the whole data set
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)

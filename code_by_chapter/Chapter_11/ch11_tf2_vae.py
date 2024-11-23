@@ -71,9 +71,9 @@ def plot_digits(generator, n: int = 15, digit_row: int = 28, digit_col: int = 28
 if __name__ == "__main__":
 	batch_size = 50
 	original_dim = 784
-	latent_dim = 1
+	latent_dim = 2
 	intermediate_dim = 256
-	epochs = 20
+	epochs = 30
 	epsilon_std = 1
 	use_vae = True
 	
@@ -109,8 +109,8 @@ if __name__ == "__main__":
 	
 	# train the VAE on MNIST digits
 	(x_train, y_train), (x_test, y_test) = mnist.load_data()
-#	subset = np.arange(10)
-	subset = np.array([0, 1])
+	subset = np.arange(10)
+#	subset = np.array([0, 1])
 	x_train= x_train[np.isin(y_train, subset)]
 	nrem =   x_train.shape[0]%batch_size
 	x_train = x_train.astype('float32') / 255.

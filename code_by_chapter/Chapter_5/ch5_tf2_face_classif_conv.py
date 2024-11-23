@@ -57,13 +57,13 @@ model.compile(optimizer = opt, loss = loss)
 #print(model.summary())
 #%% model fitting
 # plot before training
-y_pred = model.predict(x_test)
+y_pred = model(x_test)
 show_face(x_test[0:9], 3, 3, labels = y_pred[0:9], title = "predictions before training") # plot faces before training
 history = model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs)
 
 #%% show results
 # error curve
-y_pred = model.predict(x_test)
+y_pred = model(x_test)
 show_face(x_test[0:9], 3, 3, labels = y_pred[0:9], title = "predictions after training") # plot faces after training
 fig = plt.figure()
 plt.plot(history.history["loss"], color = "black")

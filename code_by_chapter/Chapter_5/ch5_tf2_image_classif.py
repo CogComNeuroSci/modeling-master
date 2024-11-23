@@ -18,9 +18,11 @@ from ch5_tf2_digit_classif import test_performance
 
 def plot_imgs(x_train, y_train):
     """plot some pictures from the data base"""
+    labels = ["airplane", "automobile", "bird", "cat",
+		   "deer", "dog", "frog", "horse", "ship", "truck"]
     fig, axes = plt.subplots(1, 4, figsize=(7,3))
     for img, label, ax in zip(x_train[:4], y_train[:4], axes):
-        ax.set_title(label)
+        ax.set_title(labels[int(label)])
         ax.imshow(img)
         ax.axis("off")
     plt.show()

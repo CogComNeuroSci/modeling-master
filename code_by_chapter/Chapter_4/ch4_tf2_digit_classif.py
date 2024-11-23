@@ -17,8 +17,8 @@ and point sys.path.append to that directory X, as done here)
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-import sys
-sys.path.append('/Users/tom/Documents/Modcogproc/modeling-master/code_by_chapter/Chapter_5')
+#import sys
+#sys.path.append('/Users/tom/Documents/Modcogproc/modeling-master/code_by_chapter/Chapter_5')
 from ch5_tf2_digit_classif import test_performance, preprocess_digits, plot_digits
 
 # import digits dataset
