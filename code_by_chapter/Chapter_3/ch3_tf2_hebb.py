@@ -15,7 +15,7 @@ train_x = np.array([[1, 1, 0],
 				    [0, 1, 1]])
 train_t = np.array([[1, 0],
 					[0, 1]]) # t for target
-epochs = 100
+epochs = 10
 learning_rate = 0.01
 
 # define TensorFlow components

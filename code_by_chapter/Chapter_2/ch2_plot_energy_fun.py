@@ -26,16 +26,16 @@ from matplotlib import ticker
 n_unitsteps = 50
 
 # create the different value that the first dimension (let's call it x) will take
-xs = np.linspace(0, 10, n_unitsteps)
+xs = np.linspace(-5, 10, n_unitsteps)
 # create the different value that the second dimension (let's call it y) will take
-ys = np.linspace(0, 10, n_unitsteps)
+ys = np.linspace(-5, 10, n_unitsteps)
 # create a 2D array representing all the possible combinations of x and y
 X, Y = np.meshgrid(xs, ys)
 
 # the weight between the cat and dog units
-w = -0.25
+w = -1
 # the energy function
-Z = - 5*X - Y - w*X*Y
+Z = - 10*X - Y - w*X*Y
 
 # plot the energy as a function of all the x and y combinations
 fig = plt.figure()

@@ -41,15 +41,16 @@ def preprocess_imgs(x_train, y_train, train_size, x_test, y_test, test_size,
 # %% main code
 if __name__ == "__main__":
     (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
+    x_train_original = np.copy(x_train)
     plot_imgs(x_train, y_train)
     # for piloting, make a smaller data set
-    n_train_stim, n_test_stim = 10, 1000
-    learning_rate = 0.0001
-    epochs = 200
-    batch_size = 10
+    n_train_stim, n_test_stim = 2000, 1000
+    learning_rate = 0.00005
+    epochs = 10000
+    batch_size = 100
     batches = int(x_train.shape[0] / batch_size)
     stdev = 0.001
-    n_hid = 20
+    n_hid = 10
 
     # pre-processing
     n_labels = int(np.max(y_train)+1)
@@ -75,6 +76,8 @@ if __name__ == "__main__":
     # show results
     # error curve
     fig, ax = plt.subplots()
+    y_pred = np.argmax(model(x_train).numpy(), axis = 1)
+    plot_imgs(x_train_original, y_pred)
     ax.plot(history.history["loss"], color = "black")
 
     # print test data results

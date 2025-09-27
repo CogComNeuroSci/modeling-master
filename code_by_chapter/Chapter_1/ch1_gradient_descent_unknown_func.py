@@ -65,7 +65,7 @@ for i in np.arange(n_steps):
     a = axes.plot(x_desc[-1], y_desc[-1], 'o', mec = 'k', color = col)
     axes.set_xlabel('alph * der = x_step\n%.2f * %.2f = %.2f' % (alpha, der, der*alpha))
     fig.canvas.draw()
-#   fig.waitforbuttonpress(0) # if you want to step through the function; make sure you don't plot in console then!
+    fig.waitforbuttonpress(0) # if you want to step through the function; make sure you don't plot in console then!
     
 pl.title('THE END\nstep: %i/%i' % (i+2, n_steps+1))
 

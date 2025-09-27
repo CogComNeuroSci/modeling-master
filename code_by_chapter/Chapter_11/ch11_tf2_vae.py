@@ -71,7 +71,7 @@ def plot_digits(generator, n: int = 15, digit_row: int = 28, digit_col: int = 28
 if __name__ == "__main__":
 	batch_size = 50
 	original_dim = 784
-	latent_dim = 2
+	latent_dim = 1
 	intermediate_dim = 256
 	epochs = 30
 	epsilon_std = 1
