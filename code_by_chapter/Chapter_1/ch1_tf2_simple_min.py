@@ -23,7 +23,7 @@ if plot_results:
 	fig, ax = plt.subplots(nrows = 1, ncols = 1)
 
 step_size, n_steps = 0.02, 100
-x = tf.Variable(initial_value = 0.0, trainable = True)
+x = tf.Variable(initial_value = 7.0, trainable = True)
  
 def f_x():
     return (x - 5)**2
@@ -55,7 +55,7 @@ for step in range(n_steps):
         fig.canvas.draw()
         if wait_for_press:
             plt.title('step: {}/{}'.format(step+1, n_steps))
-            fig.waitforbuttonpress(0) # if you want to step through the function
+            fig.waitforbuttonpress(0.01) # if you want to step through the function slowly; if you want to click through it, set time to 0
 
 if plot_results:
     plt.title('Optimization done.')			
