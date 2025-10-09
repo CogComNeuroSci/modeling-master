@@ -8,6 +8,7 @@ look at the train_x and train_y patterns; can you predict what W will look like 
 """
 import tensorflow as tf
 import numpy as np
+from tensorflow.python.training import gradient_descent
 
 np.set_printoptions(precision = 2)
 # initialize  variables
@@ -15,7 +16,7 @@ train_x = np.array([[1, 1, 0],
 				    [0, 1, 1]])
 train_t = np.array([[1, 0],
 					[0, 1]]) # t for target
-epochs = 10
+steps = 100
 learning_rate = 0.01
 
 # define TensorFlow components
@@ -27,14 +28,15 @@ def cost():
     """ this cost function (eq (3.1) in MCP book) will be optimized"""
     return tf.matmul(-tf.matmul(X, W), tf.transpose(T)) 
 
-opt  = tf.keras.optimizers.SGD(learning_rate = learning_rate) # SGD = stochastic gradient descent
+#opt  = tf.keras.optimizers.SGD(learning_rate = learning_rate) # SGD = stochastic gradient descent
 
-for epoch in range(epochs):
+for step in range(steps):
     for (x, t) in zip(train_x, train_t):
         X.assign(x[np.newaxis,:])
         T.assign(t[np.newaxis,:])
-        opt.minimize(cost, [W])
-        if not epoch%10: # plot output only every 10 epochs
+        gradient_descent.GradientDescentOptimizer(learning_rate).minimize(loss = cost, var_list = [W]) # core of the code
+        #opt.minimize(cost, [W])
+        if not step%10: # plot output only every 10 epochs
             w = W.numpy()
             print(w, '\n')
 			

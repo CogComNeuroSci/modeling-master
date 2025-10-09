@@ -35,7 +35,7 @@ X, Y = np.meshgrid(xs, ys)
 # the weight between the cat and dog units
 w = -1
 # the energy function
-Z = - 10*X - Y - w*X*Y
+Z = - X - Y - w*X*Y
 
 # plot the energy as a function of all the x and y combinations
 fig = plt.figure()
