@@ -16,14 +16,9 @@ The folders are organized according to chapter. The chapters line up with the MC
 
 ## Programming environment   
 
-We rely heavily on Python 3 incorporated in the Anaconda environment. The most recent scripts use TensorFlow 2 (TF2); I highly recommend TF2, rather than the earlier TF1. Several modules are required to run the scripts, but the most important softwares are:
+We rely heavily on Python 3 incorporated in the Anaconda environment. The most recent scripts use TensorFlow 2 (TF2); We highly recommend TF2, rather than the earlier TF1. Several modules are required to run the scripts, but the most important software is Python 3.8 and TensorFlow 2.12. Our preferred editor is Spyder 5. 
 
-- Python 3 (*v. 3.6)
-- Anaconda 3 (*v. 4.10.3)
-- TensorFlow 2 (*v. 2.4)
-
-Note that we always work with Anaconda via virtual environments.   
-Our preferred editor is Spyder. You can use our own TensorFlow 2 environment by creating a new environment with the modelling_mac.yml or modelling_windows.yml files (in folder installation).
+We always work with Anaconda via virtual environments. You can use our own environment via the Anaconda Navigator or by creating a new environment with the modelling24.yml files (in folder installation).
 
 ## Contact
 
@@ -33,4 +28,4 @@ Tom Verguts
 
 [Lab website]: https://cogcomneurosci.com/
 
-**Last edit: 1-09-2022**
+**Last edit: 01-10-2025**
