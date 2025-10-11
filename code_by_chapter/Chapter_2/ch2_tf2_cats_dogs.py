@@ -36,6 +36,7 @@ noise = 0.001
 # define TensorFlow components
 Y  = tf.Variable(initial_value = np.random.randn(1, 2))
 
+
 # define functions
 def cost():
 	"""this is just the cost function 2.3 in matmul notation"""

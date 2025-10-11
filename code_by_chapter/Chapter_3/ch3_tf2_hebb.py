@@ -28,14 +28,11 @@ def cost():
     """ this cost function (eq (3.1) in MCP book) will be optimized"""
     return tf.matmul(-tf.matmul(X, W), tf.transpose(T)) 
 
-#opt  = tf.keras.optimizers.SGD(learning_rate = learning_rate) # SGD = stochastic gradient descent
-
 for step in range(steps):
     for (x, t) in zip(train_x, train_t):
         X.assign(x[np.newaxis,:])
         T.assign(t[np.newaxis,:])
         gradient_descent.GradientDescentOptimizer(learning_rate).minimize(loss = cost, var_list = [W]) # core of the code
-        #opt.minimize(cost, [W])
         if not step%10: # plot output only every 10 epochs
             w = W.numpy()
             print(w, '\n')
