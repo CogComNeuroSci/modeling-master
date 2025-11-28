@@ -24,7 +24,7 @@ train_size, test_size = 1000, 50
 x_train, y_train, x_test, y_test = x_train[:train_size,:], y_train[:train_size], x_test[:test_size,:], y_test[:test_size]
 
 learning_rate = 0.0001
-epochs = 10
+epochs = 100
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
 stdev = 0.001

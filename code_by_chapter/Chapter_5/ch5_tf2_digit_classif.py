@@ -29,9 +29,10 @@ def test_performance(model, x_train, x_test, y_train, y_test, metric = tf.keras.
     labels =  ["train", "test"]
     print("\n")
     for loop in range(2):
-        y_pred = model.predict(to_test_x[loop])
+        testdata_loss.reset_state()
+        y_pred = model(to_test_x[loop])
         testdata_loss.update_state(to_test_y[loop], y_pred)
-        testdata_loss_summary = np.mean(testdata_loss.result().numpy())*100
+        testdata_loss_summary = testdata_loss.result().numpy()*100
         print("mean {} data performance: {:.2f}%".format(labels[loop], testdata_loss_summary))		
 	
 def preprocess_digits(x_train, y_train,

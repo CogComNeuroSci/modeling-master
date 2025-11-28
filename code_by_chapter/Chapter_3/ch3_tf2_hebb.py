@@ -16,7 +16,7 @@ train_x = np.array([[1, 1, 0],
 				    [0, 1, 1]])
 train_t = np.array([[1, 0],
 					[0, 1]]) # t for target
-steps = 100
+steps = 50
 learning_rate = 0.01
 
 # define TensorFlow components
@@ -33,7 +33,7 @@ for step in range(steps):
         X.assign(x[np.newaxis,:])
         T.assign(t[np.newaxis,:])
         gradient_descent.GradientDescentOptimizer(learning_rate).minimize(loss = cost, var_list = [W]) # core of the code
-        if not step%10: # plot output only every 10 epochs
-            w = W.numpy()
-            print(w, '\n')
+    if not step%10: # plot output only every 10 epochs
+        w = W.numpy()
+        print(w, '\n')
 			

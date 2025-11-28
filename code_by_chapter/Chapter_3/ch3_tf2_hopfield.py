@@ -30,7 +30,7 @@ if dim == 1:
 else:
     # 2D numbers from MNIST data set
     all_data = tf.keras.datasets.mnist.load_data()
-    start_number, stop_number = 16, 18
+    start_number, stop_number = 16, 22
     n_numbers    = stop_number - start_number
     train_pattern = all_data[0][0][start_number:stop_number] # first n_numbers numbers from the training data
     train_pattern = 2*(train_pattern>5) - 1  # recode to -1 / +1 patterns

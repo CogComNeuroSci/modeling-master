@@ -86,7 +86,7 @@ if __name__ == "__main__":
 		text       = "trump.txt"
 		models_dir = "models_trump"
 		suffix     = "trump"
-	train_it, save_it, model_nr = False, False, 3
+	train_it, save_it, model_nr = True, False, 300
 	
 	if train_it: # train the model
 	    batch_size = 128           # how many stimuli (of length (stim_depth, stim_dim)) per batch

@@ -17,8 +17,8 @@ train_x = np.array([[1., 1., 0.],
 				    [0., 1., 1.]])
 train_t = np.array([[1., 0.],
 					[0., 1.]]) # t for target
-steps = 30
-learning_rate = 0.1
+steps = 50
+learning_rate = 1
 
 # define numpy and TensorFlow components
 X = np.random.randn(1, train_x.shape[1]) # size 1, 3
@@ -33,6 +33,6 @@ for step in range(steps):
         X = x[np.newaxis,:]  # X has now size (1, 3) instead of (,3)
         T = t[np.newaxis,:]
         gradient_descent.GradientDescentOptimizer(learning_rate).minimize(cost) # core of the code
-        if not step%10: # plot output (weight matrix) only every 10 epochs
-            w = W.numpy()
-            print(w, '\n')
+    if not step%10: # plot output (weight matrix) only every 10 epochs
+        w = W.numpy()
+        print(w, '\n')
