@@ -24,7 +24,7 @@ plot_imgs(x_train, y_train)
 train_size, test_size = 1000, 50
 x_train, y_train, x_test, y_test = x_train[:train_size,:], y_train[:train_size], x_test[:test_size,:], y_test[:test_size]
 y_train = y_train[:,0]
-learning_rate = 0.0001
+learning_rate = 0.001
 epochs = 2000
 batch_size = 100
 batches = int(x_train.shape[0] / batch_size)
@@ -40,10 +40,10 @@ y_test  = tf.one_hot(y_test, n_labels)
 
 #%% model definition
 model = tf.keras.Sequential([
-			tf.keras.layers.Conv2D(filters = 32, kernel_size = (3, 3), input_shape = (x_train.shape[1], x_train.shape[2], x_train.shape[3])),
+			tf.keras.layers.Conv2D(filters = 16, kernel_size = (3, 3), input_shape = (x_train.shape[1], x_train.shape[2], x_train.shape[3])),
 			tf.keras.layers.AveragePooling2D(pool_size = (2, 2)),
-#			tf.keras.layers.Conv2D(filters = 32, kernel_size = (3, 3)),
-#			tf.keras.layers.AveragePooling2D(pool_size = (2, 2)),
+			tf.keras.layers.Conv2D(filters = 32, kernel_size = (3, 3)),
+			tf.keras.layers.AveragePooling2D(pool_size = (2, 2)),
 #			tf.keras.layers.Conv2D(filters = 64, kernel_size = (3, 3)),
 #			tf.keras.layers.AveragePooling2D(pool_size = (2, 2)),
 			tf.keras.layers.Flatten(),

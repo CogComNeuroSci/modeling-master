@@ -22,10 +22,10 @@ def succ(state_pass = 1, action_pass = 1):
     return state + action_pass*2 - 1
     
 nstates, nactions = 7, 2
-r = [0.7, 0, 0, 0, 0, 0, 8]
+r = [0.7, 0, 0, 0, 0, 0, 0.8]
 slip = 0
 Q_value = np.random.random((nstates, 2))
-gamma = 0.8 # discount factor
+gamma = 0.99 # discount factor
 stop, converge, threshold, max_iteration = False, False, 0.01, 10000
 halfway = 5 # intermediate-step value matrix to be printed
 fig, axs = plt.subplots(1, 1)
